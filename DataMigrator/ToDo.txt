@@ -1,0 +1,7 @@
+﻿- TODO: TEST, TEST, TEST!!!
+- Enable user change field type on UI (mapping)
+- Convert to WPF app and use ObservableCollection<T> for binding data on Table Mappings form
+
+- ExtendedProperties IEnumerable<string> on Field?
+- Support other delimeters on Csv file?
+- excel is too slow for inserting data. Is faster even possible with openxml?

@@ -1,0 +1,318 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using DataMigrator.Common.Data;
+using DataMigrator.Common.Models;
+using DataMigrator.SharePoint.Extensions;
+using DataMigrator.Windows.Forms.Diagnostics;
+using Kore;
+using Kore.Collections;
+using SP = Microsoft.SharePoint.Client;
+
+namespace DataMigrator.SharePoint
+{
+    //TODO: Test! This class not yet tested.
+    public class SharePointProvider : BaseProvider
+    {
+        private SPFieldTypeConverter typeConverter = new SPFieldTypeConverter();
+
+        public override string DbProviderName
+        {
+            get { throw new NotSupportedException(); }
+        }
+
+        public SharePointProvider(ConnectionDetails connectionDetails)
+            : base(connectionDetails)
+        {
+        }
+
+        internal static SP.ClientContext GetClientContext(ConnectionDetails connectionDetails)
+        {
+            SP.ClientContext context = new SP.ClientContext(connectionDetails.ConnectionString);
+            if (connectionDetails.IntegratedSecurity)
+            {
+                context.Credentials = CredentialCache.DefaultNetworkCredentials;
+            }
+            else
+            {
+                context.Credentials = new NetworkCredential(
+                    connectionDetails.UserName,
+                    connectionDetails.Password,
+                    connectionDetails.Domain);
+            }
+            return context;
+        }
+
+        public override IEnumerable<string> TableNames
+        {
+            get
+            {
+                List<string> listNames = new List<string>();
+                using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+                {
+                    SP.Web site = context.Web;
+                    var lists = context.LoadQuery(site.Lists);
+                    context.ExecuteQuery();
+
+                    lists.ForEach(list =>
+                    {
+                        listNames.Add(list.Title);
+                    });
+                }
+                return listNames;
+            }
+        }
+
+        public override bool CreateTable(string tableName)
+        {
+            return CreateTable(tableName, null);
+        }
+
+        public override bool CreateTable(string tableName, IEnumerable<Field> fields)
+        {
+            try
+            {
+                using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+                {
+                    SP.Web site = context.Web;
+
+                    // Create a list.
+                    SP.ListCreationInformation listCreationInfo = new SP.ListCreationInformation();
+                    listCreationInfo.Title = tableName;
+                    listCreationInfo.TemplateType = (int)SP.ListTemplateType.GenericList;
+                    listCreationInfo.QuickLaunchOption = SP.QuickLaunchOptions.On;
+                    SP.List list = site.Lists.Add(listCreationInfo);
+                    list.Update();
+                    context.ExecuteQuery();
+
+                    if (!fields.IsNullOrEmpty())
+                    {
+                        fields.ForEach(field =>
+                        {
+                            CreateField(tableName, field);
+                        });
+                    }
+
+                    return true;
+                }
+            }
+            catch (Exception x)
+            {
+                TraceService.Instance.WriteException(x);
+                return false;
+            }
+        }
+
+        public override bool CreateField(string tableName, Field field)
+        {
+            var existingFieldNames = GetFieldNames(tableName);
+            if (existingFieldNames.Contains(field.Name))
+            {
+                TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the list, {1}", field.Name, tableName);
+                //throw new ArgumentException("etc");
+                return false;
+            }
+
+            try
+            {
+                using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+                {
+                    SP.Web site = context.Web;
+                    SP.List list = context.Web.Lists.GetByTitle(tableName);
+
+                    SP.Field spField = list.Fields.Add(field.Name, typeConverter.GetDataProviderFieldType(field.Type), true);
+                    list.Update();
+                    context.ExecuteQuery();
+                    return true;
+                }
+            }
+            catch (Exception x)
+            {
+                TraceService.Instance.WriteException(x);
+                return false;
+            }
+        }
+
+        public override IEnumerable<string> GetFieldNames(string tableName)
+        {
+            List<string> spFieldNames = new List<string>();
+            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            {
+                SP.Web site = context.Web;
+                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                var fields = context.LoadQuery(list.Fields);
+                context.ExecuteQuery();
+
+                fields.ForEach(spField =>
+                    {
+                        if (!spField.Hidden && !spField.InternalName.In(Constants.SystemFields))
+                        {
+                            spFieldNames.Add(spField.InternalName);
+                        }
+                    });
+            }
+            return spFieldNames;
+        }
+
+        public override FieldCollection GetFields(string tableName)
+        {
+            FieldCollection fields = new FieldCollection();
+            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            {
+                SP.Web site = context.Web;
+                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                var spFields = context.LoadQuery(list.Fields);
+                context.ExecuteQuery();
+
+                spFields.ForEach(spField =>
+                {
+                    if (!spField.Hidden && !spField.InternalName.In(Constants.SystemFields))
+                    {
+                        Field field = new Field
+                        {
+                            DisplayName = spField.InternalName,
+                            IsPrimaryKey = false,
+                            IsRequired = spField.Required,
+                            Name = spField.InternalName
+                        };
+
+                        field.Type = typeConverter.GetDataMigratorFieldType(spField.FieldTypeKind);
+
+                        if (spField.FieldTypeKind == SP.FieldType.Text)
+                        {
+                            field.MaxLength = ((SP.FieldText)spField).MaxLength;
+                        }
+
+                        fields.Add(field);
+                    }
+                });
+            }
+            return fields;
+        }
+
+        public override int GetRecordCount(string tableName)
+        {
+            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            {
+                SP.Web site = context.Web;
+                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                SP.CamlQuery camlQuery = new SP.CamlQuery();
+                // retrieve only one field, to make the query as small and quick as possible.
+                camlQuery.ViewXml = "<View><ViewFields><FieldRef Name='Title'/></ViewFields></View>";
+                SP.ListItemCollection listItems = list.GetItems(camlQuery);
+                context.Load(listItems);
+                context.ExecuteQuery();
+                return listItems.Count;
+            }
+        }
+
+        public override IEnumerator<Record> GetRecordsEnumerator(string tableName)
+        {
+            return GetRecordsEnumeratorInternal(tableName, GetFields(tableName));
+        }
+
+        public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
+        {
+            return GetRecordsEnumeratorInternal(tableName, fields);
+        }
+
+        public override void InsertRecords(string tableName, IEnumerable<Record> records)
+        {
+            //ProcessBatchData not available in Client OM. Maybe can use custom solution similar to base class ADO.NET version
+            //But first need to test - maybe this is already fast enough
+            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            {
+                SP.Web site = context.Web;
+                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                SP.ListItemCreationInformation itemCreateInfo = new SP.ListItemCreationInformation();
+
+                records.ForEach(record =>
+                    {
+                        SP.ListItem listItem = list.AddItem(itemCreateInfo);
+
+                        record.Fields.ForEach(field =>
+                            {
+                                if (field.Type == FieldType.DateTime)
+                                {
+                                    listItem[field.Name] = field.GetValue<DateTime>().ToISO8601DateString();
+                                }
+                                else if (field.Type == FieldType.String)
+                                {
+                                    string value = field.Value.ToString();
+                                    if (value.Length > 255)
+                                    {
+                                        value = value.Substring(0, 255);
+                                    }
+                                    listItem[field.Name] = field.Value.ToString();
+                                }
+                                else if (field.Type == FieldType.RichText)
+                                {
+                                    listItem[field.Name] = field.Value.ToString();
+                                }
+                                else
+                                {
+                                    listItem[field.Name] = field.Value;
+                                }
+                            });
+
+                        listItem.Update();
+                    });
+                context.ExecuteQuery();
+            }
+        }
+
+        private IEnumerator<Record> GetRecordsEnumeratorInternal(string tableName, IEnumerable<Field> fields)
+        {
+            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            {
+                SP.Web site = context.Web;
+                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                var spFields = context.LoadQuery(list.Fields);
+
+                const string FIELD_REF_FORMAT = "<FieldRef Name='{0}'/>";
+
+                StringBuilder sb = new StringBuilder(200);
+                foreach (Field field in fields)
+                {
+                    sb.AppendFormat(FIELD_REF_FORMAT, field.Name);
+                }
+
+                SP.CamlQuery camlQuery = new SP.CamlQuery();
+                camlQuery.ViewXml = string.Format("<View><ViewFields>{0}</ViewFields></View>", sb.ToString());
+
+                SP.ListItemCollection listItems = list.GetItems(camlQuery);
+                context.Load(listItems);
+                context.ExecuteQuery();
+
+                foreach (var item in listItems)
+                {
+                    Record record = new Record();
+                    record.Fields.AddRange(fields);
+
+                    foreach (Field field in fields)
+                    {
+                        SP.Field spField = spFields.SingleOrDefault(f => f.InternalName == field.Name);
+                        if (spField != null)
+                        {
+                            field.Value = item[spField.InternalName];
+                        }
+                    }
+
+                    yield return record;
+                }
+            }
+        }
+
+        public override FieldType GetDataMigratorFieldType(string providerFieldType)
+        {
+            return typeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SP.FieldType>(providerFieldType, true));
+        }
+
+        public override string GetDataProviderFieldType(FieldType fieldType)
+        {
+            return typeConverter.GetDataProviderFieldType(fieldType).ToString();
+        }
+    }
+}
