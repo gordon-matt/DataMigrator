@@ -5,8 +5,8 @@ using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
-using Kore;
 using DataMigrator.Windows.Forms.Diagnostics;
+using Kore;
 
 namespace DataMigrator
 {
@@ -40,21 +40,21 @@ namespace DataMigrator
                 throw new ArgumentException("You must have at least one Field Mapped!");
             }
 
-            BaseProvider sourceProvider = GetProvider(Program.Configuration.SourceConnection);
-            BaseProvider destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
+            var sourceProvider = GetProvider(Program.Configuration.SourceConnection);
+            var destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
 
             var sourceFields = job.FieldMappings.Select(f => f.SourceField);
             var destinationFields = job.FieldMappings.Select(f => f.DestinationField);
 
             int recordCount = sourceProvider.GetRecordCount(job.SourceTable);
 
-            RecordCollection buffer = new RecordCollection();
+            var buffer = new RecordCollection();
             int processedRecordCount = 0;
             var recordsEnumerator = sourceProvider.GetRecordsEnumerator(job.SourceTable, sourceFields);
 
             while (recordsEnumerator.MoveNext())
             {
-                Record record = recordsEnumerator.Current.Clone();
+                var record = recordsEnumerator.Current.Clone();
 
                 buffer.Add(record);
                 processedRecordCount++;
@@ -82,8 +82,8 @@ namespace DataMigrator
 
         public static bool CreateDestinationTable(string tableName)
         {
-            BaseProvider sourceProvider = GetProvider(Program.Configuration.SourceConnection);
-            BaseProvider destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
+            var sourceProvider = GetProvider(Program.Configuration.SourceConnection);
+            var destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
 
             return destinationProvider.CreateTable(tableName, sourceProvider.GetFields(tableName));
         }

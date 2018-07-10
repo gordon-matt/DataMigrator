@@ -15,11 +15,12 @@ namespace DataMigrator.Views
 {
     public partial class MainForm : KryptonForm
     {
-        private TraceViewerControl traceViewer = new TraceViewerControl();
         private UserControl currentControl = null;
 
         [ImportMany(typeof(IMigrationPlugin))]
         private IEnumerable<IMigrationPlugin> plugins = null;
+
+        private TraceViewerControl traceViewer = new TraceViewerControl();
 
         #region Constructor
 
@@ -33,11 +34,11 @@ namespace DataMigrator.Views
                 ShowTraceViewer();//Initialize here or get an error: "Window Handle not yet created"
             }
 
-            using (AggregateCatalog aggregateCatalog = new AggregateCatalog(
+            using (var aggregateCatalog = new AggregateCatalog(
                 new AssemblyCatalog(typeof(Program).Assembly),
                 new DirectoryCatalog(Path.Combine(Application.StartupPath, "Plugins"))))
             {
-                using (CompositionContainer container = new CompositionContainer(aggregateCatalog))
+                using (var container = new CompositionContainer(aggregateCatalog))
                 {
                     container.ComposeParts(this);
                 }
@@ -47,9 +48,28 @@ namespace DataMigrator.Views
             this.plugins = null;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Private Methods
+
+        public void HideTraceViewer()
+        {
+            panelMain.Controls.Clear();
+            if (currentControl != null)
+            {
+                panelMain.Controls.Add(currentControl);
+                currentControl.Dock = DockStyle.Fill;
+            }
+            mnuMainToolsShowTraceViewer.Checked = false;
+        }
+
+        public void ShowTraceViewer()
+        {
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(traceViewer);
+            traceViewer.Dock = DockStyle.Fill;
+            mnuMainToolsShowTraceViewer.Checked = true;
+        }
 
         private DialogResult CheckSaveChanges()
         {
@@ -68,6 +88,48 @@ namespace DataMigrator.Views
             }
 
             return dialogResult;
+        }
+
+        private T LoadUserControl<T>() where T : UserControl
+        {
+            //SaveCurrentControl();
+            T control = Activator.CreateInstance<T>();
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(control);
+            control.Dock = DockStyle.Fill;
+            if (control.MinimumSize != new Size(0, 0))
+            {
+                this.Width = this.Width - panelMain.Width + control.MinimumSize.Width;
+                this.Height = this.Height - panelMain.Height + control.MinimumSize.Height;
+            }
+
+            currentControl = control;
+            mnuMainToolsShowTraceViewer.Checked = false;
+            return control;
+        }
+
+        private void NewFile()
+        {
+            CheckSaveChanges();
+            Program.Configuration = new DataMigrationConfigFile();
+            treeView.ClearJobs();
+        }
+
+        private void OpenFile()
+        {
+            DialogResult dialogResult = CheckSaveChanges();
+            if (dialogResult == DialogResult.Cancel)
+            { return; }
+
+            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+            {
+                Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
+                treeView.ClearJobs();
+                foreach (Job job in Program.Configuration.Jobs.OrderBy(j => j.Name))
+                {
+                    treeView.AddJob(job);
+                }
+            }
         }
 
         private void SaveCurrentControl()
@@ -107,67 +169,6 @@ namespace DataMigrator.Views
             }
         }
 
-        private T LoadUserControl<T>() where T : UserControl
-        {
-            //SaveCurrentControl();
-            T control = Activator.CreateInstance<T>();
-            panelMain.Controls.Clear();
-            panelMain.Controls.Add(control);
-            control.Dock = DockStyle.Fill;
-            if (control.MinimumSize != new Size(0, 0))
-            {
-                this.Width = this.Width - panelMain.Width + control.MinimumSize.Width;
-                this.Height = this.Height - panelMain.Height + control.MinimumSize.Height;
-            }
-
-            currentControl = control;
-            mnuMainToolsShowTraceViewer.Checked = false;
-            return control;
-        }
-
-        public void HideTraceViewer()
-        {
-            panelMain.Controls.Clear();
-            if (currentControl != null)
-            {
-                panelMain.Controls.Add(currentControl);
-                currentControl.Dock = DockStyle.Fill;
-            }
-            mnuMainToolsShowTraceViewer.Checked = false;
-        }
-
-        public void ShowTraceViewer()
-        {
-            panelMain.Controls.Clear();
-            panelMain.Controls.Add(traceViewer);
-            traceViewer.Dock = DockStyle.Fill;
-            mnuMainToolsShowTraceViewer.Checked = true;
-        }
-
-        private void NewFile()
-        {
-            CheckSaveChanges();
-            Program.Configuration = new DataMigrationConfigFile();
-            treeView.ClearJobs();
-        }
-
-        private void OpenFile()
-        {
-            DialogResult dialogResult = CheckSaveChanges();
-            if (dialogResult == DialogResult.Cancel)
-            { return; }
-
-            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
-            {
-                Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
-                treeView.ClearJobs();
-                foreach (Job job in Program.Configuration.Jobs.OrderBy(j => j.Name))
-                {
-                    treeView.AddJob(job);
-                }
-            }
-        }
-
         private void SaveFile()
         {
             SaveCurrentControl();
@@ -175,7 +176,7 @@ namespace DataMigrator.Views
             Program.Configuration.Save();
         }
 
-        #endregion
+        #endregion Private Methods
 
         #region Control Event Handlers
 
@@ -189,15 +190,17 @@ namespace DataMigrator.Views
             OpenFile();
         }
 
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            ShowTraceViewer();
+
+            RunJobsForm form = new RunJobsForm();
+            form.ShowDialog();
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveFile();
-        }
-
-        private void btnRun_Click(object sender, EventArgs e)
-        {
-            RunJobsForm form = new RunJobsForm();
-            form.ShowDialog();
         }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -221,12 +224,18 @@ namespace DataMigrator.Views
                             treeView.SelectedNode = treeView.Nodes[0];
                         }
                         break;
+
                     default: break;
                 }
             }
         }
 
         #region Main Menu
+
+        private void mnuMainFileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
         private void mnuMainFileNew_Click(object sender, EventArgs e)
         {
@@ -253,9 +262,19 @@ namespace DataMigrator.Views
             }
         }
 
-        private void mnuMainFileExit_Click(object sender, EventArgs e)
+        private void mnuMainHelpAbout_Click(object sender, EventArgs e)
         {
-            this.Close();
+            new AboutForm().ShowDialog();
+        }
+
+        private void mnuMainToolsOptions_Click(object sender, EventArgs e)
+        {
+            new SettingsForm().ShowDialog();
+        }
+
+        private void mnuMainToolsPluginTools_Click(object sender, EventArgs e)
+        {
+            new ToolsForm().ShowDialog();
         }
 
         private void mnuMainToolsShowTraceViewer_Click(object sender, EventArgs e)
@@ -270,23 +289,8 @@ namespace DataMigrator.Views
             }
         }
 
-        private void mnuMainToolsOptions_Click(object sender, EventArgs e)
-        {
-            new SettingsForm().ShowDialog();
-        }
+        #endregion Main Menu
 
-        private void mnuMainHelpAbout_Click(object sender, EventArgs e)
-        {
-            new AboutForm().ShowDialog();
-        }
-
-        private void mnuMainToolsPluginTools_Click(object sender, EventArgs e)
-        {
-            new ToolsForm().ShowDialog();
-        }
-
-        #endregion
-
-        #endregion
+        #endregion Control Event Handlers
     }
 }

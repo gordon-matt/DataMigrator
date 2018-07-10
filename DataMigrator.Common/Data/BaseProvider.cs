@@ -295,7 +295,7 @@ namespace DataMigrator.Common.Data
                 command.CommandText = sb.ToString();
 
                 connection.Open();
-                using (DbDataReader reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -314,7 +314,7 @@ namespace DataMigrator.Common.Data
 
         protected IDictionary<string, string> CreateParameterNames(IEnumerable<string> fieldNames)
         {
-            Dictionary<string, string> parameterNames = new Dictionary<string, string>();
+            var parameterNames = new Dictionary<string, string>();
             fieldNames.ForEach(f =>
             {
                 string parameterName = f;
@@ -324,6 +324,7 @@ namespace DataMigrator.Common.Data
             return parameterNames;
         }
 
+        // TODO: See if can improve performance.
         public virtual void InsertRecords(string tableName, IEnumerable<Record> records)
         {
             const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
@@ -338,12 +339,12 @@ namespace DataMigrator.Common.Data
                 .Prepend(EscapeIdentifierStart) // "["
                 .Append(EscapeIdentifierEnd); // "]"
 
-            using (DbConnection connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
             {
                 connection.Open();
-                using (DbTransaction transaction = connection.BeginTransaction())
+                using (var transaction = connection.BeginTransaction())
                 {
-                    using (DbCommand command = connection.CreateCommand())
+                    using (var command = connection.CreateCommand())
                     {
                         command.Transaction = transaction;
                         command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames.Values.Join(","));
@@ -351,7 +352,7 @@ namespace DataMigrator.Common.Data
 
                         records.ElementAt(0).Fields.ForEach(field =>
                         {
-                            DbParameter parameter = command.CreateParameter();
+                            var parameter = command.CreateParameter();
                             //parameter.ParameterName = string.Concat("@", field.Name);
                             parameter.ParameterName = parameterNames[field.Name];
                             parameter.DbType = AppContext.DbTypeConverter.GetDataProviderFieldType(field.Type);
@@ -412,7 +413,7 @@ namespace DataMigrator.Common.Data
 
         protected virtual void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
         {
-            using (DbConnection connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
             {
                 const string CMD_CREATE_TABLE_FORMAT = "CREATE TABLE {0}({1} {2} {3} NOT NULL CONSTRAINT {4} PRIMARY KEY)";
                 string commandText = string.Format(
@@ -423,7 +424,7 @@ namespace DataMigrator.Common.Data
                     pkIsIdentity ? "IDENTITY(1,1)" : string.Empty,
                     EncloseIdentifier("PK_" + tableName));
 
-                using (DbCommand command = connection.CreateCommand())
+                using (var command = connection.CreateCommand())
                 {
                     command.CommandType = CommandType.Text;
                     command.CommandText = commandText;
