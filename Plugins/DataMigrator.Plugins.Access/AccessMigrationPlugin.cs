@@ -11,31 +11,16 @@ namespace DataMigrator.Access
     {
         #region IMigrationPlugin Members
 
-        public string ProviderName
-        {
-            get { return Constants.PROVIDER_NAME; }
-        }
+        public string ProviderName => Constants.PROVIDER_NAME;
 
-        public IConnectionControl ConnectionControl
-        {
-            get { return new AccessConnectionControl(); }
-        }
+        public IConnectionControl ConnectionControl => new AccessConnectionControl();
 
-        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
-        {
-            return new AccessProvider(connectionDetails);
-        }
+        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new AccessProvider(connectionDetails);
 
-        public ISettingsControl SettingsControl
-        {
-            get { return null; }
-        }
+        public ISettingsControl SettingsControl => null;
 
-        public IEnumerable<IMigrationTool> Tools
-        {
-            get { return null; }
-        }
+        public IEnumerable<IMigrationTool> Tools => null;
 
-        #endregion
+        #endregion IMigrationPlugin Members
     }
 }

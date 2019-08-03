@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms;
@@ -91,10 +90,7 @@ namespace DataMigrator.Plugins.Npgsql
 
         #region IConnectionControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public ConnectionDetails ConnectionDetails
         {

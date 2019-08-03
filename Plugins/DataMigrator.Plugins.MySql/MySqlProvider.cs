@@ -14,10 +14,7 @@ namespace DataMigrator.MySql
     {
         private MySqlDbTypeConverter typeConverter = new MySqlDbTypeConverter();
 
-        public override string DbProviderName
-        {
-            get { return "MySql.Data.MySqlClient"; }
-        }
+        public override string DbProviderName => "MySql.Data.MySqlClient";
 
         public MySqlProvider(ConnectionDetails connectionDetails)
             : base(connectionDetails)
@@ -28,19 +25,17 @@ namespace DataMigrator.MySql
 
         public override bool CreateTable(string tableName)
         {
-            using (MySqlConnection connection = new MySqlConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (MySqlCommand command = connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format(
-                        "CREATE TABLE {0}(Id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(Id)) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci",
-                        tableName);
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format(
+                    "CREATE TABLE {0}(Id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(Id)) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci",
+                    tableName);
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                }
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
             }
             return true;
         }
@@ -144,13 +139,13 @@ namespace DataMigrator.MySql
 
         public override FieldType GetDataMigratorFieldType(string providerFieldType)
         {
-            MySqlDbType mySqlType = MySqlDbTypeConverter.GetMySqlDataType(providerFieldType);
+            var mySqlType = MySqlDbTypeConverter.GetMySqlDataType(providerFieldType);
             return typeConverter.GetDataMigratorFieldType(mySqlType);
         }
 
         public override string GetDataProviderFieldType(FieldType fieldType)
         {
-            MySqlDbType mySqlType = typeConverter.GetDataProviderFieldType(fieldType);
+            var mySqlType = typeConverter.GetDataProviderFieldType(fieldType);
             return MySqlDbTypeConverter.GetMySqlDataTypeStringValue(mySqlType);
         }
     }

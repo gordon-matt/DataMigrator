@@ -186,7 +186,7 @@ namespace DataMigrator.Excel
         {
             get
             {
-                using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+                using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
                 {
                     return excel.GetSheetNames();
                 }
@@ -195,7 +195,7 @@ namespace DataMigrator.Excel
 
         public override bool CreateTable(string tableName)
         {
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
                 excel.AddSheet(tableName);
             }
@@ -204,11 +204,11 @@ namespace DataMigrator.Excel
 
         public override bool CreateTable(string tableName, IEnumerable<Field> fields)
         {
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
                 excel.AddSheet(tableName);
                 int columnIndex = 0;
-                foreach (Field field in fields)
+                foreach (var field in fields)
                 {
                     excel.InsertText(tableName, field.Name, 1, ++columnIndex);
                 }
@@ -228,7 +228,7 @@ namespace DataMigrator.Excel
 
         public override bool CreateField(string tableName, Field field)
         {
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
                 int columnCount = excel.GetColumnCount(tableName);
                 excel.InsertText(tableName, field.Name, 1, columnCount + 1);
@@ -238,7 +238,7 @@ namespace DataMigrator.Excel
 
         public override IEnumerable<string> GetFieldNames(string tableName)
         {
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
                 return excel.ReadSheet(tableName).Columns.Cast<DataColumn>().Select(x => x.ColumnName);
             }
@@ -246,12 +246,12 @@ namespace DataMigrator.Excel
 
         public override FieldCollection GetFields(string tableName)
         {
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
-                FieldCollection fields = new FieldCollection();
+                var fields = new FieldCollection();
                 foreach (DataColumn column in excel.ReadSheet(tableName, true).Columns)
                 {
-                    Field field = new Field
+                    var field = new Field
                     {
                         DisplayName = column.ColumnName,
                         IsRequired = !column.AllowDBNull,
@@ -273,7 +273,7 @@ namespace DataMigrator.Excel
         public override int GetRecordCount(string tableName)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
                 int rowCount = excel.GetRowCount(tableName);
                 return hasHeaderRow ? rowCount - 1 : rowCount;
@@ -283,11 +283,11 @@ namespace DataMigrator.Excel
         public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
                 foreach (DataRow row in excel.ReadSheet(tableName, hasHeaderRow).Rows)
                 {
-                    Record record = new Record();
+                    var record = new Record();
                     record.Fields.AddRange(fields);
                     fields.ForEach(f =>
                     {
@@ -300,12 +300,12 @@ namespace DataMigrator.Excel
 
         public override void InsertRecords(string tableName, IEnumerable<Record> records)
         {
-            RecordCollection collection = new RecordCollection();
+            var collection = new RecordCollection();
             collection.AddRange(records);
 
-            using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
+            using (var excel = ExcelOpenXmlDocument.Load(ConnectionDetails.Database))
             {
-                DataTable data = collection.ToDataTable();
+                var data = collection.ToDataTable();
                 excel.Import(data, tableName, true, (uint)(excel.GetRowCount(tableName) + 1));
             }
         }

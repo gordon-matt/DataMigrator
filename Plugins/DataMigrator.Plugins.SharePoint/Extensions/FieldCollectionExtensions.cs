@@ -7,7 +7,7 @@ namespace DataMigrator.SharePoint.Extensions
         public static Field Add(this FieldCollection fields, string name, FieldType fieldType, bool addToDefaultView)
         {
             return fields.AddFieldAsXml(
-                string.Format("<Field Name='{0}' DisplayName='{0}' Type='{1}' />", name, fieldType),
+                $"<Field Name='{name}' DisplayName='{name}' Type='{fieldType}' />",
                 addToDefaultView,
                 AddFieldOptions.DefaultValue);
         }

@@ -1,11 +1,11 @@
-﻿
-namespace DataMigrator.SharePoint
+﻿namespace DataMigrator.SharePoint
 {
     internal static class Constants
     {
         internal const string PROVIDER_NAME = "SharePoint";
 
         private static string[] systemFields = null;
+
         public static string[] SystemFields
         {
             get

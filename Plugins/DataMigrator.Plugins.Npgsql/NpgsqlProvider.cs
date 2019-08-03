@@ -11,7 +11,6 @@ using Kore;
 using Kore.Collections;
 using Kore.Data.PostgreSql;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace DataMigrator.Plugins.Npgsql
 {
@@ -19,10 +18,7 @@ namespace DataMigrator.Plugins.Npgsql
     {
         private NpgsqlDbTypeConverter typeConverter = new NpgsqlDbTypeConverter();
 
-        public override string DbProviderName
-        {
-            get { return "Npgsql"; }
-        }
+        public override string DbProviderName => "Npgsql";
 
         public NpgsqlProvider(ConnectionDetails connectionDetails)
             : base(connectionDetails)
@@ -232,14 +228,14 @@ namespace DataMigrator.Plugins.Npgsql
 
         public override FieldType GetDataMigratorFieldType(string providerFieldType)
         {
-            NpgsqlDbType npgsqlType = NpgsqlDbTypeConverter.GetNpgsqlDataType(providerFieldType);
+            var npgsqlType = NpgsqlDbTypeConverter.GetNpgsqlDataType(providerFieldType);
             return typeConverter.GetDataMigratorFieldType(npgsqlType);
         }
 
         public override string GetDataProviderFieldType(FieldType fieldType)
         {
-            NpgsqlDbType mySqlType = typeConverter.GetDataProviderFieldType(fieldType);
-            return NpgsqlDbTypeConverter.GetNpgsqlDataTypeStringValue(mySqlType);
+            var npgsqlType = typeConverter.GetDataProviderFieldType(fieldType);
+            return NpgsqlDbTypeConverter.GetNpgsqlDataTypeStringValue(npgsqlType);
         }
     }
 }

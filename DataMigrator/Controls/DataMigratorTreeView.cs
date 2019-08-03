@@ -82,9 +82,15 @@ namespace DataMigrator.Controls
             return jobNode;
         }
 
-        public void ClearJobs()
+        //public void ClearJobs()
+        //{
+        //    JobsNode.Nodes.Clear();
+        //}
+
+        public void Reset()
         {
-            JobsNode.Nodes.Clear();
+            this.Nodes.Clear();
+            LoadDefaultNodes();
         }
 
         void mnuContextJobsJobRename_Click(object sender, System.EventArgs e)

@@ -97,10 +97,7 @@ namespace DataMigrator.Common.Models
             };
         }
 
-        object ICloneable.Clone()
-        {
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
         #endregion
     }

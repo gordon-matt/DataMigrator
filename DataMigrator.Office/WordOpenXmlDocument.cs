@@ -23,7 +23,7 @@ namespace DataMigrator.Office
         private static XNamespace XMLNS { get { return XNamespace.Get(WORDMLNS); } }
         private const string WORDMLNS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
-        #endregion
+        #endregion Non-Public Members
 
         #region Public Properties
 
@@ -63,7 +63,7 @@ namespace DataMigrator.Office
             {
                 if (string.IsNullOrEmpty(documentXml))
                 {
-                    using (StreamReader sr = new StreamReader(Document.MainDocumentPart.GetStream()))
+                    using (var sr = new StreamReader(Document.MainDocumentPart.GetStream()))
                     {
                         documentXml = sr.ReadToEnd();
                     }
@@ -79,7 +79,7 @@ namespace DataMigrator.Office
             set { Document.MainDocumentPart.Document.Body = value; }
         }
 
-        #endregion
+        #endregion Public Properties
 
         #region Constructors
 
@@ -87,16 +87,16 @@ namespace DataMigrator.Office
         {
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Public Methods
 
         public static WordOpenXmlDocument Create(string filePath)
         {
-            WordOpenXmlDocument word = new WordOpenXmlDocument();
+            var word = new WordOpenXmlDocument();
             word.Document = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document);
 
-            MainDocumentPart mainDocumentPart = word.Document.AddMainDocumentPart();
+            var mainDocumentPart = word.Document.AddMainDocumentPart();
 
             const string docXml =
 @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
@@ -105,7 +105,7 @@ namespace DataMigrator.Office
    </w:body>
 </w:document>";
 
-            using (Stream stream = mainDocumentPart.GetStream())
+            using (var stream = mainDocumentPart.GetStream())
             {
                 byte[] buffer = (new UTF8Encoding()).GetBytes(docXml);
                 stream.Write(buffer, 0, buffer.Length);
@@ -131,10 +131,10 @@ namespace DataMigrator.Office
 
         public static WordOpenXmlDocument Create(Stream stream)
         {
-            WordOpenXmlDocument word = new WordOpenXmlDocument();
+            var word = new WordOpenXmlDocument();
             word.Document = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
 
-            MainDocumentPart mainDocumentPart = word.Document.AddMainDocumentPart();
+            var mainDocumentPart = word.Document.AddMainDocumentPart();
 
             const string docXml =
 @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
@@ -143,7 +143,7 @@ namespace DataMigrator.Office
    </w:body>
 </w:document>";
 
-            using (Stream stream2 = mainDocumentPart.GetStream())
+            using (var stream2 = mainDocumentPart.GetStream())
             {
                 byte[] buffer = (new UTF8Encoding()).GetBytes(docXml);
                 stream2.Write(buffer, 0, buffer.Length);
@@ -177,7 +177,7 @@ namespace DataMigrator.Office
         /// <param name="mergeType">Specifies whether to merge to a single document or multiple documents</param>
         public static void MailMerge(string templateFilePath, string outputFilePath, DataTable data, MailMergeType mergeType)
         {
-            List<MailMergeMapping> mappings = new List<MailMergeMapping>();
+            var mappings = new List<MailMergeMapping>();
             data.Columns.Cast<DataColumn>().ForEach(column =>
             {
                 mappings.Add(new MailMergeMapping
@@ -215,9 +215,9 @@ namespace DataMigrator.Office
 
         public static MemoryStream MailMerge(Stream templateStream, DataTable data, IEnumerable<MailMergeMapping> mappings)
         {
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             templateStream.CopyTo(stream);
-            WordOpenXmlDocument document = Load(stream);
+            var document = Load(stream);
             DoMailMerge(document, data, mappings);
             stream.Flush();
             return stream;
@@ -225,13 +225,13 @@ namespace DataMigrator.Office
 
         public void InsertPageBreak()
         {
-            this.Body.AppendChild<Paragraph>(
+            this.Body.AppendChild(
                 new Paragraph(
                     new Run(
                         new Break() { Type = BreakValues.Page })));
         }
 
-        #endregion
+        #endregion Public Methods
 
         #region Private Methods
 
@@ -279,7 +279,7 @@ namespace DataMigrator.Office
         /// <returns>An instance of WordOpenXmlDocument that is the output document</returns>
         private static void MailMerge(string templateFilePath, string outputFilePath, DataTable data)
         {
-            List<MailMergeMapping> mappings = new List<MailMergeMapping>();
+            var mappings = new List<MailMergeMapping>();
             data.Columns.Cast<DataColumn>().ForEach(column =>
             {
                 mappings.Add(new MailMergeMapping
@@ -303,7 +303,7 @@ namespace DataMigrator.Office
         /// <returns>An instance of WordOpenXmlDocument that is the output document</returns>
         private static void MailMerge(string templateFilePath, string outputFilePath, DataTable data, IEnumerable<MailMergeMapping> mappings)
         {
-            using (WordOpenXmlDocument document = Create(outputFilePath, templateFilePath))
+            using (var document = Create(outputFilePath, templateFilePath))
             {
                 DoMailMerge(document, data, mappings);
             }
@@ -318,7 +318,7 @@ namespace DataMigrator.Office
         /// <returns>An instance of WordOpenXmlDocument that is the output document</returns>
         private static void MailMerge(string templateFilePath, string outputFilePath, DataRow row)
         {
-            List<MailMergeMapping> mappings = new List<MailMergeMapping>();
+            var mappings = new List<MailMergeMapping>();
             row.Table.Columns.Cast<DataColumn>().ForEach(column => mappings.Add(new MailMergeMapping
             {
                 DataColumnFieldName = column.ColumnName,
@@ -338,7 +338,7 @@ namespace DataMigrator.Office
         /// <returns>An instance of WordOpenXmlDocument that is the output document</returns>
         private static void MailMerge(string templateFilePath, string outputFilePath, DataRow row, IEnumerable<MailMergeMapping> mappings)
         {
-            using (WordOpenXmlDocument document = Create(outputFilePath, templateFilePath))
+            using (var document = Create(outputFilePath, templateFilePath))
             {
                 DoMailMerge(document, row, mappings);
             }
@@ -423,7 +423,7 @@ namespace DataMigrator.Office
             document.Save();
         }
 
-        #endregion
+        #endregion Private Methods
 
         #region IWordDocument Members
 
@@ -436,7 +436,7 @@ namespace DataMigrator.Office
         {
             DocumentXml = new Regex(find).Replace(DocumentXml, replaceWith);
 
-            using (StreamWriter sw = new StreamWriter(Document.MainDocumentPart.GetStream(FileMode.Create)))
+            using (var sw = new StreamWriter(Document.MainDocumentPart.GetStream(FileMode.Create)))
             {
                 sw.Write(DocumentXml);
             }
@@ -457,7 +457,7 @@ namespace DataMigrator.Office
                 DocumentXml = new Regex(kv.Key).Replace(DocumentXml, kv.Value);
             }
 
-            using (StreamWriter sw = new StreamWriter(Document.MainDocumentPart.GetStream(FileMode.Create)))
+            using (var sw = new StreamWriter(Document.MainDocumentPart.GetStream(FileMode.Create)))
             {
                 sw.Write(DocumentXml);
             }
@@ -470,7 +470,7 @@ namespace DataMigrator.Office
             Document.MainDocumentPart.Document.Save();
         }
 
-        #endregion
+        #endregion IWordDocument Members
 
         #region IDisposable Members
 
@@ -479,6 +479,6 @@ namespace DataMigrator.Office
             Document.Dispose();
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

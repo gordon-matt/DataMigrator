@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Microsoft.SharePoint.Client;
 
 namespace DataMigrator.SharePoint
 {
@@ -73,9 +72,9 @@ namespace DataMigrator.SharePoint
         {
             try
             {
-                using (ClientContext context = SharePointProvider.GetClientContext(ConnectionDetails))
+                using (var context = SharePointProvider.GetClientContext(ConnectionDetails))
                 {
-                    Web site = context.Web;
+                    var site = context.Web;
                     var lists = context.LoadQuery(site.Lists);
                     context.ExecuteQuery(); //If can run this line, then credentials OK
                     return true;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -16,7 +15,6 @@ namespace DataMigrator.Office
         //Blocks the constructor as this is intended to be a static library
         private SpreadsheetReader()
         {
-
         }
 
         /// <summary>
@@ -32,11 +30,11 @@ namespace DataMigrator.Office
         ///</summary>
         public static WorksheetPart GetWorksheetPartByName(SpreadsheetDocument document, string worksheetName)
         {
-            IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == worksheetName);
+            var sheets = document.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == worksheetName);
 
             if (sheets.Count() == 0) return null; // The specified worksheet does not exist.
 
-            return (WorksheetPart) document.WorkbookPart.GetPartById(sheets.First().Id);
+            return (WorksheetPart)document.WorkbookPart.GetPartById(sheets.First().Id);
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace DataMigrator.Office
 
             while (total > 0)
             {
-                total = System.Math.DivRem(total, 26, out remainder);
+                total = Math.DivRem(total, 26, out remainder);
                 if (remainder == 0)
                 {
                     result = "Z" + result;
@@ -62,7 +60,7 @@ namespace DataMigrator.Office
                 }
                 else
                 {
-                    result = (char) (64 + remainder) + result;
+                    result = (char)(64 + remainder) + result;
                 }
             }
 
@@ -83,7 +81,7 @@ namespace DataMigrator.Office
             for (int i = (base26.Length - 1); i >= 0; i += -1)
             {
                 char chr = char.ToUpper(base26[i]);
-                int asc = (int) chr - 64;
+                int asc = chr - 64;
 
                 if (asc < 1 || asc > 26) throw new ApplicationException(string.Format("Invalid column name '{0}'.", column));
 
@@ -119,9 +117,12 @@ namespace DataMigrator.Office
         {
             string numberString = string.Join(null, System.Text.RegularExpressions.Regex.Split(cellReference, "[^\\d]"));
             uint result;
-            UInt32Value ret = new UInt32Value();
+            var ret = new UInt32Value();
 
-            if (uint.TryParse(numberString, out result)) ret.Value = result;
+            if (uint.TryParse(numberString, out result))
+            {
+                ret.Value = result;
+            }
 
             return ret;
         }
@@ -145,30 +146,29 @@ namespace DataMigrator.Office
         /// </summary>
         public static SpreadsheetStyle GetDefaultStyle(SpreadsheetDocument spreadsheet)
         {
-            WorkbookStylesPart styles = GetWorkbookStyles(spreadsheet);
+            var styles = GetWorkbookStyles(spreadsheet);
 
-            CellStyleFormats cellStyleFormats = styles.Stylesheet.CellStyleFormats;
-            CellFormat cellStyleFormat = (CellFormat)cellStyleFormats.FirstChild;
+            var cellStyleFormats = styles.Stylesheet.CellStyleFormats;
+            var cellStyleFormat = (CellFormat)cellStyleFormats.FirstChild;
 
-            Font font = (Font) styles.Stylesheet.Fonts.ChildElements[(int) cellStyleFormat.FontId.Value];
-            Fill fill = (Fill) styles.Stylesheet.Fills.ChildElements[(int) cellStyleFormat.FillId.Value];
-            Border border = (Border) styles.Stylesheet.Borders.ChildElements[(int)cellStyleFormat.BorderId.Value];
-
+            var font = (Font)styles.Stylesheet.Fonts.ChildElements[(int)cellStyleFormat.FontId.Value];
+            var fill = (Fill)styles.Stylesheet.Fills.ChildElements[(int)cellStyleFormat.FillId.Value];
+            var border = (Border)styles.Stylesheet.Borders.ChildElements[(int)cellStyleFormat.BorderId.Value];
 
             NumberingFormat numberFormat = null;
-            if (styles.Stylesheet.NumberingFormats != null && cellStyleFormat.NumberFormatId.Value > 0) 
+            if (styles.Stylesheet.NumberingFormats != null && cellStyleFormat.NumberFormatId.Value > 0)
             {
-	            //Loop through and see if there is a matching border style
-            	foreach (var formatElement in styles.Stylesheet.NumberingFormats) 
+                //Loop through and see if there is a matching border style
+                foreach (var formatElement in styles.Stylesheet.NumberingFormats)
                 {
-		            NumberingFormat format = (NumberingFormat) formatElement;
+                    var format = (NumberingFormat)formatElement;
 
-		            if (cellStyleFormat.NumberFormatId.Value == format.NumberFormatId.Value) 
+                    if (cellStyleFormat.NumberFormatId.Value == format.NumberFormatId.Value)
                     {
-			            numberFormat = format;
-			            break;
-		            }
-	            }
+                        numberFormat = format;
+                        break;
+                    }
+                }
             }
 
             return new SpreadsheetStyle(font, fill, border, null, numberFormat);
@@ -187,11 +187,11 @@ namespace DataMigrator.Office
         /// </summary>
         public static DefinedName GetDefinedName(SpreadsheetDocument spreadsheet, string rangeName)
         {
-            IEnumerable<DefinedNames> parts = spreadsheet.WorkbookPart.Workbook.Descendants<DefinedNames>();
+            var parts = spreadsheet.WorkbookPart.Workbook.Descendants<DefinedNames>();
 
             if (parts.Count() > 0)
             {
-                foreach (DefinedName name in parts.First().Elements<DefinedName>())
+                foreach (var name in parts.First().Elements<DefinedName>())
                 {
                     if (name.Name == rangeName) return name;
                 }
@@ -205,7 +205,7 @@ namespace DataMigrator.Office
         /// </summary>
         public static UInt32Value GetSheetId(SpreadsheetDocument spreadsheet, string worksheetName)
         {
-            Sheets sheets = spreadsheet.WorkbookPart.Workbook.Descendants<Sheets>().First();
+            var sheets = spreadsheet.WorkbookPart.Workbook.Descendants<Sheets>().First();
 
             //Loop through the sheets and get the id
             foreach (Sheet sheet in sheets)

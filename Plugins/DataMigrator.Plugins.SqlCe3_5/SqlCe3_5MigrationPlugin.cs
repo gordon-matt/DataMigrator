@@ -11,31 +11,16 @@ namespace DataMigrator.SqlCe3_5
     {
         #region IMigrationPlugin Members
 
-        public string ProviderName
-        {
-            get { return Constants.PROVIDER_NAME; }
-        }
+        public string ProviderName => Constants.PROVIDER_NAME;
 
-        public IConnectionControl ConnectionControl
-        {
-            get { return new SqlCe3_5ConnectionControl(); }
-        }
+        public IConnectionControl ConnectionControl => new SqlCe3_5ConnectionControl();
 
-        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
-        {
-            return new SqlCe3_5Provider(connectionDetails);
-        }
+        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new SqlCe3_5Provider(connectionDetails);
 
-        public ISettingsControl SettingsControl
-        {
-            get { return null; }
-        }
+        public ISettingsControl SettingsControl => null;
 
-        public IEnumerable<IMigrationTool> Tools
-        {
-            get { return null; }
-        }
+        public IEnumerable<IMigrationTool> Tools => null;
 
-        #endregion
+        #endregion IMigrationPlugin Members
     }
 }

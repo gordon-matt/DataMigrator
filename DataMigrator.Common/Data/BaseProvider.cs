@@ -26,7 +26,7 @@ namespace DataMigrator.Common.Data
 
         protected virtual string EscapeIdentifierEnd { get; set; }
 
-        #endregion
+        #endregion Public Properties
 
         protected string EncloseIdentifier(string value)
         {
@@ -44,7 +44,7 @@ namespace DataMigrator.Common.Data
             //MaxRichTextFieldLength = "MAX";
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Table Methods
 
@@ -52,16 +52,16 @@ namespace DataMigrator.Common.Data
         {
             get
             {
-                using (DbConnection connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+                using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
                 {
                     string[] restrictions = new string[4];
                     restrictions[3] = "Base Table";
 
                     connection.Open();
-                    DataTable schema = connection.GetSchema("Tables", restrictions);
+                    var schema = connection.GetSchema("Tables", restrictions);
                     connection.Close();
 
-                    List<string> tableNames = new List<string>();
+                    var tableNames = new List<string>();
                     foreach (DataRow row in schema.Rows)
                     {
                         tableNames.Add(row.Field<string>("TABLE_NAME"));
@@ -105,7 +105,7 @@ namespace DataMigrator.Common.Data
             return true;
         }
 
-        #endregion
+        #endregion Table Methods
 
         #region Field Methods
 
@@ -119,68 +119,64 @@ namespace DataMigrator.Common.Data
                 return false;
             }
 
-            using (DbConnection connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (DbCommand command = connection.CreateCommand())
+                string fieldType = GetDataProviderFieldType(field.Type);
+                string maxLength = string.Empty;
+                if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
                 {
-                    string fieldType = GetDataProviderFieldType(field.Type);
-                    string maxLength = string.Empty;
-                    if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+                    if (field.MaxLength > 0 && field.MaxLength <= 8000)
                     {
-                        if (field.MaxLength > 0 && field.MaxLength <= 8000)
+                        maxLength = string.Concat("(", field.MaxLength, ")");
+                    }
+                    else
+                    {
+                        if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
                         {
-                            maxLength = string.Concat("(", field.MaxLength, ")");
-                        }
-                        else
-                        {
-                            if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
-                            {
-                                maxLength = "(MAX)";
-                            }
+                            maxLength = "(MAX)";
                         }
                     }
-                    string isRequired = string.Empty;
-                    if (field.IsRequired)
-                    { isRequired = " NOT NULL"; }
-
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format(
-                        Constants.Data.CMD_ADD_COLUMN,
-                        tableName,
-                        string.Concat(
-                            EncloseIdentifier(field.Name), " ",
-                            fieldType,
-                            maxLength,
-                            isRequired));
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                    return true;
                 }
+                string isRequired = string.Empty;
+                if (field.IsRequired)
+                { isRequired = " NOT NULL"; }
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format(
+                    Constants.Data.CMD_ADD_COLUMN,
+                    tableName,
+                    string.Concat(
+                        EncloseIdentifier(field.Name), " ",
+                        fieldType,
+                        maxLength,
+                        isRequired));
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+                return true;
             }
         }
 
         public virtual IEnumerable<string> GetFieldNames(string tableName)
         {
-            using (DbConnection connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (DbCommand command = connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
-                    List<string> columns = new List<string>();
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
+                var columns = new List<string>();
 
-                    connection.Open();
-                    using (DbDataReader reader = command.ExecuteReader())
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            columns.Add(reader.GetString(0));
-                        }
+                        columns.Add(reader.GetString(0));
                     }
-                    connection.Close();
-                    return columns;
                 }
+                connection.Close();
+                return columns;
             }
         }
 
@@ -246,25 +242,23 @@ namespace DataMigrator.Common.Data
             }
         }
 
-        #endregion
+        #endregion Field Methods
 
         #region Record Methods
 
         public virtual int GetRecordCount(string tableName)
         {
-            using (DbConnection connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (DbCommand command = connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format("SELECT COUNT(*) FROM {0}{1}{2}", EscapeIdentifierStart, tableName, EscapeIdentifierEnd);
-                    //command.CommandText = new Query().SelectCountAll().From(tableName).ToString();
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format("SELECT COUNT(*) FROM {0}{1}{2}", EscapeIdentifierStart, tableName, EscapeIdentifierEnd);
+                //command.CommandText = new Query().SelectCountAll().From(tableName).ToString();
 
-                    connection.Open();
-                    int rowCount = (int)command.ExecuteScalar();
-                    connection.Close();
-                    return rowCount;
-                }
+                connection.Open();
+                int rowCount = (int)command.ExecuteScalar();
+                connection.Close();
+                return rowCount;
             }
         }
 
@@ -299,7 +293,7 @@ namespace DataMigrator.Common.Data
                 {
                     while (reader.Read())
                     {
-                        Record record = new Record();
+                        var record = new Record();
                         record.Fields.AddRange(fields);
                         fields.ForEach(f =>
                         {
@@ -376,7 +370,7 @@ namespace DataMigrator.Common.Data
             }
         }
 
-        #endregion
+        #endregion Record Methods
 
         #region Public Static Methods
 
@@ -390,7 +384,7 @@ namespace DataMigrator.Common.Data
             {
                 try
                 {
-                    DbProviderFactory factory = DbProviderFactories.GetFactory(providerName);
+                    var factory = DbProviderFactories.GetFactory(providerName);
 
                     connection = factory.CreateConnection();
                     connection.ConnectionString = connectionString;
@@ -409,7 +403,7 @@ namespace DataMigrator.Common.Data
             return connection;
         }
 
-        #endregion
+        #endregion Public Static Methods
 
         protected virtual void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
         {
@@ -441,6 +435,6 @@ namespace DataMigrator.Common.Data
 
         public abstract string GetDataProviderFieldType(FieldType fieldType);
 
-        #endregion
+        #endregion Field Conversion Methods
     }
 }

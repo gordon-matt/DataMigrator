@@ -30,7 +30,7 @@ namespace DataMigrator.SharePoint
 
         internal static SP.ClientContext GetClientContext(ConnectionDetails connectionDetails)
         {
-            SP.ClientContext context = new SP.ClientContext(connectionDetails.ConnectionString);
+            var context = new SP.ClientContext(connectionDetails.ConnectionString);
             if (connectionDetails.IntegratedSecurity)
             {
                 context.Credentials = CredentialCache.DefaultNetworkCredentials;
@@ -49,10 +49,10 @@ namespace DataMigrator.SharePoint
         {
             get
             {
-                List<string> listNames = new List<string>();
-                using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+                var listNames = new List<string>();
+                using (var context = GetClientContext(ConnectionDetails))
                 {
-                    SP.Web site = context.Web;
+                    var site = context.Web;
                     var lists = context.LoadQuery(site.Lists);
                     context.ExecuteQuery();
 
@@ -74,16 +74,16 @@ namespace DataMigrator.SharePoint
         {
             try
             {
-                using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+                using (var context = GetClientContext(ConnectionDetails))
                 {
-                    SP.Web site = context.Web;
+                    var site = context.Web;
 
                     // Create a list.
-                    SP.ListCreationInformation listCreationInfo = new SP.ListCreationInformation();
+                    var listCreationInfo = new SP.ListCreationInformation();
                     listCreationInfo.Title = tableName;
                     listCreationInfo.TemplateType = (int)SP.ListTemplateType.GenericList;
                     listCreationInfo.QuickLaunchOption = SP.QuickLaunchOptions.On;
-                    SP.List list = site.Lists.Add(listCreationInfo);
+                    var list = site.Lists.Add(listCreationInfo);
                     list.Update();
                     context.ExecuteQuery();
 
@@ -117,12 +117,12 @@ namespace DataMigrator.SharePoint
 
             try
             {
-                using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+                using (var context = GetClientContext(ConnectionDetails))
                 {
-                    SP.Web site = context.Web;
-                    SP.List list = context.Web.Lists.GetByTitle(tableName);
+                    var site = context.Web;
+                    var list = context.Web.Lists.GetByTitle(tableName);
 
-                    SP.Field spField = list.Fields.Add(field.Name, typeConverter.GetDataProviderFieldType(field.Type), true);
+                    var spField = list.Fields.Add(field.Name, typeConverter.GetDataProviderFieldType(field.Type), true);
                     list.Update();
                     context.ExecuteQuery();
                     return true;
@@ -137,32 +137,32 @@ namespace DataMigrator.SharePoint
 
         public override IEnumerable<string> GetFieldNames(string tableName)
         {
-            List<string> spFieldNames = new List<string>();
-            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            var spFieldNames = new List<string>();
+            using (var context = GetClientContext(ConnectionDetails))
             {
-                SP.Web site = context.Web;
-                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                var site = context.Web;
+                var list = context.Web.Lists.GetByTitle(tableName);
                 var fields = context.LoadQuery(list.Fields);
                 context.ExecuteQuery();
 
                 fields.ForEach(spField =>
+                {
+                    if (!spField.Hidden && !spField.InternalName.In(Constants.SystemFields))
                     {
-                        if (!spField.Hidden && !spField.InternalName.In(Constants.SystemFields))
-                        {
-                            spFieldNames.Add(spField.InternalName);
-                        }
-                    });
+                        spFieldNames.Add(spField.InternalName);
+                    }
+                });
             }
             return spFieldNames;
         }
 
         public override FieldCollection GetFields(string tableName)
         {
-            FieldCollection fields = new FieldCollection();
-            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            var fields = new FieldCollection();
+            using (var context = GetClientContext(ConnectionDetails))
             {
-                SP.Web site = context.Web;
-                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                var site = context.Web;
+                var list = context.Web.Lists.GetByTitle(tableName);
                 var spFields = context.LoadQuery(list.Fields);
                 context.ExecuteQuery();
 
@@ -170,7 +170,7 @@ namespace DataMigrator.SharePoint
                 {
                     if (!spField.Hidden && !spField.InternalName.In(Constants.SystemFields))
                     {
-                        Field field = new Field
+                        var field = new Field
                         {
                             DisplayName = spField.InternalName,
                             IsPrimaryKey = false,
@@ -194,14 +194,14 @@ namespace DataMigrator.SharePoint
 
         public override int GetRecordCount(string tableName)
         {
-            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            using (var context = GetClientContext(ConnectionDetails))
             {
-                SP.Web site = context.Web;
-                SP.List list = context.Web.Lists.GetByTitle(tableName);
-                SP.CamlQuery camlQuery = new SP.CamlQuery();
+                var site = context.Web;
+                var list = context.Web.Lists.GetByTitle(tableName);
+                var camlQuery = new SP.CamlQuery();
                 // retrieve only one field, to make the query as small and quick as possible.
                 camlQuery.ViewXml = "<View><ViewFields><FieldRef Name='Title'/></ViewFields></View>";
-                SP.ListItemCollection listItems = list.GetItems(camlQuery);
+                var listItems = list.GetItems(camlQuery);
                 context.Load(listItems);
                 context.ExecuteQuery();
                 return listItems.Count;
@@ -222,78 +222,78 @@ namespace DataMigrator.SharePoint
         {
             //ProcessBatchData not available in Client OM. Maybe can use custom solution similar to base class ADO.NET version
             //But first need to test - maybe this is already fast enough
-            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            using (var context = GetClientContext(ConnectionDetails))
             {
-                SP.Web site = context.Web;
-                SP.List list = context.Web.Lists.GetByTitle(tableName);
-                SP.ListItemCreationInformation itemCreateInfo = new SP.ListItemCreationInformation();
+                var site = context.Web;
+                var list = context.Web.Lists.GetByTitle(tableName);
+                var itemCreateInfo = new SP.ListItemCreationInformation();
 
                 records.ForEach(record =>
+                {
+                    var listItem = list.AddItem(itemCreateInfo);
+
+                    record.Fields.ForEach(field =>
                     {
-                        SP.ListItem listItem = list.AddItem(itemCreateInfo);
-
-                        record.Fields.ForEach(field =>
+                        if (field.Type == FieldType.DateTime)
+                        {
+                            listItem[field.Name] = field.GetValue<DateTime>().ToISO8601DateString();
+                        }
+                        else if (field.Type == FieldType.String)
+                        {
+                            string value = field.Value.ToString();
+                            if (value.Length > 255)
                             {
-                                if (field.Type == FieldType.DateTime)
-                                {
-                                    listItem[field.Name] = field.GetValue<DateTime>().ToISO8601DateString();
-                                }
-                                else if (field.Type == FieldType.String)
-                                {
-                                    string value = field.Value.ToString();
-                                    if (value.Length > 255)
-                                    {
-                                        value = value.Substring(0, 255);
-                                    }
-                                    listItem[field.Name] = field.Value.ToString();
-                                }
-                                else if (field.Type == FieldType.RichText)
-                                {
-                                    listItem[field.Name] = field.Value.ToString();
-                                }
-                                else
-                                {
-                                    listItem[field.Name] = field.Value;
-                                }
-                            });
-
-                        listItem.Update();
+                                value = value.Substring(0, 255);
+                            }
+                            listItem[field.Name] = field.Value.ToString();
+                        }
+                        else if (field.Type == FieldType.RichText)
+                        {
+                            listItem[field.Name] = field.Value.ToString();
+                        }
+                        else
+                        {
+                            listItem[field.Name] = field.Value;
+                        }
                     });
+
+                    listItem.Update();
+                });
                 context.ExecuteQuery();
             }
         }
 
         private IEnumerator<Record> GetRecordsEnumeratorInternal(string tableName, IEnumerable<Field> fields)
         {
-            using (SP.ClientContext context = GetClientContext(ConnectionDetails))
+            using (var context = GetClientContext(ConnectionDetails))
             {
-                SP.Web site = context.Web;
-                SP.List list = context.Web.Lists.GetByTitle(tableName);
+                var site = context.Web;
+                var list = context.Web.Lists.GetByTitle(tableName);
                 var spFields = context.LoadQuery(list.Fields);
 
                 const string FIELD_REF_FORMAT = "<FieldRef Name='{0}'/>";
 
-                StringBuilder sb = new StringBuilder(200);
-                foreach (Field field in fields)
+                var sb = new StringBuilder(200);
+                foreach (var field in fields)
                 {
                     sb.AppendFormat(FIELD_REF_FORMAT, field.Name);
                 }
 
-                SP.CamlQuery camlQuery = new SP.CamlQuery();
+                var camlQuery = new SP.CamlQuery();
                 camlQuery.ViewXml = string.Format("<View><ViewFields>{0}</ViewFields></View>", sb.ToString());
 
-                SP.ListItemCollection listItems = list.GetItems(camlQuery);
+                var listItems = list.GetItems(camlQuery);
                 context.Load(listItems);
                 context.ExecuteQuery();
 
                 foreach (var item in listItems)
                 {
-                    Record record = new Record();
+                    var record = new Record();
                     record.Fields.AddRange(fields);
 
-                    foreach (Field field in fields)
+                    foreach (var field in fields)
                     {
-                        SP.Field spField = spFields.SingleOrDefault(f => f.InternalName == field.Name);
+                        var spField = spFields.SingleOrDefault(f => f.InternalName == field.Name);
                         if (spField != null)
                         {
                             field.Value = item[spField.InternalName];

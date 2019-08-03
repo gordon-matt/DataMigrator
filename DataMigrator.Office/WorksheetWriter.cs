@@ -10,7 +10,6 @@ namespace DataMigrator.Office
 {
     public class WorksheetWriter
     {
-
         private SpreadsheetDocument _spreadsheet;
         private WorksheetPart _worksheetPart;
 
@@ -25,7 +24,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Returns the current spreadsheet
-        ///</summary> 
+        ///</summary>
         public SpreadsheetDocument Spreadsheet
         {
             get { return _spreadsheet; }
@@ -33,7 +32,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Returns the current worksheet
-        ///</summary> 
+        ///</summary>
         public WorksheetPart Worksheet
         {
             get { return _worksheetPart; }
@@ -41,7 +40,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Given a worksheet, column and row creates or returns a cell
-        ///</summary> 
+        ///</summary>
         public Cell FindCell(string reference)
         {
             return FindCell(SpreadsheetReader.ColumnFromReference(reference), SpreadsheetReader.RowFromReference(reference), Worksheet);
@@ -314,7 +313,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Inserts a new row into worksheet and updates all existing cell references.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
@@ -325,7 +324,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Inserts one or more rows into worksheet and updates all existing cell references. Returns the last row.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
@@ -336,7 +335,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Delete a row into worksheet and updates all existing cell references.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
@@ -347,7 +346,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Delete one or more rows into worksheet and updates all existing cell references.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
@@ -374,12 +373,12 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Merges the cell area defined by the two references into one cell.
-        ///</summary> 
+        ///</summary>
         public void MergeCells(string startReference, string endReference)
         {
             MergeCells(SpreadsheetReader.ColumnFromReference(startReference), SpreadsheetReader.RowFromReference(startReference), SpreadsheetReader.ColumnFromReference(endReference), SpreadsheetReader.RowFromReference(endReference), Spreadsheet, Worksheet);
         }
-     
+
         ///<summary>
         /// Sets the defined name representing the print area for a worksheet
         /// </summary>
@@ -390,7 +389,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Saves this worksheet and all related document parts.
-        ///</summary> 
+        ///</summary>
         public void Save()
         {
             Save(Spreadsheet, Worksheet);
@@ -468,7 +467,7 @@ namespace DataMigrator.Office
         public static Cell PasteDate(SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint row, DateTime date)
         {
             string output = GetNumericDate(date);
-            Cell cell = PasteValue(spreadsheet, worksheetPart, column, row, output, CellValues.Number, null);
+            var cell = PasteValue(spreadsheet, worksheetPart, column, row, output, CellValues.Number, null);
             cell.StyleIndex = GetReservedStyleIndex(Convert.ToUInt32(14), SpreadsheetReader.GetWorkbookStyles(spreadsheet));
 
             return cell;
@@ -480,13 +479,13 @@ namespace DataMigrator.Office
         public static Cell PasteValue(SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint row, string value, CellValues type, SpreadsheetStyle style)
         {
             //Get the cell, or insert a new one
-            Cell cell = FindCell(column, row, worksheetPart);
+            var cell = FindCell(column, row, worksheetPart);
 
-            //If shared text then get the SharedStringTablePart. 
+            //If shared text then get the SharedStringTablePart.
             //Create one in Excel by adding text, saving, then removing the text again.
             if (type == CellValues.SharedString)
             {
-                SharedStringTablePart shareStringPart = spreadsheet.WorkbookPart.SharedStringTablePart;
+                var shareStringPart = spreadsheet.WorkbookPart.SharedStringTablePart;
                 if (shareStringPart == null) throw new ApplicationException("Template does not contain a shared string table.");
 
                 // Insert the text into the SharedStringTablePart.
@@ -510,19 +509,19 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Given a worksheet, column and row, returns an existing cell or creates a new one if it doesnt exist
-        ///</summary> 
+        ///</summary>
         public static Cell FindCell(string columnName, uint rowIndex, WorksheetPart worksheetPart)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            var worksheet = worksheetPart.Worksheet;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
             string cellReference = (columnName + rowIndex.ToString());
             int columnIndex = SpreadsheetReader.GetColumnIndex(columnName);
-            
-            //If the worksheet does not contain a row with the specified row index, insert one.
-            Row row = FindRow(sheetData, rowIndex);
 
-            //If there is not a cell with the specified column name, insert one.  
-            IEnumerable<Cell> cells = row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
+            //If the worksheet does not contain a row with the specified row index, insert one.
+            var row = FindRow(sheetData, rowIndex);
+
+            //If there is not a cell with the specified column name, insert one.
+            var cells = row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
             if ((cells.Count() > 0))
             {
                 return cells.First();
@@ -532,8 +531,8 @@ namespace DataMigrator.Office
                 //Check the numerical value of the column portion of the cell reference.
                 //Because the cells are in order, we add the new cell directly before first cell that is greater
                 Cell refCell = null;
-                
-                foreach (Cell cell in row.Elements<Cell>())
+
+                foreach (var cell in row.Elements<Cell>())
                 {
                     int colId = SpreadsheetReader.GetColumnIndex(SpreadsheetReader.ColumnFromReference(cell.CellReference.Value));
                     if (colId > columnIndex)
@@ -543,7 +542,7 @@ namespace DataMigrator.Office
                     }
                 }
 
-                Cell newCell = new Cell();
+                var newCell = new Cell();
                 newCell.CellReference = cellReference;
 
                 row.InsertBefore(newCell, refCell);
@@ -554,7 +553,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Inserts a new row into worksheet and updates all existing cell references.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
@@ -565,25 +564,25 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Inserts one or more rows into worksheet and updates all existing cell references. Returns the last row.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
         public static void InsertRows(uint rowIndex, uint count, WorksheetPart worksheetPart)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            var worksheet = worksheetPart.Worksheet;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
 
             //Get all the rows which are equal or greater than this row index
-            IEnumerable<Row> rows = sheetData.Elements<Row>().Where(r => r.RowIndex.Value >= rowIndex);
+            var rows = sheetData.Elements<Row>().Where(r => r.RowIndex.Value >= rowIndex);
 
             //Move the cell references down by the number of rows
-            foreach (Row row in rows)
+            foreach (var row in rows)
             {
                 row.RowIndex.Value += count;
 
-                IEnumerable<Cell> cells = row.Elements<Cell>();
-                foreach (Cell cell in cells)
+                var cells = row.Elements<Cell>();
+                foreach (var cell in cells)
                 {
                     cell.CellReference = SpreadsheetReader.ColumnFromReference(cell.CellReference) + row.RowIndex.Value.ToString();
                 }
@@ -592,7 +591,7 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Delete a row into worksheet and updates all existing cell references.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
@@ -603,14 +602,14 @@ namespace DataMigrator.Office
 
         ///<summary>
         ///Delete one or more rows into worksheet and updates all existing cell references. Returns the last row.
-        ///</summary> 
+        ///</summary>
         ///<remarks>
         ///Formula references are not updated by this method.
         ///</remarks>
         public static void DeleteRows(uint rowIndex, uint count, WorksheetPart worksheetPart)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            var worksheet = worksheetPart.Worksheet;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
 
             //Remove rows to delete
             foreach (var row in sheetData.Elements<Row>().
@@ -627,8 +626,8 @@ namespace DataMigrator.Office
             {
                 row.RowIndex.Value -= count;
 
-                IEnumerable<Cell> cells = row.Elements<Cell>();
-                foreach (Cell cell in cells)
+                var cells = row.Elements<Cell>();
+                foreach (var cell in cells)
                 {
                     cell.CellReference = SpreadsheetReader.ColumnFromReference(cell.CellReference)
                         + row.RowIndex.Value.ToString();
@@ -656,21 +655,24 @@ namespace DataMigrator.Office
         /// </remarks>
         public static uint PasteDataTable(DataTable dt, SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint rowIndex, List<string> columnNames, SpreadsheetStyle style)
         {
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
-            SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-            List<Type> numericTypes = new List<Type>(new Type[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(ushort), typeof(uint), typeof(ulong) });
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            var numericTypes = new List<Type>(new Type[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(ushort), typeof(uint), typeof(ulong) });
 
-            foreach (System.Data.DataRow dataRow in dt.Rows)
+            foreach (DataRow dataRow in dt.Rows)
             {
                 string colString = column;
 
                 //Setup first reference
-                Cell refCell = null; 
-                if (SpreadsheetReader.GetColumnIndex(colString) > 0) refCell = WorksheetReader.GetCell(SpreadsheetReader.GetColumnName(colString,-1), rowIndex, worksheetPart);
-                
-                Row excelRow = FindRow(sheetData, rowIndex);
+                Cell refCell = null;
+                if (SpreadsheetReader.GetColumnIndex(colString) > 0)
+                {
+                    refCell = WorksheetReader.GetCell(SpreadsheetReader.GetColumnName(colString, -1), rowIndex, worksheetPart);
+                }
 
-                foreach (System.Data.DataColumn dataColumn in dt.Columns)
+                var excelRow = FindRow(sheetData, rowIndex);
+
+                foreach (DataColumn dataColumn in dt.Columns)
                 {
                     //Filter out columns not needed, if supplied
                     if (columnNames == null || columnNames.Contains(dataColumn.ColumnName))
@@ -678,8 +680,8 @@ namespace DataMigrator.Office
                         string cellReference = (colString + rowIndex.ToString());
                         Cell excelCell;
 
-                        // If there is not a cell with the specified column name, insert one.  
-                        IEnumerable<Cell> excelCells = excelRow.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
+                        // If there is not a cell with the specified column name, insert one.
+                        var excelCells = excelRow.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
                         if (excelCells.Count() > 0)
                         {
                             excelCell = excelCells.First();
@@ -701,7 +703,7 @@ namespace DataMigrator.Office
                             {
                                 excelCell.CellValue = new CellValue(GetNumericDate(value));
                                 excelCell.DataType = new EnumValue<CellValues>(CellValues.Number);
-                               
+
                                 //Use a reserved number format , or modify the current style
                                 if (style == null)
                                 {
@@ -709,7 +711,7 @@ namespace DataMigrator.Office
                                 }
                                 else
                                 {
-                                    SpreadsheetStyle clone = style.Clone() as SpreadsheetStyle;
+                                    var clone = style.Clone() as SpreadsheetStyle;
                                     clone.FormatCode = "mm-dd-yy";
                                     excelCell.StyleIndex = GetStyleIndex(clone, styles);
                                 }
@@ -765,11 +767,11 @@ namespace DataMigrator.Office
         ///</summary>
         public static string PasteValues(SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint rowIndex, List<string> values, CellValues type, SpreadsheetStyle style)
         {
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
-            SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
             string colString = column;
-            Cell refCell = WorksheetReader.GetCell(colString, rowIndex, worksheetPart);
-            Row excelRow = FindRow(sheetData, rowIndex);
+            var refCell = WorksheetReader.GetCell(colString, rowIndex, worksheetPart);
+            var excelRow = FindRow(sheetData, rowIndex);
 
             //Check if the row is created
             // If the worksheet does not contain a row with the specified row index, insert one.
@@ -789,15 +791,14 @@ namespace DataMigrator.Office
                 string cellReference = (colString + rowIndex.ToString());
                 Cell excelCell;
 
-                //If there is not a cell with the specified column name, insert one.  
-                IEnumerable<Cell> excelCells = excelRow.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
+                //If there is not a cell with the specified column name, insert one.
+                var excelCells = excelRow.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
                 if ((excelCells.Count() > 0))
                 {
                     excelCell = excelCells.First();
                 }
                 else
                 {
-
                     excelCell = new Cell();
                     excelCell.CellReference = cellReference;
 
@@ -823,8 +824,8 @@ namespace DataMigrator.Office
         ///</summary>
         public static Cell SetStyle(SpreadsheetStyle style, SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint rowIndex)
         {
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
-            Cell cell = WorksheetWriter.FindCell(column, rowIndex, worksheetPart);
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var cell = FindCell(column, rowIndex, worksheetPart);
             //Get the cell, create if necessary
 
             cell.StyleIndex = GetStyleIndex(style, styles);
@@ -837,9 +838,9 @@ namespace DataMigrator.Office
         ///</summary>
         public static void SetStyle(SpreadsheetStyle style, SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string startColumn, uint startRowIndex, string endColumn, uint endRowIndex)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var worksheet = worksheetPart.Worksheet;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
 
             uint rowStart = startRowIndex;
             uint rowEnd = endRowIndex;
@@ -862,14 +863,13 @@ namespace DataMigrator.Office
             //Loop through each row
             for (uint rowIndex = rowStart; rowIndex <= rowEnd; rowIndex++)
             {
-                Row row = FindRow(sheetData, rowIndex);
+                var row = FindRow(sheetData, rowIndex);
 
                 string col = string.Empty;
 
                 //Loop through each column
                 while (col != colEnd)
                 {
-
                     if (col == string.Empty)
                     {
                         col = colStart;
@@ -883,7 +883,7 @@ namespace DataMigrator.Office
                     string cellReference = string.Format("{0}{1}", col, rowIndex.ToString());
 
                     //Get the cell, or create if it doesnt exist
-                    IEnumerable<Cell> cells = row.Elements<Cell>().Where(c => c.CellReference == cellReference);
+                    var cells = row.Elements<Cell>().Where(c => c.CellReference == cellReference);
                     if ((cells.Count() > 0))
                     {
                         cell = cells.First();
@@ -892,7 +892,7 @@ namespace DataMigrator.Office
                     {
                         // Cells must be in sequential order according to CellReference. Determine where to insert the new cell.
                         Cell refCell = null;
-                        foreach (Cell cellLoop in row.Elements<Cell>())
+                        foreach (var cellLoop in row.Elements<Cell>())
                         {
                             if (string.Compare(cellLoop.CellReference.Value, cellReference, true) > 0)
                             {
@@ -901,7 +901,7 @@ namespace DataMigrator.Office
                             }
                         }
 
-                        Cell newCell = new Cell();
+                        var newCell = new Cell();
                         newCell.CellReference = cellReference;
 
                         row.InsertBefore(newCell, refCell);
@@ -920,15 +920,15 @@ namespace DataMigrator.Office
         public static uint GetStyleIndex(SpreadsheetStyle style, WorkbookStylesPart styles)
         {
             //Find a CellFormat with the selected indexes, or create a new one
-            UInt32 fontIndex = SpreadsheetWriter.CreateFont(style, styles);
-            UInt32 fillIndex = SpreadsheetWriter.CreateFill(style, styles);
-            UInt32 borderIndex = SpreadsheetWriter.CreateBorder(style, styles);
+            uint fontIndex = SpreadsheetWriter.CreateFont(style, styles);
+            uint fillIndex = SpreadsheetWriter.CreateFill(style, styles);
+            uint borderIndex = SpreadsheetWriter.CreateBorder(style, styles);
 
             NumberingFormat numberFormat = style.ToNumberFormat();
-            UInt32 numberFormatIndex = 0;
+            uint numberFormatIndex = 0;
 
             Alignment alignment = style.ToAlignment();
-            
+
             //Lookup number format if required
             if (numberFormat != null) numberFormatIndex = SpreadsheetWriter.CreateNumberFormat(style, styles);
 
@@ -949,7 +949,7 @@ namespace DataMigrator.Office
             }
 
             //Create a new cell format
-            CellFormat newFormat = new CellFormat();
+            var newFormat = new CellFormat();
 
             newFormat.NumberFormatId = new UInt32Value(numberFormatIndex);
             newFormat.FontId = new UInt32Value(fontIndex);
@@ -963,10 +963,9 @@ namespace DataMigrator.Office
             if (newFormat.BorderId.Value > 0) newFormat.ApplyBorder = true;
             if (newFormat.Alignment != null) newFormat.ApplyAlignment = true;
 
-            styles.Stylesheet.CellFormats.AppendChild<CellFormat>(newFormat);
+            styles.Stylesheet.CellFormats.AppendChild(newFormat);
             styles.Stylesheet.CellFormats.Count = index + Convert.ToUInt32(1);
             return index;
-
         }
 
         ///<summary>
@@ -985,12 +984,12 @@ namespace DataMigrator.Office
             }
 
             //Create a new cell format
-            CellFormat newFormat = new CellFormat();
+            var newFormat = new CellFormat();
 
             newFormat.NumberFormatId = new UInt32Value(numberFormatIndex);
             newFormat.ApplyNumberFormat = true;
 
-            styles.Stylesheet.CellFormats.AppendChild<CellFormat>(newFormat);
+            styles.Stylesheet.CellFormats.AppendChild(newFormat);
             styles.Stylesheet.CellFormats.Count = index + Convert.ToUInt32(1);
             return index;
         }
@@ -1000,7 +999,6 @@ namespace DataMigrator.Office
         ///</summary>
         public static void DrawBorder(string startColumn, uint startRowIndex, string endColumn, uint endRowIndex, string rgb, BorderStyleValues borderStyle, SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart)
         {
-
             SpreadsheetStyle style = null;
             uint rowStart = startRowIndex;
             uint rowEnd = endRowIndex;
@@ -1023,7 +1021,6 @@ namespace DataMigrator.Office
             //Loop through each row
             for (uint rowIndex = rowStart; rowIndex <= rowEnd; rowIndex++)
             {
-
                 //Draw a line along the top or bottom
                 if (rowIndex == rowStart || rowIndex == rowEnd)
                 {
@@ -1048,7 +1045,6 @@ namespace DataMigrator.Office
 
                         SetStyle(style, spreadsheet, worksheetPart, col, rowIndex);
                     }
-
                 }
 
                 //Add left border
@@ -1134,11 +1130,11 @@ namespace DataMigrator.Office
         public static MergeCell MergeCells(string startColumn, uint startRowIndex, string endColumn, uint endRowIndex, SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart)
         {
             string reference = string.Format("{0}{1}:{2}{3}", new object[] { startColumn, startRowIndex, endColumn, endRowIndex }).ToUpper();
-            Worksheet worksheet = worksheetPart.Worksheet;
-            MergeCells cells = worksheet.GetFirstChild<MergeCells>();
+            var worksheet = worksheetPart.Worksheet;
+            var cells = worksheet.GetFirstChild<MergeCells>();
             uint index = 0;
 
-            //Create merge cells if doesnt exists, else look for existing 
+            //Create merge cells if doesnt exists, else look for existing
             if (cells == null)
             {
                 cells = new MergeCells();
@@ -1159,7 +1155,7 @@ namespace DataMigrator.Office
             var newMergeCell = new MergeCell();
             newMergeCell.Reference = reference;
 
-            cells.AppendChild<MergeCell>(newMergeCell);
+            cells.AppendChild(newMergeCell);
             cells.Count = index + Convert.ToUInt32(1);
 
             return new MergeCell();
@@ -1175,13 +1171,13 @@ namespace DataMigrator.Office
             worksheetPart.Worksheet.Save();
 
             //Save the style information
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
             styles.Stylesheet.Save();
 
             //Save the shared string table part
             if ((spreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0))
             {
-                SharedStringTablePart shareStringPart = spreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                var shareStringPart = spreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
                 shareStringPart.SharedStringTable.Save();
             }
 
@@ -1210,16 +1206,16 @@ namespace DataMigrator.Office
                 row.RowIndex = index;
 
                 //Get the position in the array to insert the row and insert it there
-		        int count = 0;
-		        foreach (var rowLoop in sheetData.Elements<Row>())
+                int count = 0;
+                foreach (var rowLoop in sheetData.Elements<Row>())
                 {
-			        if (rowLoop.RowIndex.Value > rowIndex) 
+                    if (rowLoop.RowIndex.Value > rowIndex)
                     {
-				        sheetData.InsertAt(row, count);
-				        return row;
-			        }
-			        count += 1;
-		        }
+                        sheetData.InsertAt(row, count);
+                        return row;
+                    }
+                    count += 1;
+                }
 
                 sheetData.Append(row);
             }
@@ -1232,16 +1228,16 @@ namespace DataMigrator.Office
         /// </summary>
         public static Column FindColumn(WorksheetPart worksheetPart, uint columnIndex)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            Columns cols = worksheet.GetFirstChild<Columns>();
+            var worksheet = worksheetPart.Worksheet;
+            var cols = worksheet.GetFirstChild<Columns>();
             Column col = null;
 
             //Add columns if dont exists
             if (cols == null)
             {
-                SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+                var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
                 cols = new Columns();
-                worksheet.InsertBefore<Columns>(cols, sheetData);
+                worksheet.InsertBefore(cols, sheetData);
             }
 
             //Make sure the row exists
@@ -1254,9 +1250,9 @@ namespace DataMigrator.Office
                 //Insert new column range before
                 if (col.Min < columnIndex)
                 {
-                    Column before = col.CloneElement<Column>();
+                    var before = col.CloneElement<Column>();
                     before.Max = columnIndex - 1;
-                    cols.InsertBefore<Column>(before, col);
+                    cols.InsertBefore(before, col);
 
                     col.Min = columnIndex;
                 }
@@ -1264,9 +1260,9 @@ namespace DataMigrator.Office
                 //Insert new column range after
                 if (col.Max > columnIndex)
                 {
-                    Column after = col.CloneElement<Column>();
+                    var after = col.CloneElement<Column>();
                     after.Min = columnIndex + 1;
-                    cols.InsertAfter<Column>(after, col);
+                    cols.InsertAfter(after, col);
 
                     col.Max = columnIndex;
                 }
@@ -1280,7 +1276,7 @@ namespace DataMigrator.Office
 
                 //Find the column to insert after
                 var beforeCols = cols.Elements<Column>().Where(c => c.Max < columnIndex);
-                cols.InsertAt<Column>(col, beforeCols.Count<Column>());
+                cols.InsertAt(col, beforeCols.Count());
             }
 
             return col;
@@ -1292,7 +1288,7 @@ namespace DataMigrator.Office
         public static void SetColumnWidth(WorksheetPart worksheetPart, uint columnIndex, double width)
         {
             var col = FindColumn(worksheetPart, columnIndex);
-            col.Width = width; 
+            col.Width = width;
         }
 
         ///<summary>
@@ -1301,10 +1297,10 @@ namespace DataMigrator.Office
         public static DefinedName SetPrintArea(SpreadsheetDocument spreadsheet, string sheetName, string startColumn, uint startRowIndex, string endColumn, uint endRowIndex)
         {
             DefinedNames definedNames = null;
-            IEnumerable<DefinedNames> elements = spreadsheet.WorkbookPart.Workbook.Descendants<DefinedNames>();
+            var elements = spreadsheet.WorkbookPart.Workbook.Descendants<DefinedNames>();
             DefinedName printAreaName = null;
-            UInt32Value sheetId = SpreadsheetReader.GetSheetId(spreadsheet, sheetName);
-            WorksheetPart worksheetPart = SpreadsheetReader.GetWorksheetPartByName(spreadsheet, sheetName);
+            var sheetId = SpreadsheetReader.GetSheetId(spreadsheet, sheetName);
+            var worksheetPart = SpreadsheetReader.GetWorksheetPartByName(spreadsheet, sheetName);
 
             //Create or retrieve the defined names section
             if (elements.Count() == 0)
@@ -1312,7 +1308,7 @@ namespace DataMigrator.Office
                 definedNames = new DefinedNames();
 
                 //Need to insert directly after sheets
-                Sheets sheets = spreadsheet.WorkbookPart.Workbook.Descendants<Sheets>().First();
+                var sheets = spreadsheet.WorkbookPart.Workbook.Descendants<Sheets>().First();
                 spreadsheet.WorkbookPart.Workbook.InsertAfter(definedNames, sheets);
             }
             else
@@ -1359,15 +1355,15 @@ namespace DataMigrator.Office
         /// </summary>
         public static void SetPageSetup(SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, uint paperSize, OrientationValues orientation)
         {
-            Worksheet workSheet = worksheetPart.Worksheet;
-            PageSetup pageSetup = WorksheetReader.GetPageSetup(spreadsheet, worksheetPart);
+            var workSheet = worksheetPart.Worksheet;
+            var pageSetup = WorksheetReader.GetPageSetup(spreadsheet, worksheetPart);
 
             //Create the page setup element if applicable
             if (pageSetup == null)
             {
                 pageSetup = new PageSetup();
 
-                PageMargins pageMargins = workSheet.GetFirstChild<PageMargins>();
+                var pageMargins = workSheet.GetFirstChild<PageMargins>();
                 workSheet.InsertAfter(pageSetup, pageMargins);
             }
 
@@ -1377,8 +1373,8 @@ namespace DataMigrator.Office
 
         public static string GetNumericDate(DateTime date)
         {
-            TimeSpan result = date - new DateTime(1900, 1, 1);
-            int days = result.Days + 2; //Time difference + 2 
+            var result = date - new DateTime(1900, 1, 1);
+            int days = result.Days + 2; //Time difference + 2
 
             double totalSeconds = 24.0F * 3600.0F;
             double fraction = ((date.Hour * 3600) + (date.Minute * 60) + date.Second) / totalSeconds; // Convert to a fraction of seconds in a day

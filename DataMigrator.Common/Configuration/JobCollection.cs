@@ -6,10 +6,7 @@ namespace DataMigrator.Common.Configuration
 {
     public class JobCollection : StandardList<Job>
     {
-        public Job this[string name]
-        {
-            get { return this.SingleOrDefault(j => j.Name == name); }
-        }
+        public Job this[string name] => this.SingleOrDefault(j => j.Name == name);
 
         public new void Add(Job job)
         {

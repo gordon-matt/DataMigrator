@@ -11,9 +11,9 @@ namespace DataMigrator.Office
         public static WorksheetPart DeepCloneWorksheetPart(this SpreadsheetDocument spreadsheet, WorksheetPart sourceWorksheetPart)
         {
             //Take advantage of AddPart for deep cloning
-            SpreadsheetDocument tempSpreadsheet = SpreadsheetDocument.Create(new MemoryStream(), spreadsheet.DocumentType);
-            WorkbookPart tempWorkbookPart = tempSpreadsheet.AddWorkbookPart();
-            return tempWorkbookPart.AddPart<WorksheetPart>(sourceWorksheetPart);
+            var tempSpreadsheet = SpreadsheetDocument.Create(new MemoryStream(), spreadsheet.DocumentType);
+            var tempWorkbookPart = tempSpreadsheet.AddWorkbookPart();
+            return tempWorkbookPart.AddPart(sourceWorksheetPart);
         }
 
         //public static WorksheetPart GetWorksheetPart(this WorkbookPart workbookPart, string sheetName)
@@ -29,7 +29,7 @@ namespace DataMigrator.Office
         public static WorksheetPart GetWorksheetPart(this WorkbookPart workbookPart, string sheetName)
         {
             //Get the relationship id of the sheetname
-            Sheet sheet = workbookPart.Workbook.Descendants<Sheet>()
+            var sheet = workbookPart.Workbook.Descendants<Sheet>()
                 .SingleOrDefault(s => s.Name.Value.Equals(sheetName));
 
             if (sheet != null)

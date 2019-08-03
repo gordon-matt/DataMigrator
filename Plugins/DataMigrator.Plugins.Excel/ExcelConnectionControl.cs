@@ -22,10 +22,8 @@ namespace DataMigrator.Excel
             set { txtWorkbook.Text = value; }
         }
 
-        public string ConnectionString
-        {
-            get { return Workbook; }
-        }
+        public string ConnectionString => Workbook;
+
         //public string ConnectionString
         //{
         //    get
@@ -51,16 +49,13 @@ namespace DataMigrator.Excel
 
         #region IConnectionControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public ConnectionDetails ConnectionDetails
         {
             get
             {
-                ConnectionDetails connectionDetails = new ConnectionDetails
+                var connectionDetails = new ConnectionDetails
                 {
                     Database = this.Workbook,
                     ProviderName = Constants.PROVIDER_NAME,
@@ -84,7 +79,7 @@ namespace DataMigrator.Excel
                 //{
                 //    return connection.Validate();
                 //}
-                using (ExcelOpenXmlDocument excel = ExcelOpenXmlDocument.Load(ConnectionString))
+                using (var excel = ExcelOpenXmlDocument.Load(ConnectionString))
                 {
                     return true;
                 }

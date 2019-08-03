@@ -10,10 +10,7 @@ namespace DataMigrator.SqlCe3_5
 {
     public class SqlCe3_5Provider : BaseProvider
     {
-        public override string DbProviderName
-        {
-            get { return "System.Data.SqlServerCe.4.0"; }
-        }
+        public override string DbProviderName => "System.Data.SqlServerCe.4.0";
 
         public SqlCe3_5Provider(ConnectionDetails connectionDetails)
             : base(connectionDetails)
@@ -24,13 +21,13 @@ namespace DataMigrator.SqlCe3_5
         {
             get
             {
-                using (SqlCeConnection connection = new SqlCeConnection(ConnectionDetails.ConnectionString))
+                using (var connection = new SqlCeConnection(ConnectionDetails.ConnectionString))
                 {
                     connection.Open();
-                    DataTable schema = connection.GetSchema("Tables");
+                    var schema = connection.GetSchema("Tables");
                     connection.Close();
 
-                    List<string> tableNames = new List<string>();
+                    var tableNames = new List<string>();
                     foreach (DataRow row in schema.Rows)
                     {
                         tableNames.Add(row.Field<string>("TABLE_NAME"));

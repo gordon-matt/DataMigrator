@@ -3,9 +3,9 @@ using System.Data.SqlServerCe;
 using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
-using Kore.Data.Common;
-using DataMigrator.Windows.Forms.Diagnostics;
 using DataMigrator.Windows.Forms;
+using DataMigrator.Windows.Forms.Diagnostics;
+using Kore.Data.Common;
 
 namespace DataMigrator.SqlCe3_5
 {
@@ -38,7 +38,7 @@ namespace DataMigrator.SqlCe3_5
                     return string.Empty;
                 }
 
-                #endregion
+                #endregion Checks
 
                 return string.Format(SQLCE_CONNECTION_STRING_FORMAT, Database);
             }
@@ -46,27 +46,24 @@ namespace DataMigrator.SqlCe3_5
 
         public bool ValidateConnection()
         {
-            using (SqlCeConnection connection = new SqlCeConnection(ConnectionString))
+            using (var connection = new SqlCeConnection(ConnectionString))
             {
                 return connection.Validate();
             }
         }
 
-        #endregion
+        #endregion Public Properties
 
         #region IConnectionControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public ConnectionDetails ConnectionDetails
         {
             get
             {
                 //bool isValid = false;
-                //using (SqlCeConnection connection = new SqlCeConnection(ConnectionString))
+                //using (var connection = new SqlCeConnection(ConnectionString))
                 //{
                 //    isValid = connection.Validate();
                 //}
@@ -84,7 +81,7 @@ namespace DataMigrator.SqlCe3_5
             }
         }
 
-        #endregion
+        #endregion IConnectionControl Members
 
         public SqlCe3_5ConnectionControl()
         {

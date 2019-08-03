@@ -22,47 +22,23 @@ namespace DataMigrator.Common.Collections
             }
         }
 
-        public void Sort(IComparer<T> comparer)
-        {
-            items.Sort(comparer);
-        }
+        public void Sort(IComparer<T> comparer) => items.Sort(comparer);
 
         #region ICollection<T> Members
 
-        public void Add(T item)
-        {
-            items.Add(item);
-        }
+        public void Add(T item) => items.Add(item);
 
-        public void Clear()
-        {
-            items.Clear();
-        }
+        public void Clear() => items.Clear();
 
-        public bool Contains(T item)
-        {
-            return items.Contains(item);
-        }
+        public bool Contains(T item) => items.Contains(item);
 
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            items.CopyTo(array, arrayIndex);
-        }
+        public void CopyTo(T[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 
-        public int Count
-        {
-            get { return items.Count; }
-        }
+        public int Count => items.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
-        public bool Remove(T item)
-        {
-            return items.Remove(item);
-        }
+        public bool Remove(T item) => items.Remove(item);
 
         #endregion ICollection<T> Members
 
@@ -90,9 +66,6 @@ namespace DataMigrator.Common.Collections
 
         #endregion IEnumerable Members
 
-        public override string ToString()
-        {
-            return string.Concat("Count: ", this.Count);
-        }
+        public override string ToString() => string.Concat("Count: ", this.Count);
     }
 }

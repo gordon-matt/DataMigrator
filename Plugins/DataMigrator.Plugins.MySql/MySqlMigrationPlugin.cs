@@ -11,31 +11,16 @@ namespace DataMigrator.MySql
     {
         #region IMigrationPlugin Members
 
-        public string ProviderName
-        {
-            get { return Constants.PROVIDER_NAME; }
-        }
+        public string ProviderName => Constants.PROVIDER_NAME;
 
-        public IConnectionControl ConnectionControl
-        {
-            get { return new MySqlConnectionControl(); }
-        }
+        public IConnectionControl ConnectionControl => new MySqlConnectionControl();
 
-        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
-        {
-            return new MySqlProvider(connectionDetails);
-        }
+        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new MySqlProvider(connectionDetails);
 
-        public ISettingsControl SettingsControl
-        {
-            get { return null; }
-        }
+        public ISettingsControl SettingsControl => null;
 
-        public IEnumerable<IMigrationTool> Tools
-        {
-            get { return null; }
-        }
+        public IEnumerable<IMigrationTool> Tools => null;
 
-        #endregion
+        #endregion IMigrationPlugin Members
     }
 }

@@ -54,6 +54,11 @@ namespace DataMigrator.Views
 
         public void HideTraceViewer()
         {
+            if (currentControl != traceViewer)
+            {
+                return;
+            }
+
             panelMain.Controls.Clear();
             if (currentControl != null)
             {
@@ -112,7 +117,8 @@ namespace DataMigrator.Views
         {
             CheckSaveChanges();
             Program.Configuration = new DataMigrationConfigFile();
-            treeView.ClearJobs();
+            treeView.Reset();
+            HideTraceViewer();
         }
 
         private void OpenFile()
@@ -124,7 +130,7 @@ namespace DataMigrator.Views
             if (dlgOpenFile.ShowDialog() == DialogResult.OK)
             {
                 Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
-                treeView.ClearJobs();
+                treeView.Reset();
                 foreach (Job job in Program.Configuration.Jobs.OrderBy(j => j.Name))
                 {
                     treeView.AddJob(job);

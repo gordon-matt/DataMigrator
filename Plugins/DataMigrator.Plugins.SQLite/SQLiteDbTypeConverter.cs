@@ -60,7 +60,7 @@ namespace DataMigrator.SQLite
             fieldTypes.Add(FieldType.User, SQLiteDbType.Text);
             fieldTypes.Add(FieldType.Xml, SQLiteDbType.Text);
 
-            #endregion
+            #endregion fieldTypes
 
             #region sQLiteDbTypes
 
@@ -70,7 +70,7 @@ namespace DataMigrator.SQLite
             sQLiteDbTypes.Add(SQLiteDbType.Real, FieldType.Double);
             sQLiteDbTypes.Add(SQLiteDbType.Text, FieldType.String);
 
-            #endregion
+            #endregion sQLiteDbTypes
         }
 
         #region IFieldTypeConverter<SqlDbType> Members
@@ -85,6 +85,6 @@ namespace DataMigrator.SQLite
             return fieldTypes.First(x => x.Item1 == fieldType).Item2;
         }
 
-        #endregion
+        #endregion IFieldTypeConverter<SqlDbType> Members
     }
 }

@@ -11,31 +11,16 @@ namespace DataMigrator.SharePoint
     {
         #region IMigrationPlugin Members
 
-        public string ProviderName
-        {
-            get { return Constants.PROVIDER_NAME; }
-        }
+        public string ProviderName => Constants.PROVIDER_NAME;
 
-        public IConnectionControl ConnectionControl
-        {
-            get { return new SharePointConnectionControl(); }
-        }
+        public IConnectionControl ConnectionControl => new SharePointConnectionControl();
 
-        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
-        {
-            return new SharePointProvider(connectionDetails);
-        }
+        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new SharePointProvider(connectionDetails);
 
-        public ISettingsControl SettingsControl
-        {
-            get { return null; }
-        }
+        public ISettingsControl SettingsControl => null;
 
-        public IEnumerable<IMigrationTool> Tools
-        {
-            get { return null; }
-        }
+        public IEnumerable<IMigrationTool> Tools => null;
 
-        #endregion
+        #endregion IMigrationPlugin Members
     }
 }

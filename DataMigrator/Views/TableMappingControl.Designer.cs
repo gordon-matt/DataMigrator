@@ -56,7 +56,7 @@ namespace DataMigrator.Views
             this.dgvSource.Location = new System.Drawing.Point(13, 40);
             this.dgvSource.Name = "dgvSource";
             this.dgvSource.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSource.Size = new System.Drawing.Size(240, 426);
+            this.dgvSource.Size = new System.Drawing.Size(240, 351);
             this.dgvSource.TabIndex = 1;
             this.dgvSource.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvSource_CellMouseClick);
             this.dgvSource.SelectionChanged += new System.EventHandler(this.dgvSource_SelectionChanged);
@@ -81,7 +81,7 @@ namespace DataMigrator.Views
             this.dgvDestination.Location = new System.Drawing.Point(664, 40);
             this.dgvDestination.Name = "dgvDestination";
             this.dgvDestination.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDestination.Size = new System.Drawing.Size(240, 426);
+            this.dgvDestination.Size = new System.Drawing.Size(240, 351);
             this.dgvDestination.TabIndex = 4;
             this.dgvDestination.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDestination_CellMouseClick);
             this.dgvDestination.SelectionChanged += new System.EventHandler(this.dgvDestination_SelectionChanged);
@@ -157,9 +157,9 @@ namespace DataMigrator.Views
             // 
             this.pGridSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pGridSource.HelpVisible = false;
-            this.pGridSource.Location = new System.Drawing.Point(13, 472);
+            this.pGridSource.Location = new System.Drawing.Point(13, 397);
             this.pGridSource.Name = "pGridSource";
-            this.pGridSource.Size = new System.Drawing.Size(240, 115);
+            this.pGridSource.Size = new System.Drawing.Size(240, 190);
             this.pGridSource.TabIndex = 9;
             this.pGridSource.ToolbarVisible = false;
             // 
@@ -167,9 +167,9 @@ namespace DataMigrator.Views
             // 
             this.pGridDestination.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pGridDestination.HelpVisible = false;
-            this.pGridDestination.Location = new System.Drawing.Point(664, 472);
+            this.pGridDestination.Location = new System.Drawing.Point(664, 397);
             this.pGridDestination.Name = "pGridDestination";
-            this.pGridDestination.Size = new System.Drawing.Size(240, 115);
+            this.pGridDestination.Size = new System.Drawing.Size(240, 190);
             this.pGridDestination.TabIndex = 10;
             this.pGridDestination.ToolbarVisible = false;
             // 

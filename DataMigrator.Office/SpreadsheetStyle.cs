@@ -6,7 +6,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace DataMigrator.Office
 {
-    public class SpreadsheetStyle: ICloneable
+    public class SpreadsheetStyle : ICloneable
     {
         //Constructors
         internal SpreadsheetStyle(Font font)
@@ -45,6 +45,7 @@ namespace DataMigrator.Office
 
         //Properties
         protected internal Italic Italic { get; set; }
+
         protected internal Bold Bold { get; set; }
         protected internal Underline Underline { get; set; }
         protected internal Color Color { get; set; }
@@ -65,15 +66,15 @@ namespace DataMigrator.Office
         protected internal EnumValue<HorizontalAlignmentValues> HorizontalAlignment { get; set; }
 
         public StringValue FormatCode;
-        
+
         ///<summary>
         ///Sets or gets whether the style is italic
         ///</summary>
         public bool IsItalic
         {
-            get 
-            { 
-                return Italic != null; 
+            get
+            {
+                return Italic != null;
             }
             set
             {
@@ -93,9 +94,9 @@ namespace DataMigrator.Office
         ///</summary>
         public bool IsBold
         {
-            get 
-            { 
-                return Bold != null; 
+            get
+            {
+                return Bold != null;
             }
             set
             {
@@ -115,9 +116,9 @@ namespace DataMigrator.Office
         ///</summary>
         public bool IsUnderline
         {
-            get 
-            { 
-                return Underline != null; 
+            get
+            {
+                return Underline != null;
             }
             set
             {
@@ -148,7 +149,7 @@ namespace DataMigrator.Office
                 WrapText.Value = value;
             }
         }
-        
+
         /// <summary>
         /// Returns the default SpreadsheetStyle obejct for the spreadsheet provided.
         /// </summary>
@@ -406,7 +407,7 @@ namespace DataMigrator.Office
         ///</summary>
         public Fill ToFill()
         {
-            Fill fill = new Fill();
+            var fill = new Fill();
 
             fill.AppendChild<PatternFill>(PatternFill.CloneElement<PatternFill>());
 
@@ -418,13 +419,14 @@ namespace DataMigrator.Office
         ///</summary>
         public Border ToBorder()
         {
-            Border border = new Border();
-
-            border.TopBorder = TopBorder.CloneElement<TopBorder>();
-            border.LeftBorder = LeftBorder.CloneElement<LeftBorder>();
-            border.BottomBorder = BottomBorder.CloneElement<BottomBorder>();
-            border.RightBorder = RightBorder.CloneElement<RightBorder>();
-            border.DiagonalBorder = new DiagonalBorder();
+            var border = new Border
+            {
+                TopBorder = TopBorder.CloneElement<TopBorder>(),
+                LeftBorder = LeftBorder.CloneElement<LeftBorder>(),
+                BottomBorder = BottomBorder.CloneElement<BottomBorder>(),
+                RightBorder = RightBorder.CloneElement<RightBorder>(),
+                DiagonalBorder = new DiagonalBorder()
+            };
             return border;
         }
 
@@ -437,9 +439,18 @@ namespace DataMigrator.Office
 
             var alignment = new Alignment();
 
-            if (WrapText != null && WrapText.HasValue) alignment.WrapText = new BooleanValue(WrapText.Value);
-            if (HorizontalAlignment != null && HorizontalAlignment.HasValue) alignment.Horizontal = new EnumValue<HorizontalAlignmentValues>(HorizontalAlignment.Value);
-            if (VerticalAlignment != null && VerticalAlignment.HasValue) alignment.Vertical = new EnumValue<VerticalAlignmentValues>(VerticalAlignment.Value);
+            if (WrapText != null && WrapText.HasValue)
+            {
+                alignment.WrapText = new BooleanValue(WrapText.Value);
+            }
+            if (HorizontalAlignment != null && HorizontalAlignment.HasValue)
+            {
+                alignment.Horizontal = new EnumValue<HorizontalAlignmentValues>(HorizontalAlignment.Value);
+            }
+            if (VerticalAlignment != null && VerticalAlignment.HasValue)
+            {
+                alignment.Vertical = new EnumValue<VerticalAlignmentValues>(VerticalAlignment.Value);
+            }
 
             return alignment;
         }
@@ -451,7 +462,7 @@ namespace DataMigrator.Office
         {
             if (FormatCode == null || !FormatCode.HasValue) return null;
 
-            NumberingFormat format = new NumberingFormat();
+            var format = new NumberingFormat();
             format.FormatCode = FormatCode;
             return format;
         }
@@ -604,7 +615,10 @@ namespace DataMigrator.Office
         ///</summary>
         protected internal static bool CompareNumberFormat(SpreadsheetStyle format1, SpreadsheetStyle format2)
         {
-            if (!format1.FormatCode.Compare(format2.FormatCode)) return false;
+            if (!format1.FormatCode.Compare(format2.FormatCode))
+            {
+                return false;
+            }
             return true;
         }
     }

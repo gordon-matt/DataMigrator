@@ -34,16 +34,16 @@ namespace DataMigrator.Access
         {
             get
             {
-                using (OleDbConnection connection = new OleDbConnection(ConnectionDetails.ConnectionString))
+                using (var connection = new OleDbConnection(ConnectionDetails.ConnectionString))
                 {
                     string[] restrictions = new string[4];
                     restrictions[3] = "Table";
 
                     connection.Open();
-                    DataTable schema = connection.GetSchema("Tables", restrictions);
+                    var schema = connection.GetSchema("Tables", restrictions);
                     connection.Close();
 
-                    List<string> tableNames = new List<string>();
+                    var tableNames = new List<string>();
                     foreach (DataRow row in schema.Rows)
                     {
                         tableNames.Add(row.Field<string>("TABLE_NAME"));
@@ -55,7 +55,7 @@ namespace DataMigrator.Access
 
         public override IEnumerable<string> GetFieldNames(string tableName)
         {
-            using (OleDbConnection connection = new OleDbConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new OleDbConnection(ConnectionDetails.ConnectionString))
             {
                 var columnInfo = connection.GetColumnData(tableName);
                 return columnInfo.Select(c => c.ColumnName);
@@ -64,14 +64,14 @@ namespace DataMigrator.Access
 
         public override FieldCollection GetFields(string tableName)
         {
-            using (OleDbConnection connection = new OleDbConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new OleDbConnection(ConnectionDetails.ConnectionString))
             {
                 var columnInfo = connection.GetColumnData(tableName);
-                FieldCollection fields = new FieldCollection();
+                var fields = new FieldCollection();
 
                 columnInfo.ForEach(c =>
                     {
-                        Field field = new Field
+                        var field = new Field
                         {
                             DisplayName = c.ColumnName,
                             IsPrimaryKey = c.KeyType == KeyType.PrimaryKey,
@@ -98,9 +98,9 @@ namespace DataMigrator.Access
                 return false;
             }
 
-            using (OleDbConnection connection = new OleDbConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new OleDbConnection(ConnectionDetails.ConnectionString))
             {
-                using (OleDbCommand command = connection.CreateCommand())
+                using (var command = connection.CreateCommand())
                 {
                     string fieldType = GetDataProviderFieldType(field.Type);
                     string maxLength = string.Empty;

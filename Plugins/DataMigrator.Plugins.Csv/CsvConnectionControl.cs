@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using DataMigrator.Common;
-using System.IO;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
 
@@ -39,7 +33,7 @@ namespace DataMigrator.Csv
                     return string.Empty;
                 }
 
-                #endregion
+                #endregion Checks
 
                 return FilePath;
             }
@@ -52,16 +46,13 @@ namespace DataMigrator.Csv
 
         #region IConnectionControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public ConnectionDetails ConnectionDetails
         {
             get
             {
-                ConnectionDetails connectionDetails = new ConnectionDetails
+                var connectionDetails = new ConnectionDetails
                 {
                     Database = this.FilePath,
                     ProviderName = Constants.PROVIDER_NAME,
@@ -78,12 +69,9 @@ namespace DataMigrator.Csv
             }
         }
 
-        public bool ValidateConnection()
-        {
-            return File.Exists(FilePath);
-        }
+        public bool ValidateConnection() => File.Exists(FilePath);
 
-        #endregion
+        #endregion IConnectionControl Members
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {

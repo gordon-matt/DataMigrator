@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DataMigrator.Common;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 
@@ -14,31 +11,16 @@ namespace DataMigrator.Csv
     {
         #region IMigrationPlugin Members
 
-        public string ProviderName
-        {
-            get { return Constants.PROVIDER_NAME; }
-        }
+        public string ProviderName => Constants.PROVIDER_NAME;
 
-        public IConnectionControl ConnectionControl
-        {
-            get { return new CsvConnectionControl(); }
-        }
+        public IConnectionControl ConnectionControl => new CsvConnectionControl();
 
-        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
-        {
-            return new CsvProvider(connectionDetails);
-        }
+        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new CsvProvider(connectionDetails);
 
-        public ISettingsControl SettingsControl
-        {
-            get { return null; }
-        }
+        public ISettingsControl SettingsControl => null;
 
-        public IEnumerable<IMigrationTool> Tools
-        {
-            get { return null; }
-        }
+        public IEnumerable<IMigrationTool> Tools => null;
 
-        #endregion
+        #endregion IMigrationPlugin Members
     }
 }

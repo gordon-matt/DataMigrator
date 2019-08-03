@@ -19,6 +19,7 @@ namespace DataMigrator.Access
         Attachment,
         Calculated
     }
+
     public class AccessDbTypeConverter : IFieldTypeConverter<AccessDbType>
     {
         private static TupleList<FieldType, AccessDbType> fieldTypes = new TupleList<FieldType, AccessDbType>();
@@ -64,7 +65,7 @@ namespace DataMigrator.Access
             fieldTypes.Add(FieldType.User, AccessDbType.Text);
             fieldTypes.Add(FieldType.Xml, AccessDbType.Memo);
 
-            #endregion
+            #endregion fieldTypes
 
             #region accessDbTypes
 
@@ -80,7 +81,7 @@ namespace DataMigrator.Access
             accessDbTypes.Add(AccessDbType.Text, FieldType.String);
             accessDbTypes.Add(AccessDbType.YesNo, FieldType.Boolean);
 
-            #endregion
+            #endregion accessDbTypes
         }
 
         #region IFieldTypeConverter<AccessDbType> Members
@@ -95,6 +96,6 @@ namespace DataMigrator.Access
             return fieldTypes.First(x => x.Item1 == fieldType).Item2;
         }
 
-        #endregion
+        #endregion IFieldTypeConverter<AccessDbType> Members
     }
 }

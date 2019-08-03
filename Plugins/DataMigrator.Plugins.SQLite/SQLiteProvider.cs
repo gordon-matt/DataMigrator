@@ -12,7 +12,8 @@ using Kore;
 using Kore.Text;
 
 namespace DataMigrator.SQLite
-{//TODO: Test! This class not yet tested.
+{
+    //TODO: Test! This class not yet tested.
     public class SQLiteProvider : BaseProvider
     {
         private SQLiteDbTypeConverter typeConverter = new SQLiteDbTypeConverter();
@@ -22,10 +23,7 @@ namespace DataMigrator.SQLite
         {
         }
 
-        public override string DbProviderName
-        {
-            get { return "System.Data.SQLite"; }
-        }
+        public override string DbProviderName => "System.Data.SQLite";
 
         #region Table Methods
 
@@ -33,26 +31,24 @@ namespace DataMigrator.SQLite
         {
             get
             {
-                List<string> tables = new List<string>();
-                using (SQLiteConnection connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+                var tables = new List<string>();
+                using (var connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+                using (var command = connection.CreateCommand())
                 {
-                    using (SQLiteCommand command = connection.CreateCommand())
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "SELECT tbl_name FROM sqlite_master WHERE type = 'table'";
+
+                    connection.Open();
+
+                    using (var reader = command.ExecuteReader())
                     {
-                        command.CommandType = CommandType.Text;
-                        command.CommandText = "SELECT tbl_name FROM sqlite_master WHERE type = 'table'";
-
-                        connection.Open();
-
-                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                tables.Add(reader.GetString(0));
-                            }
+                            tables.Add(reader.GetString(0));
                         }
-
-                        connection.Close();
                     }
+
+                    connection.Close();
                 }
                 return tables;
             }
@@ -81,10 +77,10 @@ namespace DataMigrator.SQLite
     @"CREATE TABLE {0}(
 {1}
 )";
-                StringBuilder sbColumns = new StringBuilder();
+                var sbColumns = new StringBuilder();
                 for (int i = 0; i < fields.Count(); i++)
                 {
-                    Field column = fields.ElementAt(i);
+                    var column = fields.ElementAt(i);
                     sbColumns.Append(column.Name, " ");
                     sbColumns.Append(Common.AppContext.SqlDbTypeConverter.GetDataProviderFieldType(column.Type).ToString().ToUpperInvariant());
                     if (i != fields.Count() - 1)
@@ -95,17 +91,15 @@ namespace DataMigrator.SQLite
 
                 #endregion Create Table Text
 
-                using (SQLiteConnection connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+                using (var connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+                using (var command = connection.CreateCommand())
                 {
-                    using (SQLiteCommand command = connection.CreateCommand())
-                    {
-                        command.CommandType = CommandType.Text;
-                        command.CommandText = string.Format(CMD_CREATE_TABLE_FORMAT, tableName, sbColumns.ToString());
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = string.Format(CMD_CREATE_TABLE_FORMAT, tableName, sbColumns.ToString());
 
-                        connection.Open();
-                        command.ExecuteNonQuery(); // CREATE TABLE
-                        connection.Close();
-                    }
+                    connection.Open();
+                    command.ExecuteNonQuery(); // CREATE TABLE
+                    connection.Close();
                 }
 
                 return true;
@@ -125,88 +119,82 @@ namespace DataMigrator.SQLite
         {
             const string cmdAddColumn = "ALTER TABLE {0} ADD ( {1} );";
 
-            using (SQLiteConnection connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (SQLiteCommand command = connection.CreateCommand())
+                string fieldType = typeConverter.GetDataProviderFieldType(field.Type).ToString();
+                string maxLength = string.Empty;
+                if (field.MaxLength > 0 && field.Type.In(FieldType.String, FieldType.RichText))
                 {
-                    string fieldType = typeConverter.GetDataProviderFieldType(field.Type).ToString();
-                    string maxLength = string.Empty;
-                    if (field.MaxLength > 0 && field.Type.In(FieldType.String, FieldType.RichText))
-                    {
-                        maxLength = string.Concat("(", field.MaxLength, ")");
-                    }
-                    string isRequired = string.Empty;
-                    if (field.IsRequired)
-                    { isRequired = " NOT NULL"; }
-
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format(
-                        cmdAddColumn,
-                        tableName,
-                        string.Concat(field.Name, " ", fieldType, maxLength, isRequired));
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                    return true;
+                    maxLength = string.Concat("(", field.MaxLength, ")");
                 }
+                string isRequired = string.Empty;
+                if (field.IsRequired)
+                { isRequired = " NOT NULL"; }
+
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format(
+                    cmdAddColumn,
+                    tableName,
+                    string.Concat(field.Name, " ", fieldType, maxLength, isRequired));
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+                return true;
             }
         }
 
         public override IEnumerable<string> GetFieldNames(string tableName)
         {
             const string COLUMN_INFO_QUERY_FORMAT = "PRAGMA table_info('{0}');";
-            using (SQLiteConnection connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (SQLiteCommand command = connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format(COLUMN_INFO_QUERY_FORMAT, tableName);
-                    List<string> fields = new List<string>();
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format(COLUMN_INFO_QUERY_FORMAT, tableName);
+                var fields = new List<string>();
 
-                    connection.Open();
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            fields.Add(reader.GetString(1));
-                        }
+                        fields.Add(reader.GetString(1));
                     }
-                    connection.Close();
-                    return fields;
                 }
+                connection.Close();
+                return fields;
             }
         }
 
         public override FieldCollection GetFields(string tableName)
         {
             const string COLUMN_INFO_QUERY_FORMAT = "PRAGMA table_info('{0}');";
-            using (SQLiteConnection connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+            using (var connection = new SQLiteConnection(ConnectionDetails.ConnectionString))
+            using (var command = connection.CreateCommand())
             {
-                using (SQLiteCommand command = connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = string.Format(COLUMN_INFO_QUERY_FORMAT, tableName);
-                    FieldCollection fields = new FieldCollection();
+                command.CommandType = CommandType.Text;
+                command.CommandText = string.Format(COLUMN_INFO_QUERY_FORMAT, tableName);
+                var fields = new FieldCollection();
 
-                    connection.Open();
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            Field field = new Field();
-                            field.Name = reader.GetString(1);
-                            if (!reader.IsDBNull(0))
-                            { field.Ordinal = reader.GetInt32(0); }
-                            if (!reader.IsDBNull(2))
-                            { field.Type = typeConverter.GetDataMigratorFieldType(reader.GetString(2).ToEnum<SQLiteDbType>(true)); }
-                            if (!reader.IsDBNull(3))
-                            { field.IsRequired = reader.GetBoolean(3) == true; } //TODO: Test
-                            fields.Add(field);
-                        }
+                        var field = new Field();
+                        field.Name = reader.GetString(1);
+                        if (!reader.IsDBNull(0))
+                        { field.Ordinal = reader.GetInt32(0); }
+                        if (!reader.IsDBNull(2))
+                        { field.Type = typeConverter.GetDataMigratorFieldType(reader.GetString(2).ToEnum<SQLiteDbType>(true)); }
+                        if (!reader.IsDBNull(3))
+                        { field.IsRequired = reader.GetBoolean(3) == true; } //TODO: Test
+                        fields.Add(field);
                     }
-                    connection.Close();
-                    return fields;
                 }
+                connection.Close();
+                return fields;
             }
         }
 

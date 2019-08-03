@@ -34,7 +34,7 @@ namespace DataMigrator.Office
         /// </remarks>
         public static MemoryStream GetEmbeddedResourceStream(string filename)
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetExecutingAssembly();
             string name = assembly.GetName().Name;
 
             //Oddly enough the vb.net compiler ignores the folder name, 
@@ -44,7 +44,7 @@ namespace DataMigrator.Office
             filename = filename.Replace("\\", "."); //If this looks incorrect make sure the input is escaped correctly
             name += "." + filename;
 
-            Stream stream = assembly.GetManifestResourceStream(name);
+            var stream = assembly.GetManifestResourceStream(name);
             if (stream == null) throw new ArgumentException(string.Format("Embedded resource with path {0} was not found.", filename));
 
             var buffer = new byte[(int)stream.Length];

@@ -9,10 +9,7 @@ namespace DataMigrator.Common.Models
     {
         public FieldCollection Fields { get; set; }
 
-        public Field this[string name]
-        {
-            get { return Fields.SingleOrDefault(f => f.Name == name); }
-        }
+        public Field this[string name] => Fields.SingleOrDefault(f => f.Name == name);
 
         public Record()
         {
@@ -29,18 +26,15 @@ namespace DataMigrator.Common.Models
             };
         }
 
-        object ICloneable.Clone()
-        {
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
-        #endregion
+        #endregion ICloneable Members
 
         public void ReMapFields(IEnumerable<FieldMapping> mappings)
         {
-            foreach (FieldMapping mapping in mappings)
+            foreach (var mapping in mappings)
             {
-                Field field = this[mapping.SourceField.Name];
+                var field = this[mapping.SourceField.Name];
                 if (field != null)
                 {
                     field.Name = mapping.DestinationField.Name;
@@ -50,24 +44,21 @@ namespace DataMigrator.Common.Models
 
         public void ReMapFieldTypes(IEnumerable<FieldMapping> mappings)
         {
-            foreach (FieldMapping mapping in mappings)
+            foreach (var mapping in mappings)
             {
-                Field field = this[mapping.SourceField.Name];
+                var field = this[mapping.SourceField.Name];
                 if (field != null)
                 {
                     if (field.Value == null || field.Value == DBNull.Value)
                     { continue; }
 
-                    Type newType = AppContext.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
+                    var newType = AppContext.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
                     field.Value = field.Value.ConvertTo(newType);
                     field.Type = mapping.DestinationField.Type;
                 }
             }
         }
 
-        public override string ToString()
-        {
-            return string.Concat("Fields: ", Fields.Count);
-        }
+        public override string ToString() => string.Concat("Fields: ", Fields.Count);
     }
 }

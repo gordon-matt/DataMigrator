@@ -15,14 +15,13 @@ namespace DataMigrator.Office
 
         public DocumentWriter(MainDocumentPart document)
         {
-            if (document == null) throw new ArgumentNullException("document");
-            _documentPart = document;
+            _documentPart = document ?? throw new ArgumentNullException("document");
         }
 
         /// <summary>
         /// Pastes the text provided at a bookmark in the document body.
         /// </summary>
-        public DocumentFormat.OpenXml.Wordprocessing.Text PasteText(string text, string bookmarkName)
+        public Text PasteText(string text, string bookmarkName)
         {
             return PasteText(text, bookmarkName, _documentPart);
         }
@@ -47,27 +46,27 @@ namespace DataMigrator.Office
         /// <summary>
         /// Pastes the text provided at a bookmark in the document body.
         /// </summary>
-        public static DocumentFormat.OpenXml.Wordprocessing.Text PasteText(string text, string bookmarkName, MainDocumentPart documentPart)
+        public static Text PasteText(string text, string bookmarkName, MainDocumentPart documentPart)
         {
-            Body body = documentPart.Document.GetFirstChild<Body>();
-            IEnumerable<Paragraph> paras = body.Elements<Paragraph>();
+            var body = documentPart.Document.GetFirstChild<Body>();
+            var paras = body.Elements<Paragraph>();
 
             //Get all paragraphs of text
-            foreach (Paragraph para in paras)
+            foreach (var para in paras)
             {
-                IEnumerable<BookmarkStart> bookMarkStarts = para.Elements<BookmarkStart>();
-                IEnumerable<BookmarkEnd> bookMarkEnds = para.Elements<BookmarkEnd>();
+                var bookMarkStarts = para.Elements<BookmarkStart>();
+                var bookMarkEnds = para.Elements<BookmarkEnd>();
 
                 //Get the id of the bookmark start to find the bookmark end
-                foreach (BookmarkStart bookMarkStart in bookMarkStarts)
+                foreach (var bookMarkStart in bookMarkStarts)
                 {
                     if (bookMarkStart.Name == bookmarkName)
                     {
                         string id = bookMarkStart.Id.Value;
-                        BookmarkEnd bookmarkEnd = bookMarkEnds.Where(i => i.Id.Value == id).First();
+                        var bookmarkEnd = bookMarkEnds.Where(i => i.Id.Value == id).First();
 
                         //Create a new run and text
-                        var textElement = new DocumentFormat.OpenXml.Wordprocessing.Text(text);
+                        var textElement = new Text(text);
                         var runElement = new Run(textElement);
 
                         para.InsertAfter(runElement, bookmarkEnd);
@@ -88,25 +87,25 @@ namespace DataMigrator.Office
         {
             if (bookmarkValues == null) return;
 
-            Body body = documentPart.Document.GetFirstChild<Body>();
-            IEnumerable<Paragraph> paras = body.Elements<Paragraph>();
+            var body = documentPart.Document.GetFirstChild<Body>();
+            var paras = body.Elements<Paragraph>();
 
             //Get all paragraphs of text
             foreach (Paragraph para in paras)
             {
-                IEnumerable<BookmarkStart> bookMarkStarts = para.Elements<BookmarkStart>();
-                IEnumerable<BookmarkEnd> bookMarkEnds = para.Elements<BookmarkEnd>();
+                var bookMarkStarts = para.Elements<BookmarkStart>();
+                var bookMarkEnds = para.Elements<BookmarkEnd>();
 
                 //Get the id of the bookmark start to find the bookmark end
-                foreach (BookmarkStart bookMarkStart in bookMarkStarts)
+                foreach (var bookMarkStart in bookMarkStarts)
                 {
                     if (bookmarkValues.ContainsKey(bookMarkStart.Name))
                     {
                         string id = bookMarkStart.Id.Value;
-                        BookmarkEnd bookmarkEnd = bookMarkEnds.Where(i => i.Id.Value == id).First();
+                        var bookmarkEnd = bookMarkEnds.Where(i => i.Id.Value == id).First();
 
                         //Create a new run and text
-                        var textElement = new DocumentFormat.OpenXml.Wordprocessing.Text(bookmarkValues[bookMarkStart.Name]);
+                        var textElement = new Text(bookmarkValues[bookMarkStart.Name]);
                         var runElement = new Run(textElement);
 
                         para.InsertAfter(runElement, bookmarkEnd);
@@ -124,5 +123,4 @@ namespace DataMigrator.Office
             documentPart.Document.Save();
         }
     }
-
 }

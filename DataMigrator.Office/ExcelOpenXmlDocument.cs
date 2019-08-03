@@ -42,7 +42,7 @@ namespace DataMigrator.Office
         /// <returns>New instance of ExcelOpenXmlDocument class.</returns>
         public static ExcelOpenXmlDocument Create(string filePath)
         {
-            ExcelOpenXmlDocument excel = new ExcelOpenXmlDocument();
+            var excel = new ExcelOpenXmlDocument();
             excel.Document = SpreadsheetDocument.Create(
                 filePath,
                 SpreadsheetDocumentType.Workbook);
@@ -68,7 +68,7 @@ namespace DataMigrator.Office
 
             File.Copy(templateFilePath, filePath);
 
-            ExcelOpenXmlDocument excel = new ExcelOpenXmlDocument
+            var excel = new ExcelOpenXmlDocument
             {
                 Document = SpreadsheetDocument.Open(filePath, true)
             };
@@ -84,7 +84,7 @@ namespace DataMigrator.Office
         /// <returns>New instance of ExcelOpenXmlDocument class.</returns>
         public static ExcelOpenXmlDocument Create(Stream stream)
         {
-            ExcelOpenXmlDocument excel = new ExcelOpenXmlDocument();
+            var excel = new ExcelOpenXmlDocument();
             excel.Document = SpreadsheetDocument.Create(
                 stream,
                 SpreadsheetDocumentType.Workbook);
@@ -102,7 +102,7 @@ namespace DataMigrator.Office
         /// <returns>New instance of ExcelOpenXmlDocument class.</returns>
         public static ExcelOpenXmlDocument Load(string filePath)
         {
-            ExcelOpenXmlDocument excel = new ExcelOpenXmlDocument
+            var excel = new ExcelOpenXmlDocument
             {
                 Document = SpreadsheetDocument.Open(filePath, true)
             };
@@ -117,7 +117,7 @@ namespace DataMigrator.Office
         /// <returns>New instance of ExcelOpenXmlDocument class.</returns>
         public static ExcelOpenXmlDocument Load(Stream stream)
         {
-            ExcelOpenXmlDocument excel = new ExcelOpenXmlDocument
+            var excel = new ExcelOpenXmlDocument
             {
                 Document = SpreadsheetDocument.Open(stream, true)
             };
@@ -134,10 +134,10 @@ namespace DataMigrator.Office
         /// <param name="columnIndex">The index of the column to write to.</param>
         public void InsertNumber(string sheetName, double value, uint rowIndex, int columnIndex)
         {
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Cell cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
-            IFormatProvider formatProvider = CultureInfo.InvariantCulture.NumberFormat;
-            CellValue cellValue = new CellValue(value.ToString("#.#", formatProvider));
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
+            var formatProvider = CultureInfo.InvariantCulture.NumberFormat;
+            var cellValue = new CellValue(value.ToString("#.#", formatProvider));
             cell.CellValue = cellValue;
             cell.DataType = CellValues.Number;
 
@@ -153,8 +153,8 @@ namespace DataMigrator.Office
         /// <param name="columnIndex">The index of the column to write to.</param>
         public void InsertDate(string sheetName, DateTime value, uint rowIndex, int columnIndex)
         {
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Cell cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
             cell.StyleIndex = DateStyleIndex;
             cell.CellValue = new CellValue(value.ToOADate().ToString());
 
@@ -170,8 +170,8 @@ namespace DataMigrator.Office
         /// <param name="columnIndex">The index of the column to write to.</param>
         public void InsertDateTime(string sheetName, DateTime value, uint rowIndex, int columnIndex)
         {
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Cell cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
             cell.StyleIndex = DateTimeStyleIndex;
             cell.CellValue = new CellValue(value.ToOADate().ToString());
 
@@ -187,8 +187,8 @@ namespace DataMigrator.Office
         /// <param name="columnIndex">The index of the column to write to.</param>
         public void InsertTime(string sheetName, DateTime value, uint rowIndex, int columnIndex)
         {
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Cell cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
             cell.CellValue = new CellValue(value.ToString("HH:mm"));
             cell.DataType = new EnumValue<CellValues>(CellValues.Date);
 
@@ -215,8 +215,8 @@ namespace DataMigrator.Office
             }
 
             int index = InsertSharedStringItem(value, shareStringPart);
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Cell cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var cell = InsertCellInWorksheet(columnIndex, rowIndex, worksheetPart);
             cell.CellValue = new CellValue(index.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
@@ -237,7 +237,7 @@ namespace DataMigrator.Office
             }
 
             int i = 0;
-            foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
+            foreach (var item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
             {
                 if (item.InnerText == value)
                 {
@@ -263,15 +263,15 @@ namespace DataMigrator.Office
         /// <param name="sheetName">The name of the new worksheet.</param>
         public void AddSheet(string sheetName)
         {
-            WorkbookPart workbookPart = Document.WorkbookPart;
+            var workbookPart = Document.WorkbookPart;
 
             // Add a blank WorksheetPart.
-            WorksheetPart newWorksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+            var newWorksheetPart = workbookPart.AddNewPart<WorksheetPart>();
             newWorksheetPart.Worksheet = new Worksheet(new SheetData());
             newWorksheetPart.Worksheet.Save();
 
             // Add new sheet to main workbook part
-            Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+            var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
             string relationshipId = workbookPart.GetIdOfPart(newWorksheetPart);
 
             uint sheetId = 1;
@@ -280,7 +280,7 @@ namespace DataMigrator.Office
                 sheetId = sheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
             }
 
-            Sheet newSheet = new Sheet
+            var newSheet = new Sheet
             {
                 Id = relationshipId,
                 Name = sheetName,
@@ -328,13 +328,13 @@ namespace DataMigrator.Office
         /// <param name="destination">The name of the new worksheet.</param>
         public void CopySheet(string source, string destination)
         {
-            WorkbookPart workbookPart = Document.WorkbookPart;
+            var workbookPart = Document.WorkbookPart;
             // Get the source sheet to be copied
-            WorksheetPart sourceWorksheetPart = workbookPart.GetWorksheetPart(source);
+            var sourceWorksheetPart = workbookPart.GetWorksheetPart(source);
             // Make clone
-            WorksheetPart tempWorksheetPart = Document.DeepCloneWorksheetPart(sourceWorksheetPart);
+            var tempWorksheetPart = Document.DeepCloneWorksheetPart(sourceWorksheetPart);
             // Add cloned sheet and all associated parts to workbook
-            WorksheetPart clonedWorksheetPart = workbookPart.AddPart<WorksheetPart>(tempWorksheetPart);
+            var clonedWorksheetPart = workbookPart.AddPart<WorksheetPart>(tempWorksheetPart);
 
             // Table definition parts are somewhat special and need unique ids...so let's make an id based on count
             int tableDefinitionPartCount = sourceWorksheetPart.GetPartsCountOfType<TableDefinitionPart>();
@@ -348,8 +348,8 @@ namespace DataMigrator.Office
             CleanView(clonedWorksheetPart);
 
             // Add new sheet to main workbook part
-            Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-            Sheet copiedSheet = new Sheet();
+            var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+            var copiedSheet = new Sheet();
             copiedSheet.Name = destination;
             copiedSheet.Id = workbookPart.GetIdOfPart(clonedWorksheetPart);
             copiedSheet.SheetId = (uint)sheets.ChildElements.Count + 1;
@@ -367,14 +367,14 @@ namespace DataMigrator.Office
             //From: http://blogs.msdn.com/b/vsod/archive/2010/02/05/how-to-delete-a-worksheet-from-excel-using-open-xml-sdk-2-0.aspx
 
             string SheetID = string.Empty;
-            WorkbookPart workbookPart = Document.WorkbookPart;
+            var workbookPart = Document.WorkbookPart;
 
             // Get the pivot Table Parts
-            IEnumerable<PivotTableCacheDefinitionPart> pvtTableCacheParts = workbookPart.PivotTableCacheDefinitionParts;
-            Dictionary<PivotTableCacheDefinitionPart, string> pvtTableCacheDefinationPart = new Dictionary<PivotTableCacheDefinitionPart, string>();
-            foreach (PivotTableCacheDefinitionPart Item in pvtTableCacheParts)
+            var pvtTableCacheParts = workbookPart.PivotTableCacheDefinitionParts;
+            var pvtTableCacheDefinationPart = new Dictionary<PivotTableCacheDefinitionPart, string>();
+            foreach (var Item in pvtTableCacheParts)
             {
-                PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
+                var pvtCacheDef = Item.PivotCacheDefinition;
                 // Check if this CacheSource is linked to SheetToDelete
                 var pvtCahce = pvtCacheDef.Descendants<CacheSource>().Where(s => s.WorksheetSource.Sheet == sheetName);
                 if (pvtCahce.Count() > 0)
@@ -387,7 +387,7 @@ namespace DataMigrator.Office
                 workbookPart.DeletePart(Item.Key);
             }
             // Get the SheetToDelete from workbook.xml
-            Sheet theSheet = workbookPart.Workbook.Descendants<Sheet>()
+            var theSheet = workbookPart.Workbook.Descendants<Sheet>()
                 .Where(s => s.Name == sheetName)
                 .FirstOrDefault();
 
@@ -399,7 +399,7 @@ namespace DataMigrator.Office
             SheetID = theSheet.SheetId;
 
             // Remove the sheet reference from the workbook.
-            WorksheetPart worksheetPart = (WorksheetPart)(workbookPart.GetPartById(theSheet.Id));
+            var worksheetPart = (WorksheetPart)(workbookPart.GetPartById(theSheet.Id));
             theSheet.Remove();
 
             // Delete the worksheet part.
@@ -413,7 +413,9 @@ namespace DataMigrator.Office
                 {
                     // This condition checks to delete only those names which are part of Sheet in question
                     if (Item.Text.Contains(sheetName + "!"))
+                    {
                         Item.Remove();
+                    }
                 }
             }
             // Get the CalculationChainPart
@@ -427,7 +429,7 @@ namespace DataMigrator.Office
                 var calChainEntries = calChainPart.CalculationChain.Descendants<CalculationCell>()
                     .Where(c => c.SheetId == SheetID);
 
-                foreach (CalculationCell Item in calChainEntries)
+                foreach (var Item in calChainEntries)
                 {
                     Item.Remove();
                 }
@@ -442,18 +444,18 @@ namespace DataMigrator.Office
 
         public int GetColumnCount(string sheetName)
         {
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Worksheet workSheet = worksheetPart.Worksheet;
-            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-            IEnumerable<Row> rows = sheetData.Descendants<Row>();
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var workSheet = worksheetPart.Worksheet;
+            var sheetData = workSheet.GetFirstChild<SheetData>();
+            var rows = sheetData.Descendants<Row>();
             return rows.ElementAt(0).Count();
         }
 
         public int GetRowCount(string sheetName)
         {
-            WorksheetPart worksheetPart = GetWorksheetPartByName(sheetName);
-            Worksheet workSheet = worksheetPart.Worksheet;
-            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
+            var worksheetPart = GetWorksheetPartByName(sheetName);
+            var workSheet = worksheetPart.Worksheet;
+            var sheetData = workSheet.GetFirstChild<SheetData>();
             return sheetData.Descendants<Row>().Count();
         }
 
@@ -519,9 +521,9 @@ namespace DataMigrator.Office
 
         public void Import(DataTable table, string sheetName, bool outputColumnNames, uint startRowIndex)
         {
-            WorkbookPart workbookPart = Document.WorkbookPart;
-            WorksheetPart worksheetPart = workbookPart.GetWorksheetPart(sheetName);
-            SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            var workbookPart = Document.WorkbookPart;
+            var worksheetPart = workbookPart.GetWorksheetPart(sheetName);
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
 
             #region Change Enum Columns To String Columns
 
@@ -599,8 +601,8 @@ namespace DataMigrator.Office
         /// <returns>IEnumerable&lt;T&gt; of available worksheets.</returns>
         public IEnumerable<string> GetSheetNames()
         {
-            List<string> sheetNames = new List<string>();
-            foreach (Sheet sheet in Document.WorkbookPart.Workbook.Descendants<Sheet>())
+            var sheetNames = new List<string>();
+            foreach (var sheet in Document.WorkbookPart.Workbook.Descendants<Sheet>())
             {
                 sheetNames.Add(sheet.Name);
             }
@@ -620,16 +622,16 @@ namespace DataMigrator.Office
         /// <returns>System.Data.DataTable containing specified worksheet's data.</returns>
         public DataTable ReadSheet(string sheetName, bool firstRowContainsColumnNames)
         {
-            DataTable table = new DataTable(sheetName);
+            var table = new DataTable(sheetName);
 
             //WorkbookPart workbookPart = Document.WorkbookPart;
-            IEnumerable<Sheet> sheets = Document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+            var sheets = Document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
 
             string relationshipId = sheets.SingleOrDefault(x => x.Name == sheetName).Id.Value;
-            WorksheetPart worksheetPart = (WorksheetPart)Document.WorkbookPart.GetPartById(relationshipId);
-            Worksheet workSheet = worksheetPart.Worksheet;
-            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-            IEnumerable<Row> rows = sheetData.Descendants<Row>();
+            var worksheetPart = (WorksheetPart)Document.WorkbookPart.GetPartById(relationshipId);
+            var workSheet = worksheetPart.Worksheet;
+            var sheetData = workSheet.GetFirstChild<SheetData>();
+            var rows = sheetData.Descendants<Row>();
 
             if (firstRowContainsColumnNames)
             {
@@ -646,9 +648,9 @@ namespace DataMigrator.Office
                 }
             }
 
-            foreach (Row row in rows)
+            foreach (var row in rows)
             {
-                DataRow dataRow = table.NewRow();
+                var dataRow = table.NewRow();
 
                 for (int i = 0; i < row.Descendants<Cell>().Count(); i++)
                 {
@@ -671,7 +673,7 @@ namespace DataMigrator.Office
         /// <returns>System.Data.DataSet containing all workbook data.</returns>
         public DataSet ReadWorkbook()
         {
-            DataSet dataSet = new DataSet("Data");
+            var dataSet = new DataSet("Data");
 
             foreach (string sheetName in GetSheetNames())
             {
@@ -692,7 +694,7 @@ namespace DataMigrator.Office
         /// <param name="sheetName">The name of the worksheet to set as the active sheet.</param>
         public void SetActiveSheet(string sheetName)
         {
-            Sheet existingSheet = Document.WorkbookPart.Workbook.Descendants<Sheet>().SingleOrDefault(s => s.Name == sheetName);
+            var existingSheet = Document.WorkbookPart.Workbook.Descendants<Sheet>().SingleOrDefault(s => s.Name == sheetName);
 
             if (existingSheet == default(Sheet)) //if null
             {
@@ -700,14 +702,14 @@ namespace DataMigrator.Office
             }
 
             //Loop through all sheets
-            IEnumerable<Sheet> sheets = Document.WorkbookPart.Workbook.Descendants<Sheet>();
+            var sheets = Document.WorkbookPart.Workbook.Descendants<Sheet>();
             byte tabIndex = 0;
             byte idxCount = 0;
-            foreach (Sheet sheet in sheets)
+            foreach (var sheet in sheets)
             {
-                WorksheetPart worksheetPart = (WorksheetPart)Document.WorkbookPart.GetPartById(sheet.Id);
-                SheetViews sheetViews = worksheetPart.Worksheet.GetFirstChild<SheetViews>();
-                SheetView sheetView = sheetViews.GetFirstChild<SheetView>();
+                var worksheetPart = (WorksheetPart)Document.WorkbookPart.GetPartById(sheet.Id);
+                var sheetViews = worksheetPart.Worksheet.GetFirstChild<SheetViews>();
+                var sheetView = sheetViews.GetFirstChild<SheetView>();
 
                 if (sheet.Name == sheetName)
                 {
@@ -723,9 +725,9 @@ namespace DataMigrator.Office
             }
 
             //Select the tab
-            Workbook workbook = Document.WorkbookPart.Workbook;
-            BookViews bookViews = workbook.GetFirstChild<BookViews>();
-            WorkbookView workbookView = bookViews.GetFirstChild<WorkbookView>();
+            var workbook = Document.WorkbookPart.Workbook;
+            var bookViews = workbook.GetFirstChild<BookViews>();
+            var workbookView = bookViews.GetFirstChild<WorkbookView>();
             workbookView.ActiveTab = (UInt32Value)tabIndex;
         }
 
@@ -769,7 +771,7 @@ namespace DataMigrator.Office
 
         private static void AddStylesParts(ExcelOpenXmlDocument excel)
         {
-            WorkbookStylesPart part = excel.Document.WorkbookPart.AddNewPart<WorkbookStylesPart>();
+            var part = excel.Document.WorkbookPart.AddNewPart<WorkbookStylesPart>();
 
             new Stylesheet(
                 new Fonts(
@@ -816,7 +818,7 @@ namespace DataMigrator.Office
 
         private WorksheetPart GetWorksheetPartByName(string sheetName)
         {
-            IEnumerable<Sheet> sheets = Document.WorkbookPart.Workbook
+            var sheets = Document.WorkbookPart.Workbook
                 .GetFirstChild<Sheets>()
                 .Elements<Sheet>()
                 .Where(s => s.Name == sheetName);
@@ -827,14 +829,14 @@ namespace DataMigrator.Office
             }
 
             string relationshipId = sheets.First().Id.Value;
-            WorksheetPart worksheetPart = (WorksheetPart)Document.WorkbookPart.GetPartById(relationshipId);
+            var worksheetPart = (WorksheetPart)Document.WorkbookPart.GetPartById(relationshipId);
             return worksheetPart;
         }
 
         private Cell InsertCellInWorksheet(int columnIndex, uint rowIndex, WorksheetPart worksheetPart)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            var worksheet = worksheetPart.Worksheet;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
             string cellReference = GetColumnName(columnIndex) + rowIndex;
 
             Row row;
@@ -864,7 +866,7 @@ namespace DataMigrator.Office
                     }
                 }
 
-                Cell newCell = new Cell() { CellReference = cellReference };
+                var newCell = new Cell { CellReference = cellReference };
                 row.InsertBefore(newCell, refCell);
 
                 worksheet.Save();
@@ -874,7 +876,7 @@ namespace DataMigrator.Office
 
         private Row CreateContentRow(string sheetName, DataRow dataRow, uint rowIndex)
         {
-            Row row = new Row { RowIndex = (uint)rowIndex };
+            var row = new Row { RowIndex = (uint)rowIndex };
 
             for (int i = 0; i < dataRow.Table.Columns.Count; i++)
             {
@@ -909,7 +911,7 @@ namespace DataMigrator.Office
 
         private string GetCellValue(Cell cell)
         {
-            SharedStringTablePart sharedStringTablePart = Document.WorkbookPart.SharedStringTablePart;
+            var sharedStringTablePart = Document.WorkbookPart.SharedStringTablePart;
             string value = cell.CellValue.InnerXml;
 
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
@@ -929,7 +931,7 @@ namespace DataMigrator.Office
             {
                 modifier = (dividend - 1) % 26;
                 columnName = Convert.ToChar(65 + modifier).ToString() + columnName;
-                dividend = (int)((dividend - modifier) / 26);
+                dividend = (dividend - modifier) / 26;
             }
 
             return columnName;
@@ -939,7 +941,7 @@ namespace DataMigrator.Office
         private static void CleanView(WorksheetPart worksheetPart)
         {
             //There can only be one sheet that has focus
-            SheetViews sheetViews = worksheetPart.Worksheet.GetFirstChild<SheetViews>();
+            var sheetViews = worksheetPart.Worksheet.GetFirstChild<SheetViews>();
 
             if (sheetViews != null)
             {
@@ -951,7 +953,7 @@ namespace DataMigrator.Office
         private static void FixupTableParts(WorksheetPart worksheetPart, uint tableID)
         {
             //Every table needs a unique id and name
-            foreach (TableDefinitionPart tableDefPart in worksheetPart.TableDefinitionParts)
+            foreach (var tableDefPart in worksheetPart.TableDefinitionParts)
             {
                 tableDefPart.Table.Id = tableID + 1;
                 string tableName = string.Concat("CopiedTable", tableID, 1);
@@ -967,13 +969,17 @@ namespace DataMigrator.Office
             UInt32Value fillIndex,
             UInt32Value numberFormatId)
         {
-            CellFormat cellFormat = new CellFormat();
+            var cellFormat = new CellFormat();
 
             if (fontIndex != null)
+            {
                 cellFormat.FontId = fontIndex;
+            }
 
             if (fillIndex != null)
+            {
                 cellFormat.FillId = fillIndex;
+            }
 
             if (numberFormatId != null)
             {
@@ -983,7 +989,7 @@ namespace DataMigrator.Office
 
             styleSheet.CellFormats.Append(cellFormat);
 
-            UInt32Value result = styleSheet.CellFormats.Count;
+            var result = styleSheet.CellFormats.Count;
             styleSheet.CellFormats.Count++;
             return result;
         }

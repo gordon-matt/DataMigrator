@@ -5,10 +5,7 @@ namespace DataMigrator.Common.Models
 {
     public class FieldCollection : List<Field>
     {
-        public Field this[string name]
-        {
-            get { return this.SingleOrDefault(x => x.Name == name); }
-        }
+        public Field this[string name]=> this.SingleOrDefault(x => x.Name == name);
 
         public FieldCollection() { }
 

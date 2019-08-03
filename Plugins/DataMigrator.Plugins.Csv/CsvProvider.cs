@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
-using System.Text;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using Kore;
-using System.IO;
-using Kore.IO;
-using System.Data;
 using Kore.Collections;
 using Kore.Data;
+using Kore.IO;
 
 namespace DataMigrator.Csv
 {
@@ -28,7 +27,7 @@ namespace DataMigrator.Csv
         public override bool CreateField(string tableName, Field field)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            DataTable table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
             table.Columns.Add(field.Name);
             table.ToCsv(ConnectionDetails.Database, true);
             return true;
@@ -42,7 +41,7 @@ namespace DataMigrator.Csv
         public override bool CreateTable(string tableName, IEnumerable<Field> fields)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            DataTable table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
             fields.ForEach(field => table.Columns.Add(field.Name));
             table.ToCsv(ConnectionDetails.Database, true);
             return true;
@@ -56,15 +55,15 @@ namespace DataMigrator.Csv
         public override IEnumerable<string> GetFieldNames(string tableName)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            DataTable table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
             return table.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
         }
 
         public override FieldCollection GetFields(string tableName)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            DataTable table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
-            FieldCollection fields = new FieldCollection();
+            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var fields = new FieldCollection();
             table.Columns.Cast<DataColumn>().ForEach(c => fields.Add(new Field
             {
                 Name = c.ColumnName,
@@ -87,7 +86,7 @@ namespace DataMigrator.Csv
         public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            DataTable table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
             foreach (DataRow row in table.Rows)
             {
                 Record record = new Record();
@@ -103,7 +102,7 @@ namespace DataMigrator.Csv
         public override void InsertRecords(string tableName, IEnumerable<Record> records)
         {
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            DataTable table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
 
             records.ForEach(record =>
                 {

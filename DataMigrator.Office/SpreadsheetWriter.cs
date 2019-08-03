@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using DocumentFormat.OpenXml;
@@ -16,7 +15,6 @@ namespace DataMigrator.Office
         //Private constructor - static library of functions
         private SpreadsheetWriter()
         {
-
         }
 
         ///<summary>
@@ -24,7 +22,7 @@ namespace DataMigrator.Office
         ///</summary>
         public static WorksheetPart InsertWorksheet(SpreadsheetDocument document)
         {
-            return InsertWorksheet(document, "");
+            return InsertWorksheet(document, string.Empty);
         }
 
         ///<summary>
@@ -38,7 +36,7 @@ namespace DataMigrator.Office
             // Thanks goes to koshinae@codeplex for this method
 
             // Get sheets where sheetname is the provided text.
-            IEnumerable<Sheet> sheets = doc.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetname);
+            var sheets = doc.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetname);
 
             // If the specified worksheet does not exist, create it.
             if (sheets.Count() == 0)
@@ -52,29 +50,29 @@ namespace DataMigrator.Office
                 int sheetnumber = doc.WorkbookPart.WorksheetParts.Count() + 1;
 
                 // Create the new worksheetpart
-                WorksheetPart wsp = doc.WorkbookPart.AddNewPart<WorksheetPart>(rId);
+                var wsp = doc.WorkbookPart.AddNewPart<WorksheetPart>(rId);
 
                 // Add important stuff :-)
                 doc.WorkbookPart.Workbook.Sheets.AppendChild<Sheet>(new Sheet() { Id = rId, SheetId = newId, Name = sheetname });
 
                 wsp.Worksheet = new Worksheet();
                 wsp.Worksheet.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-                wsp.Worksheet.AppendChild<SheetDimension>(new SheetDimension());
-                wsp.Worksheet.AppendChild<SheetViews>(new SheetViews()).AppendChild<SheetView>(new SheetView() { WorkbookViewId = 0 });
-                wsp.Worksheet.AppendChild<SheetFormatProperties>(new SheetFormatProperties() { DefaultRowHeight = 15 });
-                wsp.Worksheet.AppendChild<SheetData>(new SheetData());
-                wsp.Worksheet.AppendChild<PageMargins>(new PageMargins() { Left = 0.7, Right = 0.7, Top = 0.75, Bottom = 0.75, Header = 0.3, Footer = 0.3 });
+                wsp.Worksheet.AppendChild(new SheetDimension());
+                wsp.Worksheet.AppendChild(new SheetViews()).AppendChild<SheetView>(new SheetView() { WorkbookViewId = 0 });
+                wsp.Worksheet.AppendChild(new SheetFormatProperties() { DefaultRowHeight = 15 });
+                wsp.Worksheet.AppendChild(new SheetData());
+                wsp.Worksheet.AppendChild(new PageMargins() { Left = 0.7, Right = 0.7, Top = 0.75, Bottom = 0.75, Header = 0.3, Footer = 0.3 });
 
                 // Store the relationship of the workbook and the sheet
                 doc.Package.CreateRelationship(new Uri("worksheets/sheet" + sheetnumber + ".xml", UriKind.Relative), System.IO.Packaging.TargetMode.Internal, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet", rId);
                 doc.Package.Flush(); // !!!
-                
+
                 // return the new worksheetpart
                 return wsp;
             }
 
             // Return the sheet we found instead
-            return (WorksheetPart) doc.WorkbookPart.GetPartById(sheets.First().Id);
+            return (WorksheetPart)doc.WorkbookPart.GetPartById(sheets.First().Id);
         }
 
         ///<summary>
@@ -85,24 +83,24 @@ namespace DataMigrator.Office
         ///<returns>A boolean indicating whether the worksheet was successfully removed.</returns>
         public static bool RemoveWorksheet(SpreadsheetDocument doc, string sheetName)
         {
-            IEnumerable<Sheet> sheets = doc.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName);
+            var sheets = doc.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName);
             if (sheets.Count() == 0) return false;
 
             doc.WorkbookPart.DeletePart(sheets.First().Id);
             doc.WorkbookPart.Workbook.Sheets.RemoveChild<Sheet>(sheets.First());
-           
+
             return true;
         }
 
         ///<summary>
         ///Given text and a SharedStringTablePart, creates or returns a SharedStringItem with the specified text
-        ///</summary> 
+        ///</summary>
         public static uint GetSharedStringItem(string text, SharedStringTablePart shareStringPart)
         {
             uint i = 0;
 
             // Iterate through all the items in the SharedStringTable. If the text already exists, return its index.
-            foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
+            foreach (var item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
             {
                 if (item.InnerText == text) return i;
                 i = i + Convert.ToUInt32(1);
@@ -122,12 +120,12 @@ namespace DataMigrator.Office
         public static UInt32 CreateFont(SpreadsheetStyle style, WorkbookStylesPart styles)
         {
             Font fontMatch = null;
-            UInt32 fontIndex = 0;
+            uint fontIndex = 0;
 
             //Loop through and see if there is a matching font style
             foreach (var fontElement in styles.Stylesheet.Fonts)
             {
-                Font font = (Font) fontElement;
+                var font = (Font)fontElement;
 
                 //If we have a match then use this font
                 if (SpreadsheetStyle.CompareFont(font, style))
@@ -141,8 +139,8 @@ namespace DataMigrator.Office
             //Add the new font if not found
             if (fontMatch == null)
             {
-                Font font = style.ToFont();
-                styles.Stylesheet.Fonts.AppendChild<Font>(font); //Font index already set to new count
+                var font = style.ToFont();
+                styles.Stylesheet.Fonts.AppendChild(font); //Font index already set to new count
                 styles.Stylesheet.Fonts.Count = fontIndex + Convert.ToUInt32(1);
             }
 
@@ -152,106 +150,106 @@ namespace DataMigrator.Office
         ///<summary>
         ///Creates or gets an existing font with the style information provided.
         ///</summary>
-        public static UInt32 CreateFill(SpreadsheetStyle style, WorkbookStylesPart styles)
-	    {
-		    Fill fillMatch = null;
-		    UInt32 fillIndex = 0;
+        public static uint CreateFill(SpreadsheetStyle style, WorkbookStylesPart styles)
+        {
+            Fill fillMatch = null;
+            uint fillIndex = 0;
 
-		    //Loop through and see if there is a matching font style
-		    foreach (var fillElement in styles.Stylesheet.Fills) 
+            //Loop through and see if there is a matching font style
+            foreach (var fillElement in styles.Stylesheet.Fills)
             {
-			    Fill fill = (Fill)fillElement;
+                var fill = (Fill)fillElement;
 
-			    //If we have a match then use this font
-			    if (SpreadsheetStyle.CompareFill(fill, style)) 
+                //If we have a match then use this font
+                if (SpreadsheetStyle.CompareFill(fill, style))
                 {
-				    fillMatch = fill;
-				    break;
-			    }
-			    fillIndex += Convert.ToUInt32(1);
-		    }
+                    fillMatch = fill;
+                    break;
+                }
+                fillIndex += Convert.ToUInt32(1);
+            }
 
-		    //Add the new fill if not found
-		    if (fillMatch == null) 
+            //Add the new fill if not found
+            if (fillMatch == null)
             {
-			    Fill fill = style.ToFill();
+                var fill = style.ToFill();
                 styles.Stylesheet.Fills.AppendChild<Fill>(fill);  //Font index already set to new count
-			    styles.Stylesheet.Fills.Count.Value = fillIndex + Convert.ToUInt32(1);
-		    }
+                styles.Stylesheet.Fills.Count.Value = fillIndex + Convert.ToUInt32(1);
+            }
 
-		    return fillIndex;
-	    }
+            return fillIndex;
+        }
 
         ///<summary>
         ///Creates or gets an existing font with the style information provided.
         ///</summary>
-        public static UInt32 CreateBorder(SpreadsheetStyle style, WorkbookStylesPart styles)
-	    {
-		    Border borderMatch = null;
-		    UInt32 borderIndex = 0;
+        public static uint CreateBorder(SpreadsheetStyle style, WorkbookStylesPart styles)
+        {
+            Border borderMatch = null;
+            uint borderIndex = 0;
 
-		    //Loop through and see if there is a matching border style
-		    foreach (var borderElement in styles.Stylesheet.Borders) 
+            //Loop through and see if there is a matching border style
+            foreach (var borderElement in styles.Stylesheet.Borders)
             {
-			    Border border = (Border) borderElement;
+                var border = (Border)borderElement;
 
-			    //If we have a match then use this font
-			    if (SpreadsheetStyle.CompareBorder(border, style)) 
+                //If we have a match then use this font
+                if (SpreadsheetStyle.CompareBorder(border, style))
                 {
-				    borderMatch = border;
-				    break; 			    
+                    borderMatch = border;
+                    break;
                 }
-			    borderIndex += Convert.ToUInt32(1);
-		    }
+                borderIndex += Convert.ToUInt32(1);
+            }
 
-		    //Add the new border if not found
-		    if (borderMatch == null) 
+            //Add the new border if not found
+            if (borderMatch == null)
             {
-			    Border border = style.ToBorder();
-			    styles.Stylesheet.Borders.AppendChild<Border>(border); //Font index already set to new count
-			    styles.Stylesheet.Borders.Count = borderIndex + Convert.ToUInt32(1);
-		    }
+                var border = style.ToBorder();
+                styles.Stylesheet.Borders.AppendChild<Border>(border); //Font index already set to new count
+                styles.Stylesheet.Borders.Count = borderIndex + Convert.ToUInt32(1);
+            }
 
-		    return borderIndex;
-	    }
-
+            return borderIndex;
+        }
 
         ///<summary>
         ///Creates or gets an existing number format.
         ///</summary>
-        public static UInt32 CreateNumberFormat(SpreadsheetStyle style, WorkbookStylesPart styles)
+        public static uint CreateNumberFormat(SpreadsheetStyle style, WorkbookStylesPart styles)
         {
             NumberingFormat formatMatch = null;
-	        UInt32 formatIndex = 0; //starts at 164
+            uint formatIndex = 0; //starts at 164
 
-	        //Loop through and see if there is a matching border style
-	        if (styles.Stylesheet.NumberingFormats != null) 
+            //Loop through and see if there is a matching border style
+            if (styles.Stylesheet.NumberingFormats != null)
             {
-		        foreach (var formatElement in styles.Stylesheet.NumberingFormats)
+                foreach (var formatElement in styles.Stylesheet.NumberingFormats)
                 {
                     var format = (NumberingFormat)formatElement;
 
-			        //If we have a match then use this font
-			        if (SpreadsheetStyle.CompareNumberFormat(format, style)) 
+                    //If we have a match then use this font
+                    if (SpreadsheetStyle.CompareNumberFormat(format, style))
                     {
-				        formatMatch = format;
-				        break;
-			        }
-			        formatIndex += Convert.ToUInt32(1);
-		        }
-	        }
+                        formatMatch = format;
+                        break;
+                    }
+                    formatIndex += Convert.ToUInt32(1);
+                }
+            }
 
-	        //Add the new number format if not found
-	        if (formatMatch == null) {
-		        NumberingFormat format = style.ToNumberFormat();
+            //Add the new number format if not found
+            if (formatMatch == null)
+            {
+                NumberingFormat format = style.ToNumberFormat();
 
-		        format.NumberFormatId = formatIndex + Convert.ToUInt32(164);
-		        if (styles.Stylesheet.NumberingFormats == null) styles.Stylesheet.NumberingFormats = new NumberingFormats(); 
-		        styles.Stylesheet.NumberingFormats.AppendChild<NumberingFormat>(format);
-		        styles.Stylesheet.NumberingFormats.Count = formatIndex + Convert.ToUInt32(1);
-	        }
+                format.NumberFormatId = formatIndex + Convert.ToUInt32(164);
+                if (styles.Stylesheet.NumberingFormats == null) styles.Stylesheet.NumberingFormats = new NumberingFormats();
+                styles.Stylesheet.NumberingFormats.AppendChild<NumberingFormat>(format);
+                styles.Stylesheet.NumberingFormats.Count = formatIndex + Convert.ToUInt32(1);
+            }
 
-	        return formatIndex + Convert.ToUInt32(164);
+            return formatIndex + Convert.ToUInt32(164);
         }
 
         /// <summary>
@@ -260,7 +258,7 @@ namespace DataMigrator.Office
         public static void Save(SpreadsheetDocument spreadsheet)
         {
             //Save all worksheets
-            foreach (WorksheetPart worksheetPart in spreadsheet.WorkbookPart.WorksheetParts)
+            foreach (var worksheetPart in spreadsheet.WorkbookPart.WorksheetParts)
             {
                 SetRowSpans(worksheetPart);
                 SetWorksheetDimension(worksheetPart);
@@ -268,13 +266,13 @@ namespace DataMigrator.Office
             }
 
             //Save the style information
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
             styles.Stylesheet.Save();
 
             //Save the shared string table part
             if (spreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
             {
-                SharedStringTablePart shareStringPart = spreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                var shareStringPart = spreadsheet.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
                 shareStringPart.SharedStringTable.Save();
             }
 
@@ -287,7 +285,7 @@ namespace DataMigrator.Office
         /// </summary>
         public static void SetRowSpans(WorksheetPart worksheetPart)
         {
-            SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
 
             //Loop through all rows in the worksheet
             foreach (var row in sheetData.Elements<Row>())
@@ -314,8 +312,8 @@ namespace DataMigrator.Office
         /// </summary>
         public static SheetDimension SetWorksheetDimension(WorksheetPart worksheetPart)
         {
-            SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-            IEnumerable<Row> rows = sheetData.Elements<Row>();
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            var rows = sheetData.Elements<Row>();
 
             string firstCol = string.Empty;
             string lastCol = string.Empty;
@@ -323,8 +321,8 @@ namespace DataMigrator.Office
             //Loop through all rows in the worksheet
             foreach (Row row in rows)
             {
-                Cell startCell = row.Elements<Cell>().First();
-                Cell endCell = row.Elements<Cell>().Last();
+                var startCell = row.Elements<Cell>().First();
+                var endCell = row.Elements<Cell>().Last();
 
                 string startCol = SpreadsheetReader.ColumnFromReference(startCell.CellReference);
                 string endCol = SpreadsheetReader.ColumnFromReference(endCell.CellReference);
@@ -334,7 +332,7 @@ namespace DataMigrator.Office
             }
 
             //Write out the dimension value
-            SheetDimension dimension = worksheetPart.Worksheet.GetFirstChild<SheetDimension>();
+            var dimension = worksheetPart.Worksheet.GetFirstChild<SheetDimension>();
 
             if (rows.Count() == 0)
             {
@@ -342,8 +340,8 @@ namespace DataMigrator.Office
             }
             else
             {
-                Row firstRow = rows.First();
-                Row lastRow = rows.Last();
+                var firstRow = rows.First();
+                var lastRow = rows.Last();
 
                 if (object.ReferenceEquals(firstRow, lastRow) && firstCol == lastCol)
                 {
@@ -363,15 +361,15 @@ namespace DataMigrator.Office
         /// </summary>
         public static string ToXmlNumeric(object value)
         {
-            if (value.GetType() == typeof(short)) return XmlConvert.ToString((short) value);
-            if (value.GetType() == typeof(int)) return XmlConvert.ToString((int) value);
-            if (value.GetType() == typeof(long)) return XmlConvert.ToString((long) value);
-            if (value.GetType() == typeof(float)) return XmlConvert.ToString((float) value);
-            if (value.GetType() == typeof(double)) return XmlConvert.ToString((double) value);
-            if (value.GetType() == typeof(decimal)) return XmlConvert.ToString((decimal) value);
-            if (value.GetType() == typeof(ushort)) return XmlConvert.ToString((ushort) value);
-            if (value.GetType() == typeof(uint)) return XmlConvert.ToString((uint) value);
-            if (value.GetType() == typeof(ulong)) return XmlConvert.ToString((ulong) value);
+            if (value.GetType() == typeof(short)) return XmlConvert.ToString((short)value);
+            if (value.GetType() == typeof(int)) return XmlConvert.ToString((int)value);
+            if (value.GetType() == typeof(long)) return XmlConvert.ToString((long)value);
+            if (value.GetType() == typeof(float)) return XmlConvert.ToString((float)value);
+            if (value.GetType() == typeof(double)) return XmlConvert.ToString((double)value);
+            if (value.GetType() == typeof(decimal)) return XmlConvert.ToString((decimal)value);
+            if (value.GetType() == typeof(ushort)) return XmlConvert.ToString((ushort)value);
+            if (value.GetType() == typeof(uint)) return XmlConvert.ToString((uint)value);
+            if (value.GetType() == typeof(ulong)) return XmlConvert.ToString((ulong)value);
 
             return value.ToString();
         }

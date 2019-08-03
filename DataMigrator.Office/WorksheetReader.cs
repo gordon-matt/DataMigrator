@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -13,7 +12,6 @@ namespace DataMigrator.Office
         //Blocks the constructor as this is intended to be a static library
         private WorksheetReader()
         {
-
         }
 
         /// <summary>
@@ -44,8 +42,8 @@ namespace DataMigrator.Office
         /// </summary>
         public static Column GetColumn(WorksheetPart worksheetPart, uint columnIndex)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            Columns cols = worksheet.GetFirstChild<Columns>();
+            var worksheet = worksheetPart.Worksheet;
+            var cols = worksheet.GetFirstChild<Columns>();
             Column col = null;
 
             //If no columns have been created, return null
@@ -61,9 +59,9 @@ namespace DataMigrator.Office
                 //Insert new column range before
                 if (col.Min < columnIndex)
                 {
-                    Column before = col.CloneElement<Column>();
+                    var before = col.CloneElement<Column>();
                     before.Max = columnIndex - 1;
-                    cols.InsertBefore<Column>(before, col);
+                    cols.InsertBefore(before, col);
 
                     col.Min = columnIndex;
                 }
@@ -71,9 +69,9 @@ namespace DataMigrator.Office
                 //Insert new column range after
                 if (col.Max > columnIndex)
                 {
-                    Column after = col.CloneElement<Column>();
+                    var after = col.CloneElement<Column>();
                     after.Min = columnIndex + 1;
-                    cols.InsertAfter<Column>(after, col);
+                    cols.InsertAfter(after, col);
 
                     col.Max = columnIndex;
                 }
@@ -94,8 +92,8 @@ namespace DataMigrator.Office
         ///</remarks>
         public static Cell GetCell(string columnName, uint rowIndex, WorksheetPart worksheetPart)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            var worksheet = worksheetPart.Worksheet;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
             string cellReference = (columnName + rowIndex.ToString());
 
             // If the worksheet does not contain a row with the specified row index, insert one.
@@ -109,8 +107,8 @@ namespace DataMigrator.Office
                 return null;
             }
 
-            //If there is not a cell with the specified column name, return null 
-            IEnumerable<Cell> cells = row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
+            //If there is not a cell with the specified column name, return null
+            var cells = row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference);
             if (cells.Count() > 0)
             {
                 return cells.First();
@@ -129,16 +127,16 @@ namespace DataMigrator.Office
         ///</remarks>
         public static SpreadsheetStyle GetStyle(SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint rowIndex)
         {
-            WorkbookStylesPart styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
-            Cell cell = WorksheetReader.GetCell(column, rowIndex, worksheetPart); //Get the cell if it exists
+            var styles = SpreadsheetReader.GetWorkbookStyles(spreadsheet);
+            var cell = GetCell(column, rowIndex, worksheetPart); //Get the cell if it exists
 
             if (cell == null || cell.StyleIndex == null) return null;
 
-            CellFormat cellFormat = (CellFormat) styles.Stylesheet.CellFormats.ChildElements[(int) cell.StyleIndex.Value];
-            Font font = (Font) styles.Stylesheet.Fonts.ChildElements[(int) cellFormat.FontId.Value];
-            Fill fill = (Fill) styles.Stylesheet.Fills.ChildElements[(int) cellFormat.FillId.Value];
-            Border border = (Border) styles.Stylesheet.Borders.ChildElements[(int) cellFormat.BorderId.Value];
-            Alignment alignment = cellFormat.Alignment;
+            var cellFormat = (CellFormat)styles.Stylesheet.CellFormats.ChildElements[(int)cell.StyleIndex.Value];
+            var font = (Font)styles.Stylesheet.Fonts.ChildElements[(int)cellFormat.FontId.Value];
+            var fill = (Fill)styles.Stylesheet.Fills.ChildElements[(int)cellFormat.FillId.Value];
+            var border = (Border)styles.Stylesheet.Borders.ChildElements[(int)cellFormat.BorderId.Value];
+            var alignment = cellFormat.Alignment;
 
             NumberingFormat numberFormat = null;
 
@@ -147,7 +145,7 @@ namespace DataMigrator.Office
             {
                 foreach (var numberFormatElement in styles.Stylesheet.NumberingFormats)
                 {
-                    var formatLoop = (NumberingFormat) numberFormatElement;
+                    var formatLoop = (NumberingFormat)numberFormatElement;
                     if (formatLoop.NumberFormatId.HasValue && cellFormat.NumberFormatId.HasValue && formatLoop.NumberFormatId.Value == cellFormat.NumberFormatId.Value)
                     {
                         numberFormat = formatLoop;
@@ -167,8 +165,11 @@ namespace DataMigrator.Office
         ///</remarks>
         public static SpreadsheetStyle GetStyleWithDefault(SpreadsheetDocument spreadsheet, WorksheetPart worksheetPart, string column, uint rowIndex)
         {
-            SpreadsheetStyle result = GetStyle(spreadsheet, worksheetPart, column, rowIndex);
-            if (result == null) result = SpreadsheetReader.GetDefaultStyle(spreadsheet);
+            var result = GetStyle(spreadsheet, worksheetPart, column, rowIndex);
+            if (result == null)
+            {
+                result = SpreadsheetReader.GetDefaultStyle(spreadsheet);
+            }
 
             return result;
         }
@@ -180,7 +181,5 @@ namespace DataMigrator.Office
         {
             return worksheetPart.Worksheet.GetFirstChild<PageSetup>();
         }
-
-
     }
 }

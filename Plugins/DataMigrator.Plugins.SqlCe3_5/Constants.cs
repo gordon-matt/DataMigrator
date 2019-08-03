@@ -1,5 +1,4 @@
-﻿
-namespace DataMigrator.SqlCe3_5
+﻿namespace DataMigrator.SqlCe3_5
 {
     internal static class Constants
     {

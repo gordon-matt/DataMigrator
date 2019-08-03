@@ -61,14 +61,8 @@ namespace DataMigrator.Common.Models
 
     public class ExtendedPropertyCollection : List<ExtendedProperty>
     {
-        public ExtendedProperty this[string key]
-        {
-            get { return this.SingleOrDefault(x => x.Key == key); }
-        }
-        
-        public void Add(string key, object value)
-        {
-            this.Add(new ExtendedProperty { Key = key, Value = value });
-        }
+        public ExtendedProperty this[string key] => this.SingleOrDefault(x => x.Key == key);
+
+        public void Add(string key, object value) => this.Add(new ExtendedProperty { Key = key, Value = value });
     }
 }

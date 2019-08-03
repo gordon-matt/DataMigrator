@@ -43,7 +43,7 @@ namespace DataMigrator.Access
                     return string.Empty;
                 }
 
-                #endregion
+                #endregion Checks
 
                 if (string.IsNullOrWhiteSpace(UserName))
                 {
@@ -63,10 +63,7 @@ namespace DataMigrator.Access
 
         #region IConnectionControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public ConnectionDetails ConnectionDetails
         {
@@ -93,13 +90,13 @@ namespace DataMigrator.Access
 
         public bool ValidateConnection()
         {
-            using (OleDbConnection connection = new OleDbConnection(ConnectionString))
+            using (var connection = new OleDbConnection(ConnectionString))
             {
                 return connection.Validate();
             }
         }
 
-        #endregion
+        #endregion IConnectionControl Members
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {

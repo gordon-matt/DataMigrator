@@ -10,20 +10,11 @@ namespace DataMigrator.Common.Collections
 
         #region IList<T> Members
 
-        public int IndexOf(T item)
-        {
-            return list.IndexOf(item);
-        }
+        public int IndexOf(T item) => list.IndexOf(item);
 
-        public void Insert(int index, T item)
-        {
-            list.Insert(index, item);
-        }
+        public void Insert(int index, T item) => list.Insert(index, item);
 
-        public void RemoveAt(int index)
-        {
-            list.RemoveAt(index);
-        }
+        public void RemoveAt(int index) => list.RemoveAt(index);
 
         #endregion IList<T> Members
     }

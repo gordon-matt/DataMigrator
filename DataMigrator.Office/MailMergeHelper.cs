@@ -83,7 +83,7 @@ namespace DataMigrator.Office
                         continue;
                     }
 
-                    DataTable dataTable = dataSet.Tables[tableName];
+                    var dataTable = dataSet.Tables[tableName];
 
                     var cellPropertiesList = new List<TableCellProperties>();
                     var cellColumnNamesList = new List<string>();
@@ -129,7 +129,7 @@ namespace DataMigrator.Office
 
                     foreach (DataRow dataRow in dataTable.Rows)
                     {
-                        TableRow row = new TableRow();
+                        var row = new TableRow();
 
                         if (rowProperties != null)
                         {
@@ -382,17 +382,17 @@ namespace DataMigrator.Office
                         // Prepend any text specified to appear before the data in the MergeField
                         if (!string.IsNullOrEmpty(options[1]))
                         {
-                            field.Parent.InsertBeforeSelf<Paragraph>(GetPreOrPostParagraphToInsert(formattedText[1], field));
+                            field.Parent.InsertBeforeSelf(GetPreOrPostParagraphToInsert(formattedText[1], field));
                         }
 
                         // Append any text specified to appear after the data in the MergeField
                         if (!string.IsNullOrEmpty(options[2]))
                         {
-                            field.Parent.InsertAfterSelf<Paragraph>(GetPreOrPostParagraphToInsert(formattedText[2], field));
+                            field.Parent.InsertAfterSelf(GetPreOrPostParagraphToInsert(formattedText[2], field));
                         }
 
                         // replace mergefield with text
-                        field.Parent.ReplaceChild<SimpleField>(GetRunElementForText(formattedText[0], field), field);
+                        field.Parent.ReplaceChild(GetRunElementForText(formattedText[0], field), field);
                     }
                     else
                     {
@@ -654,7 +654,7 @@ namespace DataMigrator.Office
             int index = 0;
             do
             {
-                Run run = runElements[index];
+                var run = runElements[index];
 
                 if (run.HasChildren &&
                     run.Descendants<FieldChar>().Count() > 0 &&
