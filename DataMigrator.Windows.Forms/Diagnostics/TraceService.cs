@@ -12,12 +12,7 @@ namespace DataMigrator.Windows.Forms.Diagnostics
 
     public sealed class TraceService
     {
-        private static TraceService instance = new TraceService();
-
-        public static TraceService Instance
-        {
-            get { return instance; }
-        }
+        public static TraceService Instance => new TraceService();
 
         public delegate void TraceEventHandler(TraceEventArgs e);
 

@@ -18,10 +18,10 @@ namespace DataMigrator.Views
             if (txtTrace.InvokeRequired)
             {
                 Invoke(new MethodInvoker(() =>
-                    {
-                        txtTrace.AppendText(e.Message);
-                        txtTrace.AppendText(Environment.NewLine);
-                    }));
+                {
+                    txtTrace.AppendText(e.Message);
+                    txtTrace.AppendText(Environment.NewLine);
+                }));
             }
             else
             {

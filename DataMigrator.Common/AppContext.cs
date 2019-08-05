@@ -5,6 +5,7 @@ namespace DataMigrator.Common
     public static class AppContext
     {
         private static DbTypeConverter dbTypeConverter = null;
+
         public static DbTypeConverter DbTypeConverter
         {
             get
@@ -18,6 +19,7 @@ namespace DataMigrator.Common
         }
 
         private static SqlDbTypeConverter sqlDbTypeConverter = null;
+
         public static SqlDbTypeConverter SqlDbTypeConverter
         {
             get
@@ -31,6 +33,7 @@ namespace DataMigrator.Common
         }
 
         private static SystemTypeConverter systemTypeConverter = null;
+
         public static SystemTypeConverter SystemTypeConverter
         {
             get

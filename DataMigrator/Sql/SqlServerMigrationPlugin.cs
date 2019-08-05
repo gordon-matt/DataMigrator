@@ -11,31 +11,16 @@ namespace DataMigrator.Sql
     {
         #region IMigrationPlugin Members
 
-        public string ProviderName
-        {
-            get { return Constants.SQL_PROVIDER_NAME; }
-        }
+        public string ProviderName => Constants.SQL_PROVIDER_NAME;
 
-        public IConnectionControl ConnectionControl
-        {
-            get { return new SqlConnectionControl(); }
-        }
+        public IConnectionControl ConnectionControl => new SqlConnectionControl();
 
-        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
-        {
-            return new SqlProvider(connectionDetails);
-        }
+        public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new SqlProvider(connectionDetails);
 
-        public ISettingsControl SettingsControl
-        {
-            get { return null; }
-        }
+        public ISettingsControl SettingsControl => null;
 
-        public IEnumerable<IMigrationTool> Tools
-        {
-            get { return null; }
-        }
+        public IEnumerable<IMigrationTool> Tools => null;
 
-        #endregion
+        #endregion IMigrationPlugin Members
     }
 }

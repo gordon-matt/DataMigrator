@@ -19,16 +19,13 @@ namespace DataMigrator.Views
 
         #region ISettingsControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public void Save()
         {
             Program.Configuration.BatchSize = this.BatchSize;
         }
 
-        #endregion
+        #endregion ISettingsControl Members
     }
 }

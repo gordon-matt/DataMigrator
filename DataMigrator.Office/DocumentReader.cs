@@ -4,7 +4,7 @@ namespace DataMigrator.Office
 {
     public class DocumentReader : AbstractReader
     {
-        //Private constructor 
+        //Private constructor
         private DocumentReader()
         {
         }

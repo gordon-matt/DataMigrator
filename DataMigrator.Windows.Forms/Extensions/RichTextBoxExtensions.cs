@@ -24,7 +24,7 @@ namespace DataMigrator.Windows.Forms
 
         public static void HighlightAll(this RichTextBox richTextBox, string text, Color color)
         {
-            Regex regex = new Regex(text, RegexOptions.Compiled);
+            var regex = new Regex(text, RegexOptions.Compiled);
 
             foreach (Match match in regex.Matches(richTextBox.Text))
             {

@@ -89,7 +89,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     }
                     this.DataGridView.InvalidateColumn(this.Index);
                     // TODO: This column and/or grid rows may need to be autosized depending on their
-                    //       autosize settings. Call the autosizing methods to autosize the column, rows, 
+                    //       autosize settings. Call the autosizing methods to autosize the column, rows,
                     //       column headers / row headers as needed.
                 }
             }
@@ -307,6 +307,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             return sb.ToString();
         }
     }
+
     public class DataGridViewRadioButtonCell : DataGridViewComboBoxCell, IDataGridViewEditingCell
     {
         /// <summary>
@@ -321,20 +322,25 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
 
         // 4 pixels of margin on the left and right of error icons
         private const byte DATAGRIDVIEWRADIOBUTTONCELL_iconMarginWidth = 4;
+
         // 4 pixels of margin on the top and bottom of error icons
         private const byte DATAGRIDVIEWRADIOBUTTONCELL_iconMarginHeight = 4;
+
         // all icons are 12 pixels wide by default
         private const byte DATAGRIDVIEWRADIOBUTTONCELL_iconsWidth = 12;
+
         // all icons are 11 pixels tall by default
         private const byte DATAGRIDVIEWRADIOBUTTONCELL_iconsHeight = 11;
 
         // default value of MaxDisplayedItems property
         internal const int DATAGRIDVIEWRADIOBUTTONCELL_defaultMaxDisplayedItems = 3;
+
         // blank pixels around each radio button entry
         private const byte DATAGRIDVIEWRADIOBUTTONCELL_margin = 2;
 
         // codes used for the mouseLocationCode static variable:
         private const int DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationGeneric = -3;
+
         private const int DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationBottomScrollButton = -2; // mouse is over bottom scroll button
         private const int DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationTopScrollButton = -1;    // mouse is over top scroll button
 
@@ -462,7 +468,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Called by the grid when the cell enters editing mode. 
+        /// Called by the grid when the cell enters editing mode.
         /// </summary>
         public virtual void PrepareEditingCellForEdit(bool selectAll)
         {
@@ -508,7 +514,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Overrides the DataGridViewComboBox's implementation of the DataSource property to 
+        /// Overrides the DataGridViewComboBox's implementation of the DataSource property to
         /// initialize the displayMemberProperty and valueMemberProperty members.
         /// </summary>
         public override object DataSource
@@ -623,7 +629,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                         // Invalidate and autosize column
                         this.DataGridView.InvalidateColumn(this.ColumnIndex);
 
-                        // TODO: Add code to autosize the cell's column, the rows, the column headers 
+                        // TODO: Add code to autosize the cell's column, the rows, the column headers
                         // and the row headers depending on their autosize settings.
                         // The DataGridView control does not expose a public method that takes care of this.
                     }
@@ -996,7 +1002,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Utility function that converts a constraintSize provided to GetPreferredSize into a 
+        /// Utility function that converts a constraintSize provided to GetPreferredSize into a
         /// DataGridViewRadioButtonFreeDimension enum value.
         /// </summary>
         private static DataGridViewRadioButtonFreeDimension GetFreeDimensionFromConstraint(Size constraintSize)
@@ -1030,7 +1036,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Utility function that returns the display value of an item given the 
+        /// Utility function that returns the display value of an item given the
         /// display/value property descriptors and display/value property names.
         /// </summary>
         private object GetItemDisplayValue(object item)
@@ -1074,7 +1080,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Utility function that returns the value of an item given the 
+        /// Utility function that returns the value of an item given the
         /// display/value property descriptors and display/value property names.
         /// </summary>
         private object GetItemValue(object item)
@@ -1258,7 +1264,6 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     }
                 }
             }
-
             else if (upButton)
             {
                 return ScrollBarArrowButtonState.UpNormal;
@@ -1540,18 +1545,21 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 {
                     case DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationGeneric:
                         break;
+
                     case DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationBottomScrollButton:
                         if (this.layout.FirstDisplayedItemIndex + this.layout.DisplayedItemsCount < this.Items.Count)
                         {
                             return true;
                         }
                         break;
+
                     case DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationTopScrollButton:
                         if (this.layout.FirstDisplayedItemIndex > 0)
                         {
                             return true;
                         }
                         break;
+
                     default:
                         if (this.pressedItemIndex != mouseLocationCode + this.layout.FirstDisplayedItemIndex)
                         {
@@ -1748,6 +1756,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 {
                     case DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationGeneric:
                         break;
+
                     case DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationBottomScrollButton:
                         if (this.layout.FirstDisplayedItemIndex + this.layout.TotallyDisplayedItemsCount < this.Items.Count)
                         {
@@ -1756,6 +1765,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                             this.DataGridView.Invalidate(new Rectangle(this.layout.DownButtonLocation, this.layout.ScrollButtonsSize));
                         }
                         break;
+
                     case DATAGRIDVIEWRADIOBUTTONCELL_mouseLocationTopScrollButton:
                         if (this.layout.FirstDisplayedItemIndex > 0)
                         {
@@ -1764,6 +1774,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                             this.DataGridView.Invalidate(new Rectangle(this.layout.UpButtonLocation, this.layout.ScrollButtonsSize));
                         }
                         break;
+
                     default:
                         if (this.pressedItemIndex != mouseLocationCode + this.layout.FirstDisplayedItemIndex)
                         {
@@ -1879,7 +1890,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Invalidates the potential pressed radio button. 
+        /// Invalidates the potential pressed radio button.
         /// </summary>
         protected override void OnMouseUp(DataGridViewCellMouseEventArgs e)
         {
@@ -2075,9 +2086,10 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             return true;
         }
     }
+
     /// <summary>
     /// Internal class that represents the layout of a DataGridViewRadioButtonCell cell.
-    /// It tracks the first displayed item index, the number of displayed items, 
+    /// It tracks the first displayed item index, the number of displayed items,
     /// scrolling information and various location/size information.
     /// </summary>
     internal class DataGridViewRadioButtonCellLayout

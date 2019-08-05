@@ -11,7 +11,7 @@ namespace DataMigrator.Controls
 
         public SettingsTreeView()
         {
-            imageList = new System.Windows.Forms.ImageList();
+            imageList = new ImageList();
             imageList.ImageSize = new Size(24, 24);
             imageList.Images.Add(Resources.TreeNode);
             this.ImageList = imageList;
@@ -21,7 +21,7 @@ namespace DataMigrator.Controls
         {
             if (tag != null)
             {
-                TreeNode treeNode = new TreeNode(providerName);
+                var treeNode = new TreeNode(providerName);
                 treeNode.Tag = tag;
                 this.Nodes.Add(treeNode);
                 return treeNode;

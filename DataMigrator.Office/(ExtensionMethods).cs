@@ -39,7 +39,6 @@ namespace DataMigrator.Office
             else { return null; }
         }
 
-
         public static T CloneElement<T>(this OpenXmlElement value) where T : OpenXmlElement
         {
             return value.CloneNode(true) as T;

@@ -9,6 +9,7 @@ namespace DataMigrator.Windows.Forms.Wizard
         Middle,
         End
     }
+
     public class WizardPageCollection : Dictionary<int, IWizardPage>
     {
         #region Properties
@@ -21,18 +22,12 @@ namespace DataMigrator.Windows.Forms.Wizard
         /// <summary>
         /// The first page in the collection
         /// </summary>
-        public IWizardPage FirstPage
-        {
-            get { return this[this.Min(x => x.Key)]; }
-        }
+        public IWizardPage FirstPage => this[this.Min(x => x.Key)];
 
         /// <summary>
         /// The last page in the collection
         /// </summary>
-        public IWizardPage LastPage
-        {
-            get { return this[this.Max(x => x.Key)]; }
-        }
+        public IWizardPage LastPage => this[this.Max(x => x.Key)];
 
         /// <summary>
         /// The location of the current IWizardPage
@@ -48,11 +43,10 @@ namespace DataMigrator.Windows.Forms.Wizard
         {
             get
             {
-                if (this.Count == 1)
+                if (Count == 1)
                 { return false; }
 
-                if (this.Count > 0 &&
-                    this.PageLocation != WizardPageLocation.End)
+                if (Count > 0 && PageLocation != WizardPageLocation.End)
                 {
                     return true;
                 }
@@ -69,11 +63,10 @@ namespace DataMigrator.Windows.Forms.Wizard
         {
             get
             {
-                if (this.Count == 1)
+                if (Count == 1)
                 { return false; }
 
-                if (this.Count > 0 &&
-                    this.PageLocation != WizardPageLocation.Start)
+                if (Count > 0 && PageLocation != WizardPageLocation.Start)
                 {
                     return true;
                 }
@@ -81,7 +74,7 @@ namespace DataMigrator.Windows.Forms.Wizard
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructor
 
@@ -90,14 +83,15 @@ namespace DataMigrator.Windows.Forms.Wizard
             PageLocation = WizardPageLocation.Start;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Delegates & Events
 
         public delegate void WizardPageLocationChangedEventHanlder(WizardPageLocationChangedEventArgs e);
+
         public event WizardPageLocationChangedEventHanlder WizardPageLocationChanged;
 
-        #endregion
+        #endregion Delegates & Events
 
         #region Public Methods
 
@@ -111,8 +105,7 @@ namespace DataMigrator.Windows.Forms.Wizard
 
             PageLocation = WizardPageLocation.Start;
             // Find the index of the first page
-            int firstPageIndex = (from x in this
-                                  select x.Key).Min();
+            int firstPageIndex = this.Min(x => x.Key);
 
             // Set the current page to be the first page
             CurrentPage = this[firstPageIndex];
@@ -132,8 +125,7 @@ namespace DataMigrator.Windows.Forms.Wizard
 
             PageLocation = WizardPageLocation.End;
             // Find the index of the last page
-            int lastPageIndex = (from x in this
-                                 select x.Key).Max();
+            int lastPageIndex = this.Max(x => x.Key);
 
             // Set the current page to be the last page
             CurrentPage = this[lastPageIndex];
@@ -155,13 +147,10 @@ namespace DataMigrator.Windows.Forms.Wizard
                 CurrentPage != null)
             {
                 // Find the index of the next page
-                int nextPageIndex = (from x in this
-                                     where x.Key > IndexOf(CurrentPage)
-                                     select x.Key).Min();
+                int nextPageIndex = this.Where(x => x.Key > IndexOf(CurrentPage)).Min(x => x.Key);
 
                 // Find the index of the last page
-                int lastPageIndex = (from x in this
-                                     select x.Key).Max();
+                int lastPageIndex = this.Max(x => x.Key);
 
                 // If the next page is the last page
                 if (nextPageIndex == lastPageIndex)
@@ -170,7 +159,7 @@ namespace DataMigrator.Windows.Forms.Wizard
                 }
                 else { PageLocation = WizardPageLocation.Middle; }
 
-                // Set the current page to be the next page                
+                // Set the current page to be the next page
                 CurrentPage = this[nextPageIndex];
                 NotifyPageChanged(previousPageIndex);
 
@@ -187,17 +176,13 @@ namespace DataMigrator.Windows.Forms.Wizard
         {
             int prevPageIndex = IndexOf(CurrentPage);
 
-            if (PageLocation != WizardPageLocation.Start &&
-                CurrentPage != null)
+            if (PageLocation != WizardPageLocation.Start && CurrentPage != null)
             {
                 // Find the index of the previous page
-                int previousPageIndex = (from x in this
-                                         where x.Key < IndexOf(CurrentPage)
-                                         select x.Key).Max();
+                int previousPageIndex = this.Where(x => x.Key < IndexOf(CurrentPage)).Max(x => x.Key);
 
                 // Find the index of the first page
-                int firstPageIndex = (from x in this
-                                      select x.Key).Min();
+                int firstPageIndex = this.Min(x => x.Key);
 
                 // If the previous page is the first page
                 if (previousPageIndex == firstPageIndex)
@@ -222,7 +207,7 @@ namespace DataMigrator.Windows.Forms.Wizard
         /// <returns>Page number for the given IWizardPage</returns>
         public int IndexOf(IWizardPage wizardPage)
         {
-            foreach (KeyValuePair<int, IWizardPage> kv in this)
+            foreach (var kv in this)
             {
                 if (kv.Value.Equals(wizardPage))
                 {
@@ -238,7 +223,7 @@ namespace DataMigrator.Windows.Forms.Wizard
             PageLocation = WizardPageLocation.Start;
         }
 
-        #endregion
+        #endregion Public Methods
 
         #region private Methods
 
@@ -246,7 +231,7 @@ namespace DataMigrator.Windows.Forms.Wizard
         {
             if (WizardPageLocationChanged != null)
             {
-                WizardPageLocationChangedEventArgs e = new WizardPageLocationChangedEventArgs();
+                var e = new WizardPageLocationChangedEventArgs();
                 e.PageLocation = PageLocation;
                 e.PageIndex = IndexOf(CurrentPage);
                 e.PreviousPageIndex = previousPageIndex;
@@ -254,8 +239,9 @@ namespace DataMigrator.Windows.Forms.Wizard
             }
         }
 
-        #endregion
+        #endregion private Methods
     }
+
     public class WizardPageLocationChangedEventArgs
     {
         /// <summary>

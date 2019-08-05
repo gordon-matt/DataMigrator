@@ -10,6 +10,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             : base(new DataGridViewNumericTextBoxCell())
         {
         }
+
         public override DataGridViewCell CellTemplate
         {
             get
@@ -34,20 +35,22 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             return col;
         }
     }
-    public class  DataGridViewNumericTextBoxCell : DataGridViewTextBoxCell
+
+    public class DataGridViewNumericTextBoxCell : DataGridViewTextBoxCell
     {
         public DataGridViewNumericTextBoxCell()
             : base()
         {
         }
+
         public override void InitializeEditingControl(int rowIndex, object
             initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
         {
             // Set the value of the editing control to the current cell value.
             base.InitializeEditingControl(rowIndex, initialFormattedValue,
                 dataGridViewCellStyle);
-             DataGridViewNumericTextBoxEditingControl ctl =
-                DataGridView.EditingControl as DataGridViewNumericTextBoxEditingControl;
+            DataGridViewNumericTextBoxEditingControl ctl =
+               DataGridView.EditingControl as DataGridViewNumericTextBoxEditingControl;
 
             try
             {
@@ -57,6 +60,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             {
             }
         }
+
         public override Type EditType
         {
             get
@@ -65,6 +69,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return typeof(DataGridViewNumericTextBoxEditingControl);
             }
         }
+
         public override Type ValueType
         {
             get
@@ -73,6 +78,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return typeof(System.String);
             }
         }
+
         public override object DefaultNewRowValue
         {
             get
@@ -82,18 +88,20 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             }
         }
     }
+
     [ToolboxItem(false)]
-    class  DataGridViewNumericTextBoxEditingControl : DataMigrator.Windows.Forms.Controls.NumericTextBox,
+    internal class DataGridViewNumericTextBoxEditingControl : DataMigrator.Windows.Forms.Controls.NumericTextBox,
         IDataGridViewEditingControl
     {
-        DataGridView dataGridView;
+        private DataGridView dataGridView;
         private bool valueChanged = false;
-        int rowIndex;
+        private int rowIndex;
 
         public DataGridViewNumericTextBoxEditingControl()
         {
         }
-        // Implements the IDataGridViewEditingControl.EditingControlFormattedValue 
+
+        // Implements the IDataGridViewEditingControl.EditingControlFormattedValue
         // property.
         public object EditingControlFormattedValue
         {
@@ -109,21 +117,24 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 }
             }
         }
-        // Implements the 
+
+        // Implements the
         // IDataGridViewEditingControl.GetEditingControlFormattedValue method.
         public object GetEditingControlFormattedValue(
             DataGridViewDataErrorContexts context)
         {
             return EditingControlFormattedValue;
         }
-        // Implements the 
+
+        // Implements the
         // IDataGridViewEditingControl.ApplyCellStyleToEditingControl method.
         public void ApplyCellStyleToEditingControl(
             DataGridViewCellStyle dataGridViewCellStyle)
         {
             this.Font = dataGridViewCellStyle.Font;
         }
-        // Implements the IDataGridViewEditingControl.EditingControlRowIndex 
+
+        // Implements the IDataGridViewEditingControl.EditingControlRowIndex
         // property.
         public int EditingControlRowIndex
         {
@@ -136,7 +147,8 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 rowIndex = value;
             }
         }
-        // Implements the IDataGridViewEditingControl.EditingControlWantsInputKey 
+
+        // Implements the IDataGridViewEditingControl.EditingControlWantsInputKey
         // method.
         public bool EditingControlWantsInputKey(
             Keys key, bool dataGridViewWantsInputKey)
@@ -154,16 +166,19 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 case Keys.Delete:
                 case Keys.Back:
                     return true;
+
                 default:
                     return false;
             }
         }
-        // Implements the IDataGridViewEditingControl.PrepareEditingControlForEdit 
+
+        // Implements the IDataGridViewEditingControl.PrepareEditingControlForEdit
         // method.
         public void PrepareEditingControlForEdit(bool selectAll)
         {
             // No preparation needs to be done.
         }
+
         // Implements the IDataGridViewEditingControl
         // .RepositionEditingControlOnValueChange property.
         public bool RepositionEditingControlOnValueChange
@@ -173,6 +188,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return false;
             }
         }
+
         // Implements the IDataGridViewEditingControl
         // .EditingControlDataGridView property.
         public DataGridView EditingControlDataGridView
@@ -186,6 +202,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 dataGridView = value;
             }
         }
+
         // Implements the IDataGridViewEditingControl
         // .EditingControlValueChanged property.
         public bool EditingControlValueChanged
@@ -199,6 +216,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 valueChanged = value;
             }
         }
+
         // Implements the IDataGridViewEditingControl
         // .EditingPanelCursor property.
         public Cursor EditingPanelCursor
@@ -208,6 +226,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return base.Cursor;
             }
         }
+
         protected override void OnTextChanged(EventArgs e)
         {
             // Notify the DataGridView that the contents of the cell

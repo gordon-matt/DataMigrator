@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using System.Windows.Forms;
+﻿using System.Reflection;
 using ComponentFactory.Krypton.Toolkit;
 
 namespace DataMigrator.Views
@@ -10,9 +8,9 @@ namespace DataMigrator.Views
         public AboutForm()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
+            this.Text = string.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = AssemblyDescription;
@@ -24,11 +22,11 @@ namespace DataMigrator.Views
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
                 if (attributes.Length > 0)
                 {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
+                    var titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title != string.Empty)
                     {
                         return titleAttribute.Title;
                     }
@@ -37,22 +35,16 @@ namespace DataMigrator.Views
             }
         }
 
-        public string AssemblyVersion
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-        }
+        public string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public string AssemblyDescription
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyDescriptionAttribute)attributes[0]).Description;
             }
@@ -62,10 +54,10 @@ namespace DataMigrator.Views
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyProductAttribute)attributes[0]).Product;
             }
@@ -75,10 +67,10 @@ namespace DataMigrator.Views
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
             }
@@ -88,15 +80,15 @@ namespace DataMigrator.Views
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyCompanyAttribute)attributes[0]).Company;
             }
         }
 
-        #endregion
+        #endregion Assembly Attribute Accessors
     }
 }

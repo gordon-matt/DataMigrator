@@ -45,7 +45,7 @@ namespace DataMigrator.Views
         {
             get
             {
-                List<FieldMapping> mappings = new List<FieldMapping>();
+                var mappings = new List<FieldMapping>();
 
                 if (SourceFields == null || DestinationFields == null)
                 {
@@ -67,7 +67,7 @@ namespace DataMigrator.Views
             }
         }
 
-        #endregion
+        #endregion Public Properties
 
         #region Private Properties
 
@@ -81,7 +81,7 @@ namespace DataMigrator.Views
 
         private FieldCollection DestinationFields { get; set; }
 
-        #endregion
+        #endregion Private Properties
 
         #region Constructor
 
@@ -120,36 +120,42 @@ namespace DataMigrator.Views
 
             foreach (FieldMapping mapping in Program.CurrentJob.FieldMappings)
             {
-                DataRow row = MappingsTable.NewRow();
+                var row = MappingsTable.NewRow();
                 row["Source"] = mapping.SourceField.Name;
                 row["Destination"] = mapping.DestinationField.Name;
                 MappingsTable.Rows.Add(row);
 
-                DataGridViewRow sourceRow = dgvSource.Rows.Cast<DataGridViewRow>()
+                var sourceRow = dgvSource.Rows.Cast<DataGridViewRow>()
                     .Where(x => x.Index != dgvSource.NewRowIndex)
                     .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.SourceField.Name);
-                DataGridViewRow destinationRow = dgvDestination.Rows.Cast<DataGridViewRow>()
+
+                var destinationRow = dgvDestination.Rows.Cast<DataGridViewRow>()
                     .Where(x => x.Index != dgvDestination.NewRowIndex)
                     .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.DestinationField.Name);
 
                 if (sourceRow != null)
-                { dgvSource.Rows.Remove(sourceRow); }
+                {
+                    dgvSource.Rows.Remove(sourceRow);
+                }
+
                 if (destinationRow != null)
-                { dgvDestination.Rows.Remove(destinationRow); }
+                {
+                    dgvDestination.Rows.Remove(destinationRow);
+                }
             }
 
             dgvMappings.DataSource = MappingsTable;
         }
 
-        #endregion
+        #endregion Constructor
 
         private DataTable GetFieldsDataTable(IEnumerable<Field> fields)
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.AddRange("Field Name", "Type");
             fields.ForEach(field =>
             {
-                DataRow row = table.NewRow();
+                var row = table.NewRow();
                 row["Field Name"] = field.Name;
                 row["Type"] = field.Type.ToString();
                 table.Rows.Add(row);
@@ -161,8 +167,8 @@ namespace DataMigrator.Views
 
         private void btnAutoMap_Click(object sender, EventArgs e)
         {
-            List<DataGridViewRow> sourceRowsToRemove = new List<DataGridViewRow>();
-            List<DataGridViewRow> destinationRowsToRemove = new List<DataGridViewRow>();
+            var sourceRowsToRemove = new List<DataGridViewRow>();
+            var destinationRowsToRemove = new List<DataGridViewRow>();
 
             foreach (DataGridViewRow sourceRow in dgvSource.Rows)
             {
@@ -187,7 +193,7 @@ namespace DataMigrator.Views
 
                     if (destinationRow.Cells[0].Value.ToString() == sourceRowValue)
                     {
-                        DataRow mappedRow = MappingsTable.NewRow();
+                        var mappedRow = MappingsTable.NewRow();
                         mappedRow["Source"] = sourceRowValue;
                         mappedRow["Destination"] = sourceRowValue;
                         MappingsTable.Rows.Add(mappedRow);
@@ -222,8 +228,8 @@ namespace DataMigrator.Views
                 return;
             }
 
-            DataGridViewRow sourceRow = dgvSource.SelectedRows[0];
-            DataGridViewRow destinationRow = dgvDestination.SelectedRows[0];
+            var sourceRow = dgvSource.SelectedRows[0];
+            var destinationRow = dgvDestination.SelectedRows[0];
 
             string sourceFieldType = sourceRow.Cells[1].Value.ToString();
             string destinationFieldType = destinationRow.Cells[1].Value.ToString();
@@ -239,7 +245,7 @@ namespace DataMigrator.Views
                 }
             }
 
-            DataRow row = MappingsTable.NewRow();
+            var row = MappingsTable.NewRow();
             row["Source"] = sourceRow.Cells[0].Value.ToString();
             row["Destination"] = destinationRow.Cells[0].Value.ToString();
             MappingsTable.Rows.Add(row);
@@ -268,15 +274,17 @@ namespace DataMigrator.Views
                 return;
             }
 
-            DataGridViewRow mappedRow = dgvMappings.SelectedRows[0];
+            var mappedRow = dgvMappings.SelectedRows[0];
             dgvMappings.Rows.Remove(mappedRow);
 
             var sourceMappedFields = dgvMappings.Rows.Cast<DataGridViewRow>()
                 .Where(x => x.Index != dgvMappings.NewRowIndex)
                 .Select(r => r.Cells["Source"].Value.ToString());
+
             var destinationMappedFields = dgvMappings.Rows.Cast<DataGridViewRow>()
                 .Where(x => x.Index != dgvMappings.NewRowIndex)
                 .Select(r => r.Cells["Destination"].Value.ToString());
+
             var sourceFields = SourceFields.Where(x => !x.Name.In(sourceMappedFields));
             var destinationFields = DestinationFields.Where(x => !x.Name.In(destinationMappedFields));
 
@@ -284,7 +292,7 @@ namespace DataMigrator.Views
             dgvDestination.DataSource = GetFieldsDataTable(destinationFields);
         }
 
-        #endregion
+        #endregion Buttons
 
         #region Combo Boxes
 
@@ -308,16 +316,14 @@ namespace DataMigrator.Views
             }
         }
 
-        #endregion
+        #endregion Combo Boxes
 
         private void dgvSource_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            
         }
 
         private void dgvDestination_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            
         }
 
         private void dgvSource_SelectionChanged(object sender, EventArgs e)
@@ -326,13 +332,14 @@ namespace DataMigrator.Views
             {
                 return;
             }
+
             var row = dgvSource.SelectedRows[0];
             if (row.Index.In(-1, dgvSource.NewRowIndex))
             {
                 return;
             }
 
-            Field field = SourceFields[row.Cells["Field Name"].Value.ToString()];
+            var field = SourceFields[row.Cells["Field Name"].Value.ToString()];
             pGridSource.SelectedObject = field;
         }
 
@@ -342,15 +349,15 @@ namespace DataMigrator.Views
             {
                 return;
             }
+
             var row = dgvDestination.SelectedRows[0];
             if (row.Index.In(-1, dgvDestination.NewRowIndex))
             {
                 return;
             }
 
-            Field field = DestinationFields[row.Cells["Field Name"].Value.ToString()];
+            var field = DestinationFields[row.Cells["Field Name"].Value.ToString()];
             pGridDestination.SelectedObject = field;
         }
-
     }
 }

@@ -16,7 +16,7 @@ namespace DataMigrator.Office
             using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 buffer = new byte[file.Length];
-                file.Read(buffer, 0, (int) file.Length);
+                file.Read(buffer, 0, (int)file.Length);
                 file.Close();
             }
 
@@ -27,7 +27,7 @@ namespace DataMigrator.Office
         }
 
         /// <summary>
-        /// Returns a copy of an embedded resource from the project as a memory stream. 
+        /// Returns a copy of an embedded resource from the project as a memory stream.
         /// </summary>
         /// <remarks>
         /// Include any folder paths in the filename parameter.
@@ -37,7 +37,7 @@ namespace DataMigrator.Office
             var assembly = Assembly.GetExecutingAssembly();
             string name = assembly.GetName().Name;
 
-            //Oddly enough the vb.net compiler ignores the folder name, 
+            //Oddly enough the vb.net compiler ignores the folder name,
             //so you can only have one eg blank.xlsx in the whole project
             //This is different to the c# behaviour
             filename = filename.Replace("/", ".");
@@ -67,7 +67,7 @@ namespace DataMigrator.Office
             var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
             if (stream == null) throw new ApplicationException(string.Format("File with path {0} was not found.", path));
 
-            var buffer = new byte[(int) stream.Length];
+            var buffer = new byte[(int)stream.Length];
             var memStream = new MemoryStream(buffer.Length);
 
             stream.Position = 0;

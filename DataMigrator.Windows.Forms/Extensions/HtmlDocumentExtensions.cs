@@ -14,19 +14,19 @@ namespace DataMigrator.Windows.Forms
         /// <param name="javaScript"></param>
         public static void AddScript(this HtmlDocument htmlDocument, string javaScript)
         {
-            HtmlElement head = htmlDocument.GetElementsByTagName("head")[0];
-            HtmlElement scriptElement = htmlDocument.CreateElement("script");
-            IHTMLScriptElement element = (IHTMLScriptElement)scriptElement.DomElement;
+            var head = htmlDocument.GetElementsByTagName("head")[0];
+            var scriptElement = htmlDocument.CreateElement("script");
+            var element = (IHTMLScriptElement)scriptElement.DomElement;
             element.text = javaScript;
             head.AppendChild(scriptElement);
         }
 
         public static void AddCSS(this HtmlDocument htmlDocument, string cssFileName)
         {
-            IHTMLDocument2 currentDocument = (IHTMLDocument2)htmlDocument.DomDocument;
+            var currentDocument = (IHTMLDocument2)htmlDocument.DomDocument;
             int length = currentDocument.styleSheets.length;
-            IHTMLStyleSheet styleSheet = currentDocument.createStyleSheet(@"", length + 1);
-            using (TextReader reader = new StreamReader(cssFileName))
+            var styleSheet = currentDocument.createStyleSheet(@"", length + 1);
+            using (var reader = new StreamReader(cssFileName))
             {
                 styleSheet.cssText = reader.ReadToEnd();
             }

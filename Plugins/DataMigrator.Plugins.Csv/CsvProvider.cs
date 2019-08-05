@@ -64,6 +64,7 @@ namespace DataMigrator.Csv
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
             var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
             var fields = new FieldCollection();
+
             table.Columns.Cast<DataColumn>().ForEach(c => fields.Add(new Field
             {
                 Name = c.ColumnName,
@@ -89,7 +90,7 @@ namespace DataMigrator.Csv
             var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
             foreach (DataRow row in table.Rows)
             {
-                Record record = new Record();
+                var record = new Record();
                 record.Fields.AddRange(fields);
                 fields.ForEach(f =>
                 {

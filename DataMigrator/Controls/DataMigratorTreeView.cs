@@ -19,7 +19,7 @@ namespace DataMigrator.Controls
 
         public DataMigratorTreeView()
         {
-            imageList = new System.Windows.Forms.ImageList();
+            imageList = new ImageList();
             imageList.Images.Add(Resources.Migrate);
             imageList.Images.Add(Resources.Connection);
             imageList.Images.Add(Resources.Mapping32x32);
@@ -31,7 +31,7 @@ namespace DataMigrator.Controls
             mnuContextJobs = new ContextMenu();
             mnuContextJobs.Name = "mnuContextJobs";
 
-            MenuItem mnuContextJobsNewJob = new MenuItem("New Job");
+            var mnuContextJobsNewJob = new MenuItem("New Job");
             mnuContextJobsNewJob.Name = "mnuContextJobsNewJob";
             mnuContextJobsNewJob.Click += new System.EventHandler(mnuContextJobsNewJob_Click);
             mnuContextJobs.MenuItems.Add(mnuContextJobsNewJob);
@@ -39,7 +39,7 @@ namespace DataMigrator.Controls
             mnuContextJobsJob = new ContextMenu();
             mnuContextJobsJob.Name = "mnuContextJobsJob";
 
-            MenuItem mnuContextJobsJobRename = new MenuItem("Rename");
+            var mnuContextJobsJobRename = new MenuItem("Rename");
             mnuContextJobsJobRename.Name = "mnuContextJobsJobRename";
             mnuContextJobsJobRename.Click += new System.EventHandler(mnuContextJobsJobRename_Click);
             mnuContextJobsJob.MenuItems.Add(mnuContextJobsJobRename);
@@ -62,7 +62,7 @@ namespace DataMigrator.Controls
 
         public TreeNode AddJob(string jobName)
         {
-            TreeNode jobNode = new TreeNode(jobName, 4, 4);
+            var jobNode = new TreeNode(jobName, 4, 4);
             jobNode.Tag = new Job { Name = jobName };
             JobsNode.Nodes.Add(jobNode);
 
@@ -73,7 +73,7 @@ namespace DataMigrator.Controls
 
         public TreeNode AddJob(Job job)
         {
-            TreeNode jobNode = new TreeNode(job.Name, 4, 4);
+            var jobNode = new TreeNode(job.Name, 4, 4);
             jobNode.Tag = job;
             JobsNode.Nodes.Add(jobNode);
 
@@ -93,9 +93,9 @@ namespace DataMigrator.Controls
             LoadDefaultNodes();
         }
 
-        void mnuContextJobsJobRename_Click(object sender, System.EventArgs e)
+        private void mnuContextJobsJobRename_Click(object sender, System.EventArgs e)
         {
-            InputDialog dlgInput = new InputDialog();
+            var dlgInput = new InputDialog();
             dlgInput.Text = "Rename Job";
             dlgInput.LabelText = "Enter job name:";
             if (dlgInput.ShowDialog() == DialogResult.OK)
@@ -113,9 +113,9 @@ namespace DataMigrator.Controls
             }
         }
 
-        void mnuContextJobsNewJob_Click(object sender, System.EventArgs e)
+        private void mnuContextJobsNewJob_Click(object sender, System.EventArgs e)
         {
-            InputDialog dlgInput = new InputDialog();
+            var dlgInput = new InputDialog();
             dlgInput.Text = "Add New Job";
             dlgInput.LabelText = "Enter job name:";
             if (dlgInput.ShowDialog() == DialogResult.OK)

@@ -1,12 +1,12 @@
 //---------------------------------------------------------------------
 //  This file is part of the Microsoft .NET Framework SDK Code Samples.
-// 
+//
 //  Copyright (C) Microsoft Corporation.  All rights reserved.
-// 
+//
 //This source code is intended only as a supplement to Microsoft
 //Development Tools and/or on-line documentation.  See these other
 //materials for detailed information regarding Microsoft code samples.
-// 
+//
 //THIS CODE AND INFORMATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY
 //KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 //IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
@@ -24,6 +24,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
     {
         static public Color foreClr;
     }
+
     //  The base object for the custom column type.  Programmers manipulate
     //  the column types most often when working with the DataGridView, and
     //  this one sets the basics and Cell Template values controlling the
@@ -37,7 +38,8 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         private Type validatingType;
 
         //CUSTOM CODE
-        Color foreColor;
+        private Color foreColor;
+
         public Color ForeColor
         {
             get
@@ -50,6 +52,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 DataGridViewMaskedTextBoxOptions.foreClr = foreColor;
             }
         }
+
         //CUSTOM CODE
         public override object Clone()
         {
@@ -58,19 +61,19 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             return col;
         }
 
-
         //  Initializes a new instance of this class, making sure to pass
-        //  to its base constructor an instance of a DataGridViewMaskedTextBoxCell 
+        //  to its base constructor an instance of a DataGridViewMaskedTextBoxCell
         //  class to use as the basic template.
-        public DataGridViewMaskedTextBoxColumn(): base(new DataGridViewMaskedTextBoxCell())
+        public DataGridViewMaskedTextBoxColumn() : base(new DataGridViewMaskedTextBoxCell())
         {
         }
+
         //  Routine to convert from boolean to DataGridViewTriState.
         private static DataGridViewTriState TriBool(bool value)
         {
-            return value ? DataGridViewTriState.True
-                         : DataGridViewTriState.False;
+            return value ? DataGridViewTriState.True : DataGridViewTriState.False;
         }
+
         //  The template cell that will be used for this column by default,
         //  unless a specific cell is set for a particular row.
         //
@@ -94,9 +97,10 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 base.CellTemplate = value;
             }
         }
+
         //  Indicates the Mask property that is used on the DataGridViewMaskedTextBox
         //  for entering new data into cells of this type.
-        // 
+        //
         //  See the DataGridViewMaskedTextBox control documentation for more details.
         public virtual string Mask
         {
@@ -138,10 +142,11 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 }
             }
         }
+
         //  By default, the DataGridViewMaskedTextBox uses the underscore (_) character
-        //  to prompt for required characters.  This propertly lets you 
+        //  to prompt for required characters.  This propertly lets you
         //  choose a different one.
-        // 
+        //
         //  See the DataGridViewMaskedTextBox control documentation for more details.
         public virtual char PromptChar
         {
@@ -182,10 +187,11 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 }
             }
         }
+
         //   Indicates whether any unfilled characters in the mask should be
         //   be included as prompt characters when somebody asks for the text
         //   of the DataGridViewMaskedTextBox for a particular cell programmatically.
-        // 
+        //
         //   See the DataGridViewMaskedTextBox control documentation for more details.
         public virtual bool IncludePrompt
         {
@@ -228,10 +234,11 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 }
             }
         }
+
         //  Controls whether or not literal (non-prompt) characters should
         //  be included in the output of the Text property for newly entered
         //  data in a cell of this type.
-        // 
+        //
         //  See the DataGridViewMaskedTextBox control documentation for more details.
         public virtual bool IncludeLiterals
         {
@@ -258,7 +265,6 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     //
                     if (this.DataGridView != null && this.DataGridView.Rows != null)
                     {
-
                         rowCount = this.DataGridView.Rows.Count;
                         for (int x = 0; x < rowCount; x++)
                         {
@@ -273,6 +279,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 }
             }
         }
+
         //  Indicates the type against any data entered in the DataGridViewMaskedTextBox
         //  should be validated.  The DataGridViewMaskedTextBox control will attempt to
         //  instantiate this type and assign the value from the contents of
@@ -320,7 +327,8 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             }
         }
     }
-    class DataGridViewMaskedTextBoxCell : DataGridViewTextBoxCell
+
+    internal class DataGridViewMaskedTextBoxCell : DataGridViewTextBoxCell
     {
         private string mask;
         private char promptChar;
@@ -333,11 +341,11 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         //=------------------------------------------------------------------=
         /// <summary>
         ///   Initializes a new instance of this class.  Fortunately, there's
-        ///   not much to do here except make sure that our base class is 
+        ///   not much to do here except make sure that our base class is
         ///   also initialized properly.
         /// </summary>
-        /// 
-        public DataGridViewMaskedTextBoxCell(): base()
+        ///
+        public DataGridViewMaskedTextBoxCell() : base()
         {
             this.mask = "";
             this.promptChar = '_';
@@ -347,10 +355,11 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             //CUSTOM CODE
             //this.Style.ForeColor = DataGridViewMaskedTextBoxOptions.foreClr;
         }
+
         ///   Whenever the user is to begin editing a cell of this type, the editing
         ///   control must be created, which in this column type's
         ///   case is a subclass of the DataGridViewMaskedTextBox control.
-        /// 
+        ///
         ///   This routine sets up all the properties and values
         ///   on this control before the editing begins.
         public override void InitializeEditingControl(int rowIndex,
@@ -423,6 +432,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 mtbec.Text = (string)this.Value;
             }
         }
+
         //  Returns the type of the control that will be used for editing
         //  cells of this type.  This control must be a valid Windows Forms
         //  control and must implement IDataGridViewEditingControl.
@@ -433,6 +443,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return typeof(DataGridViewMaskedTextBoxEditingControl);
             }
         }
+
         //   A string value containing the Mask against input for cells of
         //   this type will be verified.
         public virtual string Mask
@@ -446,8 +457,9 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.mask = value;
             }
         }
+
         //  The character to use for prompting for new input.
-        // 
+        //
         public virtual char PromptChar
         {
             get
@@ -459,6 +471,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.promptChar = value;
             }
         }
+
         //  A boolean indicating whether to include prompt characters in
         //  the Text property's value.
         public virtual DataGridViewTriState IncludePrompt
@@ -472,6 +485,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.includePrompt = value;
             }
         }
+
         //  A boolean value indicating whether to include literal characters
         //  in the Text property's output value.
         public virtual DataGridViewTriState IncludeLiterals
@@ -485,6 +499,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.includeLiterals = value;
             }
         }
+
         //  A Type object for the validating type.
         public virtual Type ValidatingType
         {
@@ -497,6 +512,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.validatingType = value;
             }
         }
+
         //   Quick routine to convert from DataGridViewTriState to boolean.
         //   True goes to true while False and NotSet go to false.
         protected static bool BoolFromTri(DataGridViewTriState tri)
@@ -504,9 +520,10 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             return (tri == DataGridViewTriState.True) ? true : false;
         }
     }
+
     //  Identifies the editing control for the DataGridViewMaskedTextBox column type.  It
-    //  isn't too much different from a regular DataGridViewMaskedTextBox control, 
-    //  except that it implements the IDataGridViewEditingControl interface. 
+    //  isn't too much different from a regular DataGridViewMaskedTextBox control,
+    //  except that it implements the IDataGridViewEditingControl interface.
     [ToolboxItem(false)]
     public class DataGridViewMaskedTextBoxEditingControl : MaskedTextBox, IDataGridViewEditingControl
     {
@@ -517,12 +534,14 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         public DataGridViewMaskedTextBoxEditingControl()
         {
         }
+
         protected override void OnTextChanged(EventArgs e)
         {
             base.OnTextChanged(e);
             // Let the DataGridView know about the value change
             NotifyDataGridViewOfValueChange();
         }
+
         //  Notify DataGridView that the value has changed.
         protected virtual void NotifyDataGridViewOfValueChange()
         {
@@ -532,7 +551,9 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.dataGridView.NotifyCurrentCellDirty(true);
             }
         }
+
         #region IDataGridViewEditingControl Members
+
         //  Indicates the cursor that should be shown when the user hovers their
         //  mouse over this cell when the editing control is shown.
         public Cursor EditingPanelCursor
@@ -542,6 +563,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return Cursors.IBeam;
             }
         }
+
         //  Returns or sets the parent DataGridView.
         public DataGridView EditingControlDataGridView
         {
@@ -554,6 +576,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.dataGridView = value;
             }
         }
+
         //  Sets/Gets the formatted value contents of this cell.
         public object EditingControlFormattedValue
         {
@@ -567,11 +590,13 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return this.Text;
             }
         }
+
         //   Get the value of the editing control for formatting.
         public object GetEditingControlFormattedValue(DataGridViewDataErrorContexts context)
         {
             return this.Text;
         }
+
         //  Process input key and determine if the key should be used for the editing control
         //  or allowed to be processed by the grid. Handle cursor movement keys for the DataGridViewMaskedTextBox
         //  control; otherwise if the DataGridView doesn't want the input key then let the editing control handle it.
@@ -590,10 +615,11 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                         return true;
                     }
                     break;
+
                 case Keys.Left:
                     //
                     // If the end of the selection is at the begining of the
-                    // string or if the entire text is selected send this character 
+                    // string or if the entire text is selected send this character
                     // to the dataGridView; else process the key event.
                     //
                     if (!(this.SelectionLength == 0
@@ -602,6 +628,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                         return true;
                     }
                     break;
+
                 case Keys.Home:
                 case Keys.End:
                     if (this.SelectionLength != this.ToString().Length)
@@ -609,6 +636,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                         return true;
                     }
                     break;
+
                 case Keys.Prior:
                 case Keys.Next:
                     if (this.valueChanged)
@@ -629,6 +657,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             //
             return !dataGridViewWantsInputKey;
         }
+
         //  Prepare the editing control for edit.
         public void PrepareEditingControlForEdit(bool selectAll)
         {
@@ -639,12 +668,13 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             else
             {
                 //
-                // Do not select all the text, but position the caret at the 
+                // Do not select all the text, but position the caret at the
                 // end of the text.
                 //
                 this.SelectionStart = this.ToString().Length;
             }
         }
+
         //  Indicates whether or not the parent DataGridView control should
         //  reposition the editing control every time value change is indicated.
         //  There is no need to do this for the DataGridViewMaskedTextBox.
@@ -655,6 +685,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 return false;
             }
         }
+
         //  Indicates the row index of this cell.  This is often -1 for the
         //  template cell, but for other cells, might actually have a value
         //  greater than or equal to zero.
@@ -669,8 +700,9 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.rowIndex = value;
             }
         }
+
         //  Make the DataGridViewMaskedTextBox control match the style and colors of
-        //  the host DataGridView control and other editing controls 
+        //  the host DataGridView control and other editing controls
         //  before showing the editing control.
         public void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
         {
@@ -681,6 +713,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             this.BackColor = dataGridViewCellStyle.BackColor;
             this.TextAlign = translateAlignment(dataGridViewCellStyle.Alignment);
         }
+
         //  Gets or sets our flag indicating whether the value has changed.
         public bool EditingControlValueChanged
         {
@@ -693,7 +726,9 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 this.valueChanged = value;
             }
         }
-        #endregion // IDataGridViewEditingControl.
+
+        #endregion IDataGridViewEditingControl Members
+
         ///   Routine to translate between DataGridView
         ///   content alignments and text box horizontal alignments.
         private static HorizontalAlignment translateAlignment(DataGridViewContentAlignment align)

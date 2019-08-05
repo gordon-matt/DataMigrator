@@ -123,7 +123,7 @@ namespace DataMigrator.Views
 
         private void OpenFile()
         {
-            DialogResult dialogResult = CheckSaveChanges();
+            var dialogResult = CheckSaveChanges();
             if (dialogResult == DialogResult.Cancel)
             { return; }
 
@@ -131,7 +131,7 @@ namespace DataMigrator.Views
             {
                 Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
                 treeView.Reset();
-                foreach (Job job in Program.Configuration.Jobs.OrderBy(j => j.Name))
+                foreach (var job in Program.Configuration.Jobs.OrderBy(j => j.Name))
                 {
                     treeView.AddJob(job);
                 }
@@ -148,7 +148,7 @@ namespace DataMigrator.Views
             {
                 if (currentControl is ConnectionsControl)
                 {
-                    ConnectionsControl control = currentControl as ConnectionsControl;
+                    var control = currentControl as ConnectionsControl;
 
                     if (control.SourceConnection != null)
                     { Program.Configuration.SourceConnection = control.SourceConnection; }
@@ -158,14 +158,14 @@ namespace DataMigrator.Views
                 }
                 else if (currentControl is TableMappingControl)
                 {
-                    TableMappingControl control = currentControl as TableMappingControl;
+                    var control = currentControl as TableMappingControl;
                     Program.CurrentJob.SourceTable = control.SourceTable;
                     Program.CurrentJob.DestinationTable = control.DestinationTable;
 
                     Program.CurrentJob.FieldMappings.Clear();
                     Program.CurrentJob.FieldMappings.AddRange(control.FieldMappings);
 
-                    Job existingJob = Program.Configuration.Jobs[Program.CurrentJob.Name];
+                    var existingJob = Program.Configuration.Jobs[Program.CurrentJob.Name];
 
                     if (existingJob == null)
                     {
@@ -200,7 +200,7 @@ namespace DataMigrator.Views
         {
             ShowTraceViewer();
 
-            RunJobsForm form = new RunJobsForm();
+            var form = new RunJobsForm();
             form.ShowDialog();
         }
 

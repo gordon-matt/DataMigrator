@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Data;
 using System.Xml.Serialization;
 using Kore;
 
@@ -44,8 +43,8 @@ namespace DataMigrator.Common.Models
             get
             {
                 //TODO: Test
-                if (Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double, 
-                    FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single, 
+                if (Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
+                    FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single,
                     FieldType.UInt16, FieldType.UInt32, FieldType.UInt64))
                 {
                     return true;
@@ -99,6 +98,6 @@ namespace DataMigrator.Common.Models
 
         object ICloneable.Clone() => Clone();
 
-        #endregion
+        #endregion ICloneable Members
     }
 }

@@ -92,7 +92,7 @@ namespace DataMigrator.Views
             if (sourceConnectionControl != null)
             {
                 pnlSourceConnection.Controls.Clear();
-                UserControl content = sourceConnectionControl.ControlContent;
+                var content = sourceConnectionControl.ControlContent;
                 pnlSourceConnection.Controls.Add(content);
                 content.Dock = DockStyle.Fill;
             }
@@ -103,7 +103,7 @@ namespace DataMigrator.Views
             if (destinationConnectionControl != null)
             {
                 pnlDestinationConnection.Controls.Clear();
-                UserControl content = destinationConnectionControl.ControlContent;
+                var content = destinationConnectionControl.ControlContent;
                 pnlDestinationConnection.Controls.Add(content);
                 content.Dock = DockStyle.Fill;
             }

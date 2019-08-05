@@ -2,7 +2,6 @@
 using System.Data;
 using System.Windows.Forms;
 using ComponentFactory.Krypton.Toolkit;
-using DataMigrator.Common.Configuration;
 using DataMigrator.Windows.Forms.Diagnostics;
 
 namespace DataMigrator.Views
@@ -17,13 +16,13 @@ namespace DataMigrator.Views
         {
             InitializeComponent();
 
-            DataTable table = new DataTable("Jobs");
+            var table = new DataTable("Jobs");
             table.Columns.Add(COLUMN_RUN, typeof(bool));
             table.Columns.Add(COLUMN_NAME);
             table.Columns.Add(COLUMN_STATUS);
-            foreach (Job job in Program.Configuration.Jobs)
+            foreach (var job in Program.Configuration.Jobs)
             {
-                DataRow row = table.NewRow();
+                var row = table.NewRow();
                 row[COLUMN_RUN] = false;
                 row[COLUMN_NAME] = job.Name;
                 row[COLUMN_STATUS] = "Pending";
@@ -49,7 +48,8 @@ namespace DataMigrator.Views
                 {
                     //progressBar.Value = 0;
                     string jobName = row[COLUMN_NAME].ToString();
-                    Job job = Program.Configuration.Jobs[jobName];
+                    var job = Program.Configuration.Jobs[jobName];
+
                     if (job == null)
                     {
                         TraceService.Instance.WriteConcat(TraceEvent.Warning, "Could not find job, '", jobName, "'");

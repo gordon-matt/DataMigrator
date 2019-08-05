@@ -13,7 +13,7 @@ namespace DataMigrator.Controls
 
         public ToolsTreeView()
         {
-            imageList = new System.Windows.Forms.ImageList();
+            imageList = new ImageList();
             imageList.ImageSize = new Size(24, 24);
             imageList.Images.Add(Resources.TreeNode);
             this.ImageList = imageList;
@@ -23,9 +23,9 @@ namespace DataMigrator.Controls
         {
             if (!tools.IsNullOrEmpty())
             {
-                TreeNode providerNode = new TreeNode(providerName);
+                var providerNode = new TreeNode(providerName);
 
-                foreach (IMigrationTool tool in tools)
+                foreach (var tool in tools)
                 {
                     TreeNode toolNode = null;
 

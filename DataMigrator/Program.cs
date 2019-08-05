@@ -7,7 +7,7 @@ using DataMigrator.Views;
 
 namespace DataMigrator
 {
-    static class Program
+    internal static class Program
     {
         public static IEnumerable<IMigrationPlugin> Plugins { get; set; }
 
@@ -19,7 +19,7 @@ namespace DataMigrator
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Configuration = new DataMigrationConfigFile();
 

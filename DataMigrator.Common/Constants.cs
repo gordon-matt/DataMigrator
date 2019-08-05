@@ -1,5 +1,4 @@
-﻿
-namespace DataMigrator.Common
+﻿namespace DataMigrator.Common
 {
     internal static class Constants
     {
@@ -9,6 +8,7 @@ namespace DataMigrator.Common
 @"SELECT COLUMN_NAME, ORDINAL_POSITION, DATA_TYPE, IS_NULLABLE, CHARACTER_MAXIMUM_LENGTH
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = '{0}'";
+
             internal const string CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES =
     @"SELECT COLUMN_NAME
 FROM INFORMATION_SCHEMA.COLUMNS

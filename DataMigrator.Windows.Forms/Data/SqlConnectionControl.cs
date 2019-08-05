@@ -16,6 +16,7 @@ namespace DataMigrator.Windows.Forms.Data
         private const string SQL_CONNECTION_STRING_FORMAT_WA = "Data Source={0};Initial Catalog={1};Integrated Security=true";
 
         public delegate void DatabaseChangedEventHandler();
+
         public event DatabaseChangedEventHandler DatabaseChanged;
 
         public string Server
@@ -41,6 +42,7 @@ namespace DataMigrator.Windows.Forms.Data
                 else { cmbServer.Text = value; }
             }
         }
+
         public string Database
         {
             get
@@ -64,16 +66,19 @@ namespace DataMigrator.Windows.Forms.Data
                 else { cmbDatabase.Text = value; }
             }
         }
+
         public string UserName
         {
             get { return txtUserName.Text.Trim(); }
             set { txtUserName.Text = value; }
         }
+
         public string Password
         {
             get { return txtPassword.Text.Trim(); }
             set { txtPassword.Text = value; }
         }
+
         public bool IntegratedSecurity
         {
             get { return cbIntegratedSecurity.Checked; }
@@ -125,7 +130,7 @@ namespace DataMigrator.Windows.Forms.Data
                     }
                 }
 
-                #endregion
+                #endregion Checks
 
                 if (IntegratedSecurity)
                 {
@@ -175,12 +180,10 @@ namespace DataMigrator.Windows.Forms.Data
                 Tables = connection.GetTableNames();
                 Tables.ForEach(x => cmbTable.Items.Add(x));
 
-                if (DatabaseChanged != null)
-                {
-                    DatabaseChanged();
-                }
+                DatabaseChanged?.Invoke();
             }
         }
+
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             cmbServer.Items.Clear();

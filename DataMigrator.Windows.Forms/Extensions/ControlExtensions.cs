@@ -7,6 +7,7 @@ namespace DataMigrator.Windows.Forms
     public static class ControlExtensions
     {
         private delegate object GetControlPropertyThreadSafeDelegate(Control control, string propertyName, object[] args);
+
         private delegate void SetControlPropertyThreadSafeDelegate(Control control, string propertyName, object propertyValue);
 
         public static object GetPropertyThreadSafe(this Control control, string propertyName, object[] args)
@@ -60,7 +61,7 @@ namespace DataMigrator.Windows.Forms
         ///   The design mode is set only to direct controls in desgined control/form.
         ///   However the child controls in controls/usercontrols does not flag for "my parent is in design mode".
         ///   The solution is traversion upon parents of target control.
-        /// 
+        ///
         ///   Contributed by tencokacistromy, http://www.codeplex.com/site/users/view/tencokacistromy
         /// </remarks>
         public static bool IsInWinDesignMode(this Control target)

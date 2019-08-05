@@ -49,7 +49,7 @@ namespace DataMigrator.Views
             if (e.Node.Tag == null)
             { return; }
 
-            UserControl control = e.Node.Tag as UserControl;
+            var control = e.Node.Tag as UserControl;
             contentPanel.Controls.Clear();
             contentPanel.Controls.Add(control);
             control.Dock = DockStyle.Fill;

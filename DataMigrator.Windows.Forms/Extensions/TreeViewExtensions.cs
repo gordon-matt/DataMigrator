@@ -9,34 +9,28 @@ namespace DataMigrator.Windows.Forms
 
         public static TreeNode GetNodeByName(this TreeView treeView, string nodeName)
         {
-            return (from x in treeView.Nodes.Cast<TreeNode>()
-                    where x.Name == nodeName
-                    select x).SingleOrDefault();
-        }
-        public static TreeNode GetNodeByFullPath(this TreeView treeView, string path)
-        {
-            return (from x in treeView.Nodes.Cast<TreeNode>()
-                    where x.FullPath == path
-                    select x).SingleOrDefault();
-        }
-        public static TreeNode GetNodeByText(this TreeView treeView, string nodeText)
-        {
-            return (from x in treeView.Nodes.Cast<TreeNode>()
-                    where x.Text == nodeText
-                    select x).SingleOrDefault();
+            return treeView.Nodes.Cast<TreeNode>().Where(x => x.Name == nodeName).SingleOrDefault();
         }
 
-        #endregion
+        public static TreeNode GetNodeByFullPath(this TreeView treeView, string path)
+        {
+            return treeView.Nodes.Cast<TreeNode>().Where(x => x.FullPath == path).SingleOrDefault();
+        }
+
+        public static TreeNode GetNodeByText(this TreeView treeView, string nodeText)
+        {
+            return treeView.Nodes.Cast<TreeNode>().Where(x => x.Text == nodeText).SingleOrDefault();
+        }
+
+        #endregion TreeView
 
         #region TreeNode
 
         public static TreeNode GetNodeByText(this TreeNode treeNode, string nodeText)
         {
-            return (from x in treeNode.Nodes.Cast<TreeNode>()
-                    where x.Text == nodeText
-                    select x).SingleOrDefault();
+            return treeNode.Nodes.Cast<TreeNode>().Where(x => x.Text == nodeText).SingleOrDefault();
         }
 
-        #endregion
+        #endregion TreeNode
     }
 }

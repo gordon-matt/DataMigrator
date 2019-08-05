@@ -50,7 +50,7 @@ namespace DataMigrator.Common.Data
             fieldTypes.Add(FieldType.User, SqlDbType.NVarChar);
             fieldTypes.Add(FieldType.Xml, SqlDbType.Xml);
 
-            #endregion
+            #endregion fieldTypes
 
             #region sqlDbTypes
 
@@ -85,7 +85,7 @@ namespace DataMigrator.Common.Data
             sqlDbTypes.Add(SqlDbType.Variant, FieldType.Object);
             sqlDbTypes.Add(SqlDbType.Xml, FieldType.Xml);
 
-            #endregion
+            #endregion sqlDbTypes
         }
 
         #region IFieldTypeConverter<SqlDbType> Members
@@ -100,6 +100,6 @@ namespace DataMigrator.Common.Data
             return fieldTypes.First(x => x.Item1 == fieldType).Item2;
         }
 
-        #endregion
+        #endregion IFieldTypeConverter<SqlDbType> Members
     }
 }

@@ -10,11 +10,13 @@ namespace DataMigrator.Windows.Forms.Wizard
         #region Properties
 
         public WizardPageCollection WizardPages { get; set; }
+
         public bool ShowFirstButton
         {
             get { return btnFirst.Visible; }
             set { btnFirst.Visible = value; }
         }
+
         public bool ShowLastButton
         {
             get { return btnLast.Visible; }
@@ -22,6 +24,7 @@ namespace DataMigrator.Windows.Forms.Wizard
         }
 
         private bool navigationEnabled = true;
+
         public bool NavigationEnabled
         {
             get { return navigationEnabled; }
@@ -35,14 +38,15 @@ namespace DataMigrator.Windows.Forms.Wizard
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Delegates & Events
 
         public delegate void WizardCompletedEventHandler();
+
         public event WizardCompletedEventHandler WizardCompleted;
 
-        #endregion
+        #endregion Delegates & Events
 
         #region Constructor & Window Event Handlers
 
@@ -53,12 +57,12 @@ namespace DataMigrator.Windows.Forms.Wizard
             WizardPages.WizardPageLocationChanged += new WizardPageCollection.WizardPageLocationChangedEventHanlder(WizardPages_WizardPageLocationChanged);
         }
 
-        void WizardPages_WizardPageLocationChanged(WizardPageLocationChangedEventArgs e)
+        private void WizardPages_WizardPageLocationChanged(WizardPageLocationChangedEventArgs e)
         {
             LoadNextPage(e.PageIndex, e.PreviousPageIndex, true);
         }
 
-        #endregion
+        #endregion Constructor & Window Event Handlers
 
         #region Private Methods
 
@@ -70,6 +74,7 @@ namespace DataMigrator.Windows.Forms.Wizard
                 WizardCompleted();
             }
         }
+
         private void OnWizardCompleted()
         {
             WizardPages.LastPage.Save();
@@ -94,7 +99,7 @@ namespace DataMigrator.Windows.Forms.Wizard
                 btnLast.Enabled = false;
             }
 
-            #endregion
+            #endregion Reset
 
             bool canMoveNext = WizardPages.CanMoveNext;
             bool canMovePrevious = WizardPages.CanMovePrevious;
@@ -141,7 +146,7 @@ namespace DataMigrator.Windows.Forms.Wizard
             return true;
         }
 
-        #endregion
+        #endregion Private Methods
 
         #region Public Methods
 
@@ -149,6 +154,7 @@ namespace DataMigrator.Windows.Forms.Wizard
         {
             WizardPages.MovePageFirst();
         }
+
         public void LoadNextPage(int pageIndex, int previousPageIndex, bool savePreviousPage)
         {
             if (pageIndex != -1)
@@ -164,7 +170,7 @@ namespace DataMigrator.Windows.Forms.Wizard
             }
         }
 
-        #endregion
+        #endregion Public Methods
 
         #region Event Handlers
 
@@ -175,6 +181,7 @@ namespace DataMigrator.Windows.Forms.Wizard
 
             WizardPages.MovePageFirst();
         }
+
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             //if (!CheckPageIsValid()) //Maybe doesn't matter if move back; only matters if move forward
@@ -182,6 +189,7 @@ namespace DataMigrator.Windows.Forms.Wizard
 
             WizardPages.MovePagePrevious();
         }
+
         private void btnNext_Click(object sender, EventArgs e)
         {
             if (!CheckPageIsValid())
@@ -197,6 +205,7 @@ namespace DataMigrator.Windows.Forms.Wizard
                 NotifyWizardCompleted();
             }
         }
+
         private void btnLast_Click(object sender, EventArgs e)
         {
             if (!CheckPageIsValid())
@@ -213,6 +222,6 @@ namespace DataMigrator.Windows.Forms.Wizard
             }
         }
 
-        #endregion
+        #endregion Event Handlers
     }
 }

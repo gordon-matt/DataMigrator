@@ -4,13 +4,13 @@ using System.Data.SqlClient;
 using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
+using DataMigrator.Windows.Forms;
+using DataMigrator.Windows.Forms.Diagnostics;
 using Kore;
 using Kore.Collections;
 using Kore.Data.Common;
 using Kore.Data.Sql;
 using Kore.Data.SqlClient;
-using DataMigrator.Windows.Forms.Diagnostics;
-using DataMigrator.Windows.Forms;
 
 namespace DataMigrator.Sql
 {
@@ -103,7 +103,7 @@ namespace DataMigrator.Sql
                     }
                 }
 
-                #endregion
+                #endregion Checks
 
                 if (IntegratedSecurity)
                 {
@@ -116,14 +116,11 @@ namespace DataMigrator.Sql
             }
         }
 
-        #endregion
+        #endregion Public Properties
 
         #region IConnectionControl Members
 
-        public UserControl ControlContent
-        {
-            get { return this; }
-        }
+        public UserControl ControlContent => this;
 
         public ConnectionDetails ConnectionDetails
         {
@@ -158,13 +155,13 @@ namespace DataMigrator.Sql
 
         public bool ValidateConnection()
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 return connection.Validate();
             }
         }
 
-        #endregion
+        #endregion IConnectionControl Members
 
         public SqlConnectionControl()
         {
@@ -188,7 +185,7 @@ namespace DataMigrator.Sql
             if (!string.IsNullOrEmpty(Server) && string.IsNullOrEmpty(cmbDatabase.Text))
             {
                 cmbDatabase.Items.Clear();
-                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString))
                 {
                     connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
                 }
@@ -206,7 +203,7 @@ namespace DataMigrator.Sql
         private void cmbServer_SelectedIndexChanged(object sender, EventArgs e)
         {
             cmbDatabase.Items.Clear();
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
             }

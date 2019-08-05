@@ -15,8 +15,8 @@ namespace DataMigrator.Windows.Forms
         {
             Application.DoEvents();
 
-            Control parent = webBrowser.Parent;
-            DockStyle dockStyle = webBrowser.Dock;
+            var parent = webBrowser.Parent;
+            var dockStyle = webBrowser.Dock;
             bool scrollbarsEnabled = webBrowser.ScrollBarsEnabled;
 
             if (parent != null)
@@ -24,13 +24,13 @@ namespace DataMigrator.Windows.Forms
                 parent.Controls.Remove(webBrowser);
             }
 
-            Rectangle screen = Screen.PrimaryScreen.Bounds;
+            var screen = Screen.PrimaryScreen.Bounds;
             Size? imageSize = null;
 
-            Rectangle body = webBrowser.Document.Body.ScrollRectangle;
+            var body = webBrowser.Document.Body.ScrollRectangle;
 
             //check if the document width/height is greater than screen width/height
-            Rectangle docRectangle = new Rectangle()
+            var docRectangle = new Rectangle
             {
                 Location = new Point(0, 0),
                 Size = new Size(
@@ -45,7 +45,7 @@ namespace DataMigrator.Windows.Forms
             //webBrowser.Document.Body.ScrollRectangle.Width = webBrowser.Width;
             //webBrowser.Document.Body.ScrollRectangle.Height = webBrowser.Height;
 
-            //if the imgsize is null, the size of the image will 
+            //if the imgsize is null, the size of the image will
             //be the same as the size of webbrowser object
             //otherwise  set the image size to imgsize
             Rectangle imgRectangle;
@@ -57,15 +57,15 @@ namespace DataMigrator.Windows.Forms
                     Location = new Point(0, 0),
                     Size = imageSize.Value
                 };
-            //create a bitmap object 
-            Bitmap bitmap = new Bitmap(imgRectangle.Width, imgRectangle.Height);
+            //create a bitmap object
+            var bitmap = new Bitmap(imgRectangle.Width, imgRectangle.Height);
             //get the viewobject of the WebBrowser
-            IViewObject viewObject = webBrowser.Document.DomDocument as IViewObject;
+            var viewObject = webBrowser.Document.DomDocument as IViewObject;
 
-            using (Graphics g = Graphics.FromImage(bitmap))
+            using (var g = Graphics.FromImage(bitmap))
             {
                 //get the handle to the device context and draw
-                IntPtr hdc = g.GetHdc();
+                var hdc = g.GetHdc();
                 viewObject.Draw(1, -1, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, hdc, ref imgRectangle, ref docRectangle, IntPtr.Zero, 0);
                 g.ReleaseHdc(hdc);
             }
@@ -87,7 +87,7 @@ namespace DataMigrator.Windows.Forms
 
         public static Bitmap GetScreenshot(this WebBrowser webBrowser, Size? size)
         {
-            Bitmap screenshot = webBrowser.GenerateScreenshot(size);
+            var screenshot = webBrowser.GenerateScreenshot(size);
             return screenshot;
         }
 

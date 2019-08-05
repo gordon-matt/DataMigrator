@@ -79,13 +79,13 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     int rowCount = dataGridViewRows.Count;
                     for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
                     {
-                        // Be careful not to unshare rows unnecessarily. 
+                        // Be careful not to unshare rows unnecessarily.
                         // This could have severe performance repercussions.
                         DataGridViewRow dataGridViewRow = dataGridViewRows.SharedRow(rowIndex);
                         DataGridViewNumericUpDownCell dataGridViewCell = dataGridViewRow.Cells[this.Index] as DataGridViewNumericUpDownCell;
                         if (dataGridViewCell != null)
                         {
-                            // Call the internal SetDecimalPlaces method instead of the property to avoid invalidation 
+                            // Call the internal SetDecimalPlaces method instead of the property to avoid invalidation
                             // of each cell. The whole column is invalidated later in a single operation for better performance.
                             dataGridViewCell.SetDecimalPlaces(rowIndex, value);
                         }
@@ -183,7 +183,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     }
                     this.DataGridView.InvalidateColumn(this.Index);
                     // TODO: This column and/or grid rows may need to be autosized depending on their
-                    //       autosize settings. Call the autosizing methods to autosize the column, rows, 
+                    //       autosize settings. Call the autosizing methods to autosize the column, rows,
                     //       column headers / row headers as needed.
                 }
             }
@@ -235,7 +235,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     }
                     this.DataGridView.InvalidateColumn(this.Index);
                     // TODO: This column and/or grid rows may need to be autosized depending on their
-                    //       autosize settings. Call the autosizing methods to autosize the column, rows, 
+                    //       autosize settings. Call the autosizing methods to autosize the column, rows,
                     //       column headers / row headers as needed.
                 }
             }
@@ -287,7 +287,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     }
                     this.DataGridView.InvalidateColumn(this.Index);
                     // TODO: This column and/or grid rows may need to be autosized depending on their
-                    //       autosize settings. Call the autosizing methods to autosize the column, rows, 
+                    //       autosize settings. Call the autosizing methods to autosize the column, rows,
                     //       column headers / row headers as needed.
                 }
             }
@@ -332,27 +332,34 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         private static readonly DataGridViewContentAlignment anyRight =
             DataGridViewContentAlignment.TopRight | DataGridViewContentAlignment.MiddleRight |
             DataGridViewContentAlignment.BottomRight;
+
         private static readonly DataGridViewContentAlignment anyCenter =
             DataGridViewContentAlignment.TopCenter | DataGridViewContentAlignment.MiddleCenter |
             DataGridViewContentAlignment.BottomCenter;
 
         // Default dimensions of the static rendering bitmap used for the painting of the non-edited cells
         private const int DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapWidth = 100;
+
         private const int DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapHeight = 22;
 
         // Default value of the DecimalPlaces property
         internal const int DATAGRIDVIEWNUMERICUPDOWNCELL_defaultDecimalPlaces = 0;
+
         // Default value of the Increment property
         internal const Decimal DATAGRIDVIEWNUMERICUPDOWNCELL_defaultIncrement = Decimal.One;
+
         // Default value of the Maximum property
         internal const Decimal DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMaximum = (Decimal)100.0;
+
         // Default value of the Minimum property
         internal const Decimal DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMinimum = Decimal.Zero;
+
         // Default value of the ThousandsSeparator property
         internal const bool DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator = false;
 
         // Type of this cell's editing control
         private static Type defaultEditType = typeof(DataGridViewNumericUpDownEditingControl);
+
         // Type of this cell's value. The formatted value type is string, the same as the base class DataGridViewTextBoxCell
         private static Type defaultValueType = typeof(System.Decimal);
 
@@ -407,7 +414,6 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         ]
         public int DecimalPlaces
         {
-
             get
             {
                 return this.decimalPlaces;
@@ -454,7 +460,6 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         /// </summary>
         public Decimal Increment
         {
-
             get
             {
                 return this.increment;
@@ -519,7 +524,6 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         ]
         public bool ThousandsSeparator
         {
-
             get
             {
                 return this.thousandsSeparator;
@@ -569,7 +573,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Returns the provided value constrained to be within the min and max. 
+        /// Returns the provided value constrained to be within the min and max.
         /// </summary>
         private Decimal Constrain(Decimal value)
         {
@@ -603,8 +607,8 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
             if (numericUpDown != null)
             {
                 // Editing controls get recycled. Indeed, when a DataGridViewNumericUpDownCell cell gets edited
-                // after another DataGridViewNumericUpDownCell cell, the same editing control gets reused for 
-                // performance reasons (to avoid an unnecessary control destruction and creation). 
+                // after another DataGridViewNumericUpDownCell cell, the same editing control gets reused for
+                // performance reasons (to avoid an unnecessary control destruction and creation).
                 // Here the undo buffer of the TextBox inside the NumericUpDown control gets cleared to avoid
                 // interferences between the editing sessions.
                 TextBox textBox = numericUpDown.Controls[1] as TextBox;
@@ -637,6 +641,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     case DataGridViewContentAlignment.MiddleRight:
                         editingControlBounds.Y += (editingControlBounds.Height - preferredHeight) / 2;
                         break;
+
                     case DataGridViewContentAlignment.BottomLeft:
                     case DataGridViewContentAlignment.BottomCenter:
                     case DataGridViewContentAlignment.BottomRight:
@@ -649,7 +654,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Customized implementation of the GetErrorIconBounds function in order to draw the potential 
+        /// Customized implementation of the GetErrorIconBounds function in order to draw the potential
         /// error icon next to the up/down buttons and not on top of them.
         /// </summary>
         protected override Rectangle GetErrorIconBounds(Graphics graphics, DataGridViewCellStyle cellStyle, int rowIndex)
@@ -685,7 +690,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                 Decimal formattedDecimal = System.Convert.ToDecimal(formattedNumber);
                 if (unformattedDecimal == formattedDecimal)
                 {
-                    // The base implementation of GetFormattedValue (which triggers the CellFormatting event) did nothing else than 
+                    // The base implementation of GetFormattedValue (which triggers the CellFormatting event) did nothing else than
                     // the typical 1234.5 to "1234.5" conversion. But depending on the values of ThousandsSeparator and DecimalPlaces,
                     // this may not be the actual string displayed. The real formatted value may be "1,234.500"
                     return formattedDecimal.ToString((this.ThousandsSeparator ? "N" : "F") + this.DecimalPlaces.ToString());
@@ -695,7 +700,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Custom implementation of the GetPreferredSize function. This implementation uses the preferred size of the base 
+        /// Custom implementation of the GetPreferredSize function. This implementation uses the preferred size of the base
         /// DataGridViewTextBoxCell cell and adds room for the up/down buttons.
         /// </summary>
         protected override Size GetPreferredSize(Graphics graphics, DataGridViewCellStyle cellStyle, int rowIndex, Size constraintSize)
@@ -716,8 +721,8 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Custom implementation of the InitializeEditingControl function. This function is called by the DataGridView control 
-        /// at the beginning of an editing session. It makes sure that the properties of the NumericUpDown editing control are 
+        /// Custom implementation of the InitializeEditingControl function. This function is called by the DataGridView control
+        /// at the beginning of an editing session. It makes sure that the properties of the NumericUpDown editing control are
         /// set according to the cell properties.
         /// </summary>
         public override void InitializeEditingControl(int rowIndex, object initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
@@ -784,7 +789,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
                     // Invalidate and autosize column
                     this.DataGridView.InvalidateColumn(this.ColumnIndex);
 
-                    // TODO: Add code to autosize the cell's column, the rows, the column headers 
+                    // TODO: Add code to autosize the cell's column, the rows, the column headers
                     // and the row headers depending on their autosize settings.
                     // The DataGridView control does not expose a public method that takes care of this.
                 }
@@ -929,7 +934,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Little utility function called by the Paint function to see if a particular part needs to be painted. 
+        /// Little utility function called by the Paint function to see if a particular part needs to be painted.
         /// </summary>
         private static bool PartPainted(DataGridViewPaintParts paintParts, DataGridViewPaintParts paintPart)
         {
@@ -960,7 +965,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         /// <summary>
         /// Utility function that sets a new value for the DecimalPlaces property of the cell. This function is used by
         /// the cell and column DecimalPlaces property. The column uses this method instead of the DecimalPlaces
-        /// property for performance reasons. This way the column can invalidate the entire column at once instead of 
+        /// property for performance reasons. This way the column can invalidate the entire column at once instead of
         /// invalidating each cell of the column individually. A row index needs to be provided as a parameter because
         /// this cell may be shared among multiple rows.
         /// </summary>
@@ -989,7 +994,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
 
         /// Utility function that sets a new value for the Maximum property of the cell. This function is used by
         /// the cell and column Maximum property. The column uses this method instead of the Maximum
-        /// property for performance reasons. This way the column can invalidate the entire column at once instead of 
+        /// property for performance reasons. This way the column can invalidate the entire column at once instead of
         /// invalidating each cell of the column individually. A row index needs to be provided as a parameter because
         /// this cell may be shared among multiple rows.
         internal void SetMaximum(int rowIndex, Decimal value)
@@ -1018,7 +1023,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
 
         /// Utility function that sets a new value for the Minimum property of the cell. This function is used by
         /// the cell and column Minimum property. The column uses this method instead of the Minimum
-        /// property for performance reasons. This way the column can invalidate the entire column at once instead of 
+        /// property for performance reasons. This way the column can invalidate the entire column at once instead of
         /// invalidating each cell of the column individually. A row index needs to be provided as a parameter because
         /// this cell may be shared among multiple rows.
         internal void SetMinimum(int rowIndex, Decimal value)
@@ -1047,7 +1052,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
 
         /// Utility function that sets a new value for the ThousandsSeparator property of the cell. This function is used by
         /// the cell and column ThousandsSeparator property. The column uses this method instead of the ThousandsSeparator
-        /// property for performance reasons. This way the column can invalidate the entire column at once instead of 
+        /// property for performance reasons. This way the column can invalidate the entire column at once instead of
         /// invalidating each cell of the column individually. A row index needs to be provided as a parameter because
         /// this cell may be shared among multiple rows.
         internal void SetThousandsSeparator(int rowIndex, bool value)
@@ -1092,7 +1097,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
     /// Defines the editing control for the DataGridViewNumericUpDownCell custom cell type.
     /// </summary>
     [ToolboxItem(false)]
-    class DataGridViewNumericUpDownEditingControl : NumericUpDown, IDataGridViewEditingControl
+    internal class DataGridViewNumericUpDownEditingControl : NumericUpDown, IDataGridViewEditingControl
     {
         // Needed to forward keyboard messages to the child TextBox control.
         [System.Runtime.InteropServices.DllImport("USER32.DLL", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
@@ -1100,8 +1105,10 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
 
         // The grid that owns this editing control
         private DataGridView dataGridView;
+
         // Stores whether the editing control's value has changed or not
         private bool valueChanged;
+
         // Stores the row index in which the editing control resides
         private int rowIndex;
 
@@ -1189,7 +1196,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Property which indicates whether the editing control needs to be repositioned 
+        /// Property which indicates whether the editing control needs to be repositioned
         /// when its value changes.
         /// </summary>
         public virtual bool RepositionEditingControlOnValueChange
@@ -1201,7 +1208,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Method called by the grid before the editing control is shown so it can adapt to the 
+        /// Method called by the grid before the editing control is shown so it can adapt to the
         /// provided cell style.
         /// </summary>
         public virtual void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
@@ -1357,7 +1364,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         // End of the IDataGridViewEditingControl interface implementation
 
         /// <summary>
-        /// Small utility function that updates the local dirty state and 
+        /// Small utility function that updates the local dirty state and
         /// notifies the grid of the value change.
         /// </summary>
         private void NotifyDataGridViewOfValueChange()
@@ -1370,7 +1377,7 @@ namespace DataMigrator.Windows.Forms.Controls.DataGrids
         }
 
         /// <summary>
-        /// Listen to the KeyPress notification to know when the value changed, and 
+        /// Listen to the KeyPress notification to know when the value changed, and
         /// notify the grid of the change.
         /// </summary>
         protected override void OnKeyPress(KeyPressEventArgs e)

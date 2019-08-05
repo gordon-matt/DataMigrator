@@ -5,6 +5,7 @@ namespace DataMigrator.Windows.Forms.Controls
     public class ExtendedTabControl : TabControl
     {
         public delegate void TabHeaderRightClickedHandler(TabHeaderRightClickedEventArgs e);
+
         public event TabHeaderRightClickedHandler TabHeaderRightClicked;
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -17,7 +18,7 @@ namespace DataMigrator.Windows.Forms.Controls
                     {
                         if (this.GetTabRect(i).Contains(e.Location))
                         {
-                            TabHeaderRightClickedEventArgs args = new TabHeaderRightClickedEventArgs();
+                            var args = new TabHeaderRightClickedEventArgs();
                             args.SelectedIndex = i;
                             TabHeaderRightClicked(args);
                             break;

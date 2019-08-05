@@ -19,16 +19,16 @@ namespace DataMigrator.Views
             settingsTreeView.AddSettingsNode("General", new DataMigratorSettingsControl());
 
             Program.Plugins.OrderBy(p => p.ProviderName).ForEach(plugin =>
-                {
-                    settingsTreeView.AddSettingsNode(plugin.ProviderName, plugin.SettingsControl);
-                });
+            {
+                settingsTreeView.AddSettingsNode(plugin.ProviderName, plugin.SettingsControl);
+            });
         }
 
         private void SaveCurrentControl()
         {
             if (contentPanel.HasChildren)
             {
-                ISettingsControl currentControl = contentPanel.Controls[0] as ISettingsControl;
+                var currentControl = contentPanel.Controls[0] as ISettingsControl;
                 if (currentControl != null)
                 {
                     currentControl.Save();
@@ -55,8 +55,8 @@ namespace DataMigrator.Views
             if (e.Node.Tag == null)
             { return; }
 
-            ISettingsControl settingsControl = e.Node.Tag as ISettingsControl;
-            UserControl control = settingsControl.ControlContent;
+            var settingsControl = e.Node.Tag as ISettingsControl;
+            var control = settingsControl.ControlContent;
             contentPanel.Controls.Clear();
             contentPanel.Controls.Add(control);
             control.Dock = DockStyle.Fill;

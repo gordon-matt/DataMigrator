@@ -23,6 +23,7 @@ namespace DataMigrator.Windows.Forms.Data
                 cmbTable.Visible = value;
             }
         }
+
         public string Server
         {
             get
@@ -46,6 +47,7 @@ namespace DataMigrator.Windows.Forms.Data
                 else { cmbServerName.Text = value; }
             }
         }
+
         public string Database
         {
             get
@@ -69,21 +71,25 @@ namespace DataMigrator.Windows.Forms.Data
                 else { cmbDatabase.Text = value; }
             }
         }
+
         public string UserName
         {
             get { return txtUserName.Text.Trim(); }
             set { txtUserName.Text = value; }
         }
+
         public string Password
         {
             get { return txtPassword.Text.Trim(); }
             set { txtPassword.Text = value; }
         }
+
         public bool IntegratedSecurity
         {
             get { return rbUseWindowsAuthentication.Checked; }
             set { rbUseWindowsAuthentication.Checked = value; }
         }
+
         public string ConnectionString
         {
             get
@@ -121,7 +127,7 @@ namespace DataMigrator.Windows.Forms.Data
                     }
                 }
 
-                #endregion
+                #endregion Checks
 
                 if (IntegratedSecurity)
                 {
@@ -143,6 +149,7 @@ namespace DataMigrator.Windows.Forms.Data
         {
             SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServerName.Items.Add(x));
         }
+
         private void btnTestConnection_Click(object sender, EventArgs e)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -176,7 +183,7 @@ namespace DataMigrator.Windows.Forms.Data
 
                 if (AllowTableSelection)
                 {
-                    using (SqlConnection connection = new SqlConnection(ConnectionString))
+                    using (var connection = new SqlConnection(ConnectionString))
                     {
                         string databaseName = cmbDatabase.SelectedItem.ToString();
                         connection.GetTableNames(databaseName).ForEach(x => cmbTable.Items.Add(x));
@@ -184,6 +191,7 @@ namespace DataMigrator.Windows.Forms.Data
                 }
             }
         }
+
         private void cmbServerName_DropDown(object sender, EventArgs e)
         {
             if (cmbServerName.Items.Count == 0)
@@ -205,7 +213,7 @@ namespace DataMigrator.Windows.Forms.Data
             if (!string.IsNullOrEmpty(Server))
             {
                 cmbDatabase.Items.Clear();
-                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString))
                 {
                     connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
                 }

@@ -5,20 +5,18 @@ using System.Windows.Forms;
 
 namespace DataMigrator.Windows.Forms.Controls
 {
-    [ToolboxBitmap(typeof(System.Windows.Forms.TextBox)),
+    [ToolboxBitmap(typeof(TextBox)),
     ToolboxItem(true),
     Description("Custom TextBox, Accepts Numerical Input Only")]
     public partial class NumericTextBox : TextBox
     {
-        bool allowSpace = false;
-
         // Restricts the entry of characters to digits (including hex), the negative sign,
         // the decimal point, and editing keystrokes (backspace).
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
 
-            NumberFormatInfo numberFormatInfo = System.Globalization.CultureInfo.CurrentCulture.NumberFormat;
+            var numberFormatInfo = CultureInfo.CurrentCulture.NumberFormat;
             string decimalSeparator = numberFormatInfo.NumberDecimalSeparator;
             string groupSeparator = numberFormatInfo.NumberGroupSeparator;
             string negativeSign = numberFormatInfo.NegativeSign;
@@ -42,9 +40,8 @@ namespace DataMigrator.Windows.Forms.Controls
             {
                 // Let the edit control handle control and alt key combinations
             }
-            else if (this.allowSpace && e.KeyChar == ' ')
+            else if (AllowSpace && e.KeyChar == ' ')
             {
-
             }
             else
             {
@@ -54,31 +51,10 @@ namespace DataMigrator.Windows.Forms.Controls
             }
         }
 
-        public int IntValue
-        {
-            get
-            {
-                return int.Parse(this.Text);
-            }
-        }
-        public decimal DecimalValue
-        {
-            get
-            {
-                return decimal.Parse(this.Text);
-            }
-        }
-        public bool AllowSpace
-        {
-            set
-            {
-                this.allowSpace = value;
-            }
+        public int IntValue => int.Parse(Text);
 
-            get
-            {
-                return this.allowSpace;
-            }
-        }
+        public decimal DecimalValue => decimal.Parse(Text);
+
+        public bool AllowSpace { set; get; } = false;
     }
 }
