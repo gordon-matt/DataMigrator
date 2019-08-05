@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{421FF90C-2A2F-4F98-9F93-098EDE815A25}"
 EndProject
@@ -39,7 +39,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigrator.Plugins.SqlCe3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigrator.Plugins.SQLite", "Plugins\DataMigrator.Plugins.SQLite\DataMigrator.Plugins.SQLite.csproj", "{E85FB6FC-60E7-48AF-A8BF-A35064AE1780}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{BDFE911C-82C8-4F32-B8A3-88A3F9B3465E}"
+	ProjectSection(SolutionItems) = preProject
+		_Misc\Logo.png = _Misc\Logo.png
+		_Misc\Screenshot_01_Connections.PNG = _Misc\Screenshot_01_Connections.PNG
+		_Misc\Screenshot_02_Job.PNG = _Misc\Screenshot_02_Job.PNG
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -205,8 +216,7 @@ Global
 		{48D8C00A-48CB-4C3F-9F5F-AEC9272119AE} = {421FF90C-2A2F-4F98-9F93-098EDE815A25}
 		{E85FB6FC-60E7-48AF-A8BF-A35064AE1780} = {421FF90C-2A2F-4F98-9F93-098EDE815A25}
 	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7CCD160-B7A9-4E4B-AED2-4A1CF97C88CF}
 	EndGlobalSection
 EndGlobal

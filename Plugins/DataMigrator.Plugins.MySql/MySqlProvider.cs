@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
@@ -147,6 +148,11 @@ namespace DataMigrator.MySql
         {
             var mySqlType = typeConverter.GetDataProviderFieldType(fieldType);
             return MySqlDbTypeConverter.GetMySqlDataTypeStringValue(mySqlType);
+        }
+
+        protected override DbConnection CreateDbConnection(string providerName, string connectionString)
+        {
+            return new MySqlConnection(connectionString);
         }
     }
 }

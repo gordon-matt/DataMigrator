@@ -122,11 +122,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DataMigrator.Common\DataMigrator.Common.csproj">
       <Project>{B70E0D33-B707-4A5C-9E78-2269CDC34564}</Project>
-      <Name>GoQuo.DataMigrator.Common</Name>
+      <Name>DataMigrator.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DataMigrator.Windows.Forms\DataMigrator.Windows.Forms.csproj">
       <Project>{4E8FDD50-631A-447C-B766-0D20C1C2B6C1}</Project>
-      <Name>GoQuo.DataMigrator.Windows.Forms</Name>
+      <Name>DataMigrator.Windows.Forms</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
