@@ -8,14 +8,14 @@
 
 This was an interesting project I started some years ago. The idea is that you should be able to migrate from any database system to any database system... and it's extensible via plugins (developed with MEF). There are currently plugins for the following database systems:
 
-SQL Server
-PostgreSQL
-MySQL (also works on MariaDB)
-Access
-Excel
-CSV
-SharePoint
-SQL Compact Edition
+- SQL Server
+- PostgreSQL
+- MySQL (also works on MariaDB)
+- Access
+- Excel
+- CSV
+- SharePoint
+- SQL Compact Edition
 
 Note: Development on this project was cancelled due to no longer being needed at the time. However, most of the work was already done. I have now "dusted it off" so to speak and fixed a few bugs that I found, updated the target .NET Framework to 4.8, and updated NuGet packages, etc. I have also tested the SQL Server, MySQL and Postgres migrations and it seems to be working quite well. The project could definitely do with some thorough testing and polishing off though, as the UI is a little "buggy" in some places. For example: loading one saved file after having already opened another doesn't seem to reset things properly with the connections view.
 
