@@ -23,9 +23,9 @@ I welcome any pull requests to fix bugs or add new features.
 
 ## Screenshots
 
-<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshot_01_Connections.PNG" alt="Connections" width="250" />
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshot_01_Connections.PNG" alt="Connections" />
 
-<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshot_02_Job.PNG" alt="Job" width="250" />
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshot_02_Job.PNG" alt="Job" />
 
 ## License
 
