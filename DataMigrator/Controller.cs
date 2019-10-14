@@ -66,10 +66,14 @@ namespace DataMigrator
 
                     buffer.ReMapFields(job.FieldMappings);
 
+                    // TODO: Apply Transform Functions
+                    //  Create an ITransformerPlugin and let users assign them to columns
+                    //  Then run them here on each record in `buffer`.
+
                     destinationProvider.InsertRecords(job.DestinationTable, buffer);
                     buffer = new RecordCollection();
 
-                    double percent = (double)processedRecordCount / (double)recordCount;
+                    double percent = processedRecordCount / (double)recordCount;
                     percent = percent * 100;
                     backgroundWorker.ReportProgress((int)percent);
                     TraceService.Instance.WriteFormat(TraceEvent.Information, "{0}/{1} Records Processed", processedRecordCount, recordCount);

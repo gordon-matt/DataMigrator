@@ -356,10 +356,10 @@ namespace DataMigrator.Common.Data
                         records.ForEach(record =>
                         {
                             record.Fields.ForEach(field =>
-                                {
-                                    command.Parameters[parameterNames[field.Name]].Value = field.Value;
-                                    //command.Parameters[string.Concat("@", field.Name)].Value = field.Value.ToString();
-                                });
+                            {
+                                command.Parameters[parameterNames[field.Name]].Value = field.Value;
+                                //command.Parameters[string.Concat("@", field.Name)].Value = field.Value.ToString();
+                            });
 
                             command.ExecuteNonQuery();
                         });
