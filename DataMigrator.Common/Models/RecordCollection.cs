@@ -27,7 +27,7 @@ namespace DataMigrator.Common.Models
         {
             var table = new DataTable();
 
-            if (this.Count == 0)
+            if (Count == 0)
             {
                 return table;
             }
@@ -40,7 +40,7 @@ namespace DataMigrator.Common.Models
                     AppContext.SystemTypeConverter.GetDataProviderFieldType(field.Type));
             });
 
-            this.ForEach(record =>
+            ForEach(record =>
             {
                 var row = table.NewRow();
                 record.Fields.ForEach(field =>
