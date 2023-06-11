@@ -6,9 +6,8 @@ using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
-using Kore.Data;
-using Kore.Data.OleDb;
+using Extenso;
+using Extenso.Data;
 
 namespace DataMigrator.Access
 {

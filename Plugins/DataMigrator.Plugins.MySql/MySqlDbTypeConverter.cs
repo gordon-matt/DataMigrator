@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
-using Kore.Collections.Generic;
+using Extenso.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace DataMigrator.MySql

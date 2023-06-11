@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using DataMigrator.Common;
-using DataMigrator.Properties;
 
 namespace DataMigrator.Controls
 {

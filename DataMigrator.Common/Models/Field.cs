@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using Kore;
+using Extenso;
 
 namespace DataMigrator.Common.Models
 {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using DataMigrator.Common.Models;
-using Kore;
-using Kore.Collections.Generic;
+using Extenso;
+using Extenso.Collections.Generic;
 using NpgsqlTypes;
 
 namespace DataMigrator.Plugins.Npgsql

@@ -5,7 +5,7 @@ using System.Linq;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
+using Extenso;
 using MySql.Data.MySqlClient;
 
 namespace DataMigrator.MySql

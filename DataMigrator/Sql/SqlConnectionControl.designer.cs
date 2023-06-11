@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Sql
 {
@@ -30,42 +30,32 @@ namespace DataMigrator.Sql
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.txtPassword = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblPassword = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtUserName = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblUserName = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.cbIntegratedSecurity = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
-            this.lblDatabase = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.cmbServer = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.cmbDatabase = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.lblServer = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbServer)).BeginInit();
+            this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
+            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
+            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
+            this.cbIntegratedSecurity = new Krypton.Toolkit.KryptonCheckBox();
+            this.lblDatabase = new Krypton.Toolkit.KryptonLabel();
+            this.cmbDatabase = new Krypton.Toolkit.KryptonComboBox();
+            this.lblServer = new Krypton.Toolkit.KryptonLabel();
+            this.txtServer = new Krypton.Toolkit.KryptonTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.cmbDatabase)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh.Location = new System.Drawing.Point(409, 6);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(75, 28);
-            this.btnRefresh.TabIndex = 2;
-            this.btnRefresh.Values.Text = "Refresh";
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // txtPassword
             // 
             this.txtPassword.Enabled = false;
-            this.txtPassword.Location = new System.Drawing.Point(83, 88);
+            this.txtPassword.Location = new System.Drawing.Point(97, 102);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(156, 23);
+            this.txtPassword.Size = new System.Drawing.Size(182, 23);
             this.txtPassword.TabIndex = 7;
             // 
             // lblPassword
             // 
-            this.lblPassword.Location = new System.Drawing.Point(3, 90);
+            this.lblPassword.Location = new System.Drawing.Point(4, 104);
+            this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
             this.lblPassword.TabIndex = 6;
@@ -74,14 +64,16 @@ namespace DataMigrator.Sql
             // txtUserName
             // 
             this.txtUserName.Enabled = false;
-            this.txtUserName.Location = new System.Drawing.Point(83, 59);
+            this.txtUserName.Location = new System.Drawing.Point(97, 68);
+            this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(156, 23);
+            this.txtUserName.Size = new System.Drawing.Size(182, 23);
             this.txtUserName.TabIndex = 5;
             // 
             // lblUserName
             // 
-            this.lblUserName.Location = new System.Drawing.Point(3, 60);
+            this.lblUserName.Location = new System.Drawing.Point(4, 69);
+            this.lblUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(74, 20);
             this.lblUserName.TabIndex = 4;
@@ -91,7 +83,8 @@ namespace DataMigrator.Sql
             // 
             this.cbIntegratedSecurity.Checked = true;
             this.cbIntegratedSecurity.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbIntegratedSecurity.Location = new System.Drawing.Point(83, 33);
+            this.cbIntegratedSecurity.Location = new System.Drawing.Point(97, 38);
+            this.cbIntegratedSecurity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cbIntegratedSecurity.Name = "cbIntegratedSecurity";
             this.cbIntegratedSecurity.Size = new System.Drawing.Size(127, 20);
             this.cbIntegratedSecurity.TabIndex = 3;
@@ -100,61 +93,60 @@ namespace DataMigrator.Sql
             // 
             // lblDatabase
             // 
-            this.lblDatabase.Location = new System.Drawing.Point(3, 118);
+            this.lblDatabase.Location = new System.Drawing.Point(4, 136);
+            this.lblDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblDatabase.Name = "lblDatabase";
             this.lblDatabase.Size = new System.Drawing.Size(64, 20);
             this.lblDatabase.TabIndex = 8;
             this.lblDatabase.Values.Text = "Database:";
             // 
-            // cmbServer
-            // 
-            this.cmbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbServer.DropDownWidth = 322;
-            this.cmbServer.FormattingEnabled = true;
-            this.cmbServer.Location = new System.Drawing.Point(83, 8);
-            this.cmbServer.Name = "cmbServer";
-            this.cmbServer.Size = new System.Drawing.Size(320, 21);
-            this.cmbServer.TabIndex = 1;
-            this.cmbServer.DropDown += new System.EventHandler(this.cmbServer_DropDown);
-            this.cmbServer.SelectedIndexChanged += new System.EventHandler(this.cmbServer_SelectedIndexChanged);
-            // 
             // cmbDatabase
             // 
+            this.cmbDatabase.CornerRoundingRadius = -1F;
             this.cmbDatabase.DropDownWidth = 280;
             this.cmbDatabase.FormattingEnabled = true;
-            this.cmbDatabase.Location = new System.Drawing.Point(83, 117);
+            this.cmbDatabase.IntegralHeight = false;
+            this.cmbDatabase.Location = new System.Drawing.Point(97, 135);
+            this.cmbDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbDatabase.Name = "cmbDatabase";
-            this.cmbDatabase.Size = new System.Drawing.Size(280, 21);
+            this.cmbDatabase.Size = new System.Drawing.Size(468, 21);
             this.cmbDatabase.TabIndex = 9;
             this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
             // 
             // lblServer
             // 
-            this.lblServer.Location = new System.Drawing.Point(3, 9);
+            this.lblServer.Location = new System.Drawing.Point(4, 10);
+            this.lblServer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblServer.Name = "lblServer";
             this.lblServer.Size = new System.Drawing.Size(47, 20);
             this.lblServer.TabIndex = 0;
             this.lblServer.Values.Text = "Server:";
             // 
+            // txtServer
+            // 
+            this.txtServer.Location = new System.Drawing.Point(97, 7);
+            this.txtServer.Name = "txtServer";
+            this.txtServer.Size = new System.Drawing.Size(468, 23);
+            this.txtServer.TabIndex = 10;
+            this.txtServer.Text = "kryptonTextBox1";
+            // 
             // SqlConnectionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.txtServer);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.txtUserName);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.cbIntegratedSecurity);
             this.Controls.Add(this.lblDatabase);
-            this.Controls.Add(this.cmbServer);
             this.Controls.Add(this.cmbDatabase);
             this.Controls.Add(this.lblServer);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "SqlConnectionControl";
-            this.Size = new System.Drawing.Size(503, 182);
-            ((System.ComponentModel.ISupportInitialize)(this.cmbServer)).EndInit();
+            this.Size = new System.Drawing.Size(587, 210);
             ((System.ComponentModel.ISupportInitialize)(this.cmbDatabase)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -162,16 +154,14 @@ namespace DataMigrator.Sql
         }
 
         #endregion
-
-        private KryptonButton btnRefresh;
         private KryptonTextBox txtPassword;
         private KryptonLabel lblPassword;
         private KryptonTextBox txtUserName;
         private KryptonLabel lblUserName;
         private KryptonCheckBox cbIntegratedSecurity;
         private KryptonLabel lblDatabase;
-        private KryptonComboBox cmbServer;
         private KryptonComboBox cmbDatabase;
         private KryptonLabel lblServer;
+        private KryptonTextBox txtServer;
     }
 }

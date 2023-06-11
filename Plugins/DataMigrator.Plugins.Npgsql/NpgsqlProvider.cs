@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Text;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
-using Kore.Collections;
-using Kore.Data.PostgreSql;
+using Extenso;
+using Extenso.Collections;
+using Extenso.Data.Npgsql;
 using Npgsql;
 
 namespace DataMigrator.Plugins.Npgsql

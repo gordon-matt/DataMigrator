@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
-using Kore.Collections;
+using Extenso;
+using Extenso.Collections;
 
 namespace DataMigrator.Common.Data
 {

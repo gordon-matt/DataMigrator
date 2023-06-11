@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -31,10 +31,10 @@ namespace DataMigrator.Views
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnOK = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.contentPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.panel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.btnCancel = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnOK = new Krypton.Toolkit.KryptonButton();
+            this.contentPanel = new Krypton.Toolkit.KryptonPanel();
+            this.panel = new Krypton.Toolkit.KryptonPanel();
+            this.btnCancel = new Krypton.Toolkit.KryptonButton();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.toolsTreeView = new DataMigrator.Controls.ToolsTreeView();
             ((System.ComponentModel.ISupportInitialize)(this.contentPanel)).BeginInit();

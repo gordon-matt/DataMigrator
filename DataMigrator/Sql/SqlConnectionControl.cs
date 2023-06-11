@@ -6,11 +6,10 @@ using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
-using Kore.Collections;
-using Kore.Data.Common;
-using Kore.Data.Sql;
-using Kore.Data.SqlClient;
+using Extenso;
+using Extenso.Collections;
+using Extenso.Data.Common;
+using Extenso.Data.SqlClient;
 
 namespace DataMigrator.Sql
 {
@@ -25,17 +24,13 @@ namespace DataMigrator.Sql
         {
             get
             {
-                if (cmbServer.SelectedIndex != -1)
+                if (!string.IsNullOrWhiteSpace(txtServer.Text))
                 {
-                    return cmbServer.SelectedItem.ToString();
-                }
-                else if (!cmbServer.Text.IsNullOrWhiteSpace())
-                {
-                    return cmbServer.Text;
+                    return txtServer.Text;
                 }
                 return string.Empty;
             }
-            set { cmbServer.Text = value; }
+            set { txtServer.Text = value; }
         }
 
         public string Database
@@ -46,7 +41,7 @@ namespace DataMigrator.Sql
                 {
                     return cmbDatabase.SelectedItem.ToString();
                 }
-                else if (!cmbDatabase.Text.IsNullOrWhiteSpace())
+                else if (!string.IsNullOrWhiteSpace(cmbDatabase.Text))
                 {
                     return cmbDatabase.Text;
                 }
@@ -84,19 +79,19 @@ namespace DataMigrator.Sql
 
                 #region Checks
 
-                if (Server.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(Server))
                 {
                     TraceService.Instance.WriteMessage(TraceEvent.Error, "Server is invalid. Please try again.");
                     return string.Empty;
                 }
-                if (Database.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(Database))
                 {
                     TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
                     return string.Empty;
                 }
                 if (!IntegratedSecurity)
                 {
-                    if (UserName.IsNullOrWhiteSpace())
+                    if (string.IsNullOrWhiteSpace(UserName))
                     {
                         TraceService.Instance.WriteMessage(TraceEvent.Error, "User Name is invalid. Please try again.");
                         return string.Empty;
@@ -168,12 +163,6 @@ namespace DataMigrator.Sql
             InitializeComponent();
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            cmbServer.Items.Clear();
-            SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServer.Items.Add(x));
-        }
-
         private void cbIntegratedSecurity_CheckedChanged(object sender, EventArgs e)
         {
             txtUserName.Enabled = !IntegratedSecurity;
@@ -189,14 +178,6 @@ namespace DataMigrator.Sql
                 {
                     connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
                 }
-            }
-        }
-
-        private void cmbServer_DropDown(object sender, EventArgs e)
-        {
-            if (cmbServer.Items.Count == 0)
-            {
-                SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServer.Items.Add(x));
             }
         }
 

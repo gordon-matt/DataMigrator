@@ -7,8 +7,8 @@ using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using DataMigrator.SharePoint.Extensions;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
-using Kore.Collections;
+using Extenso;
+using Extenso.Collections;
 using SP = Microsoft.SharePoint.Client;
 
 namespace DataMigrator.SharePoint

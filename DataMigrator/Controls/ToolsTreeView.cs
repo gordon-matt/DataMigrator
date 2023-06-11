@@ -2,8 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using DataMigrator.Common;
-using DataMigrator.Properties;
-using Kore.Collections;
+using Extenso.Collections;
 
 namespace DataMigrator.Controls
 {

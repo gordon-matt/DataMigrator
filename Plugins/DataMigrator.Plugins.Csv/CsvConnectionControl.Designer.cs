@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Csv
 {
@@ -30,11 +30,11 @@ namespace DataMigrator.Csv
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnBrowse = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.txtFile = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblFile = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.btnBrowse = new Krypton.Toolkit.KryptonButton();
+            this.txtFile = new Krypton.Toolkit.KryptonTextBox();
+            this.lblFile = new Krypton.Toolkit.KryptonLabel();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.cbHasHeaderRow = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.cbHasHeaderRow = new Krypton.Toolkit.KryptonCheckBox();
             this.SuspendLayout();
             // 
             // btnBrowse

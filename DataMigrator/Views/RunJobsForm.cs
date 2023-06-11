@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-using ComponentFactory.Krypton.Toolkit;
+using Krypton.Toolkit;
 using DataMigrator.Windows.Forms.Diagnostics;
 
 namespace DataMigrator.Views

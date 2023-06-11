@@ -3,7 +3,7 @@ using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore.Data.Common;
+using Extenso.Data.Common;
 using Npgsql;
 
 namespace DataMigrator.Plugins.Npgsql

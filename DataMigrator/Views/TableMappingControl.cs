@@ -5,9 +5,9 @@ using System.Linq;
 using System.Windows.Forms;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
-using Kore;
-using Kore.Collections;
-using Kore.Data;
+using Extenso;
+using Extenso.Collections;
+using Extenso.Data;
 
 namespace DataMigrator.Views
 {

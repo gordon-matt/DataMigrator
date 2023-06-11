@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -30,15 +30,15 @@ namespace DataMigrator.Views
         /// </summary>
         private void InitializeComponent()
         {
-            this.dgvSource = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.dgvMappings = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.dgvDestination = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.btnAutoMap = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnAdd = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnRemove = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.cmbSourceTable = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.cmbDestinationTable = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.btnCreateTable = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.dgvSource = new Krypton.Toolkit.KryptonDataGridView();
+            this.dgvMappings = new Krypton.Toolkit.KryptonDataGridView();
+            this.dgvDestination = new Krypton.Toolkit.KryptonDataGridView();
+            this.btnAutoMap = new Krypton.Toolkit.KryptonButton();
+            this.btnAdd = new Krypton.Toolkit.KryptonButton();
+            this.btnRemove = new Krypton.Toolkit.KryptonButton();
+            this.cmbSourceTable = new Krypton.Toolkit.KryptonComboBox();
+            this.cmbDestinationTable = new Krypton.Toolkit.KryptonComboBox();
+            this.btnCreateTable = new Krypton.Toolkit.KryptonButton();
             this.pGridSource = new System.Windows.Forms.PropertyGrid();
             this.pGridDestination = new System.Windows.Forms.PropertyGrid();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSource)).BeginInit();

@@ -2,7 +2,8 @@
 using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
-using Kore;
+using Extenso;
+using AppContext = DataMigrator.Common.AppContext;
 
 namespace DataMigrator.Sql
 {

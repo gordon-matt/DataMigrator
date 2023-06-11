@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnRefresh = new System.Windows.Forms.Button();
             this.lblTable = new System.Windows.Forms.Label();
             this.cmbTable = new System.Windows.Forms.ComboBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
@@ -37,71 +36,66 @@
             this.lblUserName = new System.Windows.Forms.Label();
             this.cbIntegratedSecurity = new System.Windows.Forms.CheckBox();
             this.lblDatabase = new System.Windows.Forms.Label();
-            this.cmbServer = new System.Windows.Forms.ComboBox();
             this.cmbDatabase = new System.Windows.Forms.ComboBox();
             this.lblServer = new System.Windows.Forms.Label();
+            this.txtServerName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh.Location = new System.Drawing.Point(358, 4);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btnRefresh.TabIndex = 33;
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // lblTable
             // 
             this.lblTable.AutoSize = true;
-            this.lblTable.Location = new System.Drawing.Point(3, 138);
+            this.lblTable.Location = new System.Drawing.Point(4, 159);
+            this.lblTable.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTable.Name = "lblTable";
-            this.lblTable.Size = new System.Drawing.Size(37, 13);
+            this.lblTable.Size = new System.Drawing.Size(37, 15);
             this.lblTable.TabIndex = 32;
             this.lblTable.Text = "Table:";
             // 
             // cmbTable
             // 
             this.cmbTable.FormattingEnabled = true;
-            this.cmbTable.Location = new System.Drawing.Point(72, 135);
+            this.cmbTable.Location = new System.Drawing.Point(84, 156);
+            this.cmbTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbTable.Name = "cmbTable";
-            this.cmbTable.Size = new System.Drawing.Size(280, 21);
+            this.cmbTable.Size = new System.Drawing.Size(421, 23);
             this.cmbTable.TabIndex = 31;
             // 
             // txtPassword
             // 
             this.txtPassword.Enabled = false;
-            this.txtPassword.Location = new System.Drawing.Point(72, 82);
+            this.txtPassword.Location = new System.Drawing.Point(84, 95);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(156, 20);
+            this.txtPassword.Size = new System.Drawing.Size(266, 23);
             this.txtPassword.TabIndex = 30;
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(3, 85);
+            this.lblPassword.Location = new System.Drawing.Point(4, 98);
+            this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(53, 13);
+            this.lblPassword.Size = new System.Drawing.Size(57, 15);
             this.lblPassword.TabIndex = 29;
             this.lblPassword.Text = "Password";
             // 
             // txtUserName
             // 
             this.txtUserName.Enabled = false;
-            this.txtUserName.Location = new System.Drawing.Point(72, 56);
+            this.txtUserName.Location = new System.Drawing.Point(84, 65);
+            this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(156, 20);
+            this.txtUserName.Size = new System.Drawing.Size(266, 23);
             this.txtUserName.TabIndex = 28;
             // 
             // lblUserName
             // 
             this.lblUserName.AutoSize = true;
-            this.lblUserName.Location = new System.Drawing.Point(3, 59);
+            this.lblUserName.Location = new System.Drawing.Point(4, 68);
+            this.lblUserName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUserName.Name = "lblUserName";
-            this.lblUserName.Size = new System.Drawing.Size(63, 13);
+            this.lblUserName.Size = new System.Drawing.Size(68, 15);
             this.lblUserName.TabIndex = 27;
             this.lblUserName.Text = "User Name:";
             // 
@@ -110,9 +104,10 @@
             this.cbIntegratedSecurity.AutoSize = true;
             this.cbIntegratedSecurity.Checked = true;
             this.cbIntegratedSecurity.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbIntegratedSecurity.Location = new System.Drawing.Point(72, 33);
+            this.cbIntegratedSecurity.Location = new System.Drawing.Point(84, 38);
+            this.cbIntegratedSecurity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cbIntegratedSecurity.Name = "cbIntegratedSecurity";
-            this.cbIntegratedSecurity.Size = new System.Drawing.Size(115, 17);
+            this.cbIntegratedSecurity.Size = new System.Drawing.Size(125, 19);
             this.cbIntegratedSecurity.TabIndex = 26;
             this.cbIntegratedSecurity.Text = "Integrated Security";
             this.cbIntegratedSecurity.UseVisualStyleBackColor = true;
@@ -121,29 +116,20 @@
             // lblDatabase
             // 
             this.lblDatabase.AutoSize = true;
-            this.lblDatabase.Location = new System.Drawing.Point(3, 111);
+            this.lblDatabase.Location = new System.Drawing.Point(4, 128);
+            this.lblDatabase.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatabase.Name = "lblDatabase";
-            this.lblDatabase.Size = new System.Drawing.Size(56, 13);
+            this.lblDatabase.Size = new System.Drawing.Size(58, 15);
             this.lblDatabase.TabIndex = 25;
             this.lblDatabase.Text = "Database:";
-            // 
-            // cmbServer
-            // 
-            this.cmbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbServer.FormattingEnabled = true;
-            this.cmbServer.Location = new System.Drawing.Point(72, 6);
-            this.cmbServer.Name = "cmbServer";
-            this.cmbServer.Size = new System.Drawing.Size(280, 21);
-            this.cmbServer.TabIndex = 22;
-            this.cmbServer.DropDown += new System.EventHandler(this.cmbServer_DropDown);
             // 
             // cmbDatabase
             // 
             this.cmbDatabase.FormattingEnabled = true;
-            this.cmbDatabase.Location = new System.Drawing.Point(72, 108);
+            this.cmbDatabase.Location = new System.Drawing.Point(84, 125);
+            this.cmbDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbDatabase.Name = "cmbDatabase";
-            this.cmbDatabase.Size = new System.Drawing.Size(280, 21);
+            this.cmbDatabase.Size = new System.Drawing.Size(421, 23);
             this.cmbDatabase.TabIndex = 23;
             this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
             this.cmbDatabase.SelectedIndexChanged += new System.EventHandler(this.cmbDatabase_SelectedIndexChanged);
@@ -151,17 +137,25 @@
             // lblServer
             // 
             this.lblServer.AutoSize = true;
-            this.lblServer.Location = new System.Drawing.Point(3, 9);
+            this.lblServer.Location = new System.Drawing.Point(4, 10);
+            this.lblServer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblServer.Name = "lblServer";
-            this.lblServer.Size = new System.Drawing.Size(41, 13);
+            this.lblServer.Size = new System.Drawing.Size(42, 15);
             this.lblServer.TabIndex = 24;
             this.lblServer.Text = "Server:";
             // 
+            // txtServerName
+            // 
+            this.txtServerName.Location = new System.Drawing.Point(84, 7);
+            this.txtServerName.Name = "txtServerName";
+            this.txtServerName.Size = new System.Drawing.Size(421, 23);
+            this.txtServerName.TabIndex = 33;
+            // 
             // SqlConnectionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.txtServerName);
             this.Controls.Add(this.lblTable);
             this.Controls.Add(this.cmbTable);
             this.Controls.Add(this.txtPassword);
@@ -170,19 +164,17 @@
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.cbIntegratedSecurity);
             this.Controls.Add(this.lblDatabase);
-            this.Controls.Add(this.cmbServer);
             this.Controls.Add(this.cmbDatabase);
             this.Controls.Add(this.lblServer);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "SqlConnectionControl";
-            this.Size = new System.Drawing.Size(436, 161);
+            this.Size = new System.Drawing.Size(509, 186);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Label lblTable;
         private System.Windows.Forms.ComboBox cmbTable;
         private System.Windows.Forms.TextBox txtPassword;
@@ -191,8 +183,8 @@
         private System.Windows.Forms.Label lblUserName;
         private System.Windows.Forms.CheckBox cbIntegratedSecurity;
         private System.Windows.Forms.Label lblDatabase;
-        private System.Windows.Forms.ComboBox cmbServer;
         private System.Windows.Forms.ComboBox cmbDatabase;
         private System.Windows.Forms.Label lblServer;
+        private TextBox txtServerName;
     }
 }

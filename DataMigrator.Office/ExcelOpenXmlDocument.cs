@@ -7,6 +7,7 @@ using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Extenso.Collections;
 using Kore;
 using Kore.Collections;
 using Kore.Data;

@@ -6,7 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using ComponentFactory.Krypton.Toolkit;
+using Krypton.Toolkit;
 using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Windows.Forms;

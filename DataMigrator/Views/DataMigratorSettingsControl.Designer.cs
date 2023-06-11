@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -30,8 +30,8 @@ namespace DataMigrator.Views
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblBatchSize = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.nudBatchSize = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.lblBatchSize = new Krypton.Toolkit.KryptonLabel();
+            this.nudBatchSize = new Krypton.Toolkit.KryptonNumericUpDown();
             this.SuspendLayout();
             // 
             // lblBatchSize

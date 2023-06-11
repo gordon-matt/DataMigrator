@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.SqlTypes;
 using System.Linq;
 using DataMigrator.Common.Models;
-using Kore.Collections.Generic;
+using Extenso.Collections.Generic;
 
 namespace DataMigrator.Common.Data
 {

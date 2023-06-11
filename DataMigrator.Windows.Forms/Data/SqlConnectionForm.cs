@@ -2,10 +2,9 @@
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-using Kore.Collections;
-using Kore.Data.Common;
-using Kore.Data.Sql;
-using Kore.Data.SqlClient;
+using Extenso.Collections;
+using Extenso.Data.Common;
+using Extenso.Data.SqlClient;
 
 namespace DataMigrator.Windows.Forms.Data
 {
@@ -28,23 +27,15 @@ namespace DataMigrator.Windows.Forms.Data
         {
             get
             {
-                if (cmbServerName.SelectedIndex != -1)
+                if (!string.IsNullOrWhiteSpace(txtServerName.Text))
                 {
-                    return cmbServerName.SelectedItem.ToString();
-                }
-                else if (!string.IsNullOrWhiteSpace(cmbServerName.Text))
-                {
-                    return cmbServerName.Text;
+                    return txtServerName.Text;
                 }
                 return string.Empty;
             }
             set
             {
-                if (cmbServerName.Items.Count > 0)
-                {
-                    cmbServerName.SelectedItem = value;
-                }
-                else { cmbServerName.Text = value; }
+                txtServerName.Text = value;
             }
         }
 
@@ -145,11 +136,6 @@ namespace DataMigrator.Windows.Forms.Data
             InitializeComponent();
         }
 
-        private void btnRefreshServers_Click(object sender, EventArgs e)
-        {
-            SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServerName.Items.Add(x));
-        }
-
         private void btnTestConnection_Click(object sender, EventArgs e)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -189,14 +175,6 @@ namespace DataMigrator.Windows.Forms.Data
                         connection.GetTableNames(databaseName).ForEach(x => cmbTable.Items.Add(x));
                     }
                 }
-            }
-        }
-
-        private void cmbServerName_DropDown(object sender, EventArgs e)
-        {
-            if (cmbServerName.Items.Count == 0)
-            {
-                SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServerName.Items.Add(x));
             }
         }
 

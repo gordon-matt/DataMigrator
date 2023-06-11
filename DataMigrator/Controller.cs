@@ -6,7 +6,7 @@ using DataMigrator.Common.Configuration;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore;
+using Extenso;
 
 namespace DataMigrator
 {

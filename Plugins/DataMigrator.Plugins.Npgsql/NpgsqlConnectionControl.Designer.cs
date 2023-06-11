@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Plugins.Npgsql
 {
@@ -30,18 +30,18 @@ namespace DataMigrator.Plugins.Npgsql
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtDatabase = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.txtPassword = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblPassword = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtUserName = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblUserName = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.lblDatabase = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtServer = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblServer = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtPort = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblPort = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtSchema = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblSchema = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.txtDatabase = new Krypton.Toolkit.KryptonTextBox();
+            this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
+            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
+            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
+            this.lblDatabase = new Krypton.Toolkit.KryptonLabel();
+            this.txtServer = new Krypton.Toolkit.KryptonTextBox();
+            this.lblServer = new Krypton.Toolkit.KryptonLabel();
+            this.txtPort = new Krypton.Toolkit.KryptonTextBox();
+            this.lblPort = new Krypton.Toolkit.KryptonLabel();
+            this.txtSchema = new Krypton.Toolkit.KryptonTextBox();
+            this.lblSchema = new Krypton.Toolkit.KryptonLabel();
             this.SuspendLayout();
             // 
             // txtDatabase
