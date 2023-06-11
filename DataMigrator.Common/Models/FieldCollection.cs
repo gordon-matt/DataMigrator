@@ -1,19 +1,18 @@
-﻿namespace DataMigrator.Common.Models
+﻿namespace DataMigrator.Common.Models;
+
+public class FieldCollection : List<Field>
 {
-    public class FieldCollection : List<Field>
+    public Field this[string name] => this.SingleOrDefault(x => x.Name == name);
+
+    public FieldCollection()
     {
-        public Field this[string name] => this.SingleOrDefault(x => x.Name == name);
+    }
 
-        public FieldCollection()
+    public FieldCollection(IEnumerable<Field> fields)
+    {
+        foreach (Field field in fields)
         {
-        }
-
-        public FieldCollection(IEnumerable<Field> fields)
-        {
-            foreach (Field field in fields)
-            {
-                this.Add(field.Clone());
-            }
+            this.Add(field.Clone());
         }
     }
 }

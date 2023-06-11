@@ -1,13 +1,12 @@
-﻿namespace DataMigrator.Common
+﻿namespace DataMigrator.Common;
+
+public interface IMigrationTool
 {
-    public interface IMigrationTool
-    {
-        string Name { get; }
+    string Name { get; }
 
-        string Description { get; }
+    string Description { get; }
 
-        Icon Icon { get; }
+    Icon Icon { get; }
 
-        UserControl ControlContent { get; }
-    }
+    UserControl ControlContent { get; }
 }

@@ -5,140 +5,139 @@ using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Data.Common;
 using Npgsql;
 
-namespace DataMigrator.Plugins.Npgsql
+namespace DataMigrator.Plugins.Npgsql;
+
+public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
 {
-    public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
+    private const string PGSQL_CONNECTION_STRING_FORMAT = "Server={0};port={1};Database={2};User Id={3};Password={4};";
+
+    #region Public Properties
+
+    public string Server
     {
-        private const string PGSQL_CONNECTION_STRING_FORMAT = "Server={0};port={1};Database={2};User Id={3};Password={4};";
+        get { return txtServer.Text.Trim(); }
+        set { txtServer.Text = value; }
+    }
 
-        #region Public Properties
-
-        public string Server
+    public int Port
+    {
+        get
         {
-            get { return txtServer.Text.Trim(); }
-            set { txtServer.Text = value; }
-        }
-
-        public int Port
-        {
-            get
+            if (!string.IsNullOrEmpty(txtPort.Text))
             {
-                if (!string.IsNullOrEmpty(txtPort.Text))
-                {
-                    return int.Parse(txtPort.Text.Trim());
-                }
-                return -1;
+                return int.Parse(txtPort.Text.Trim());
             }
-            set { txtPort.Text = value.ToString(); }
+            return -1;
         }
+        set { txtPort.Text = value.ToString(); }
+    }
 
-        public string Database
-        {
-            get { return txtDatabase.Text.Trim(); }
-            set { txtDatabase.Text = value; }
-        }
+    public string Database
+    {
+        get { return txtDatabase.Text.Trim(); }
+        set { txtDatabase.Text = value; }
+    }
 
-        public string UserName
-        {
-            get { return txtUserName.Text.Trim(); }
-            set { txtUserName.Text = value; }
-        }
+    public string UserName
+    {
+        get { return txtUserName.Text.Trim(); }
+        set { txtUserName.Text = value; }
+    }
 
-        public string Password
-        {
-            get { return txtPassword.Text.Trim(); }
-            set { txtPassword.Text = value; }
-        }
+    public string Password
+    {
+        get { return txtPassword.Text.Trim(); }
+        set { txtPassword.Text = value; }
+    }
 
-        public string Schema
-        {
-            get { return txtSchema.Text.Trim(); }
-            set { txtSchema.Text = value; }
-        }
+    public string Schema
+    {
+        get { return txtSchema.Text.Trim(); }
+        set { txtSchema.Text = value; }
+    }
 
-        public string ConnectionString
+    public string ConnectionString
+    {
+        get
         {
-            get
+            if (this.IsInWinDesignMode())
             {
-                if (this.IsInWinDesignMode())
-                {
-                    return string.Empty;
-                }
-
-                #region Checks
-
-                if (string.IsNullOrEmpty(Database))
-                {
-                    TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
-                    return string.Empty;
-                }
-
-                if (string.IsNullOrEmpty(UserName))
-                {
-                    TraceService.Instance.WriteMessage(TraceEvent.Error, "User Name is invalid. Please try again.");
-                    return string.Empty;
-                }
-
-                #endregion Checks
-
-                return string.Format(PGSQL_CONNECTION_STRING_FORMAT, Server, Port, Database, UserName, Password);
+                return string.Empty;
             }
-        }
 
-        #endregion Public Properties
+            #region Checks
 
-        #region IConnectionControl Members
-
-        public UserControl ControlContent => this;
-
-        public ConnectionDetails ConnectionDetails
-        {
-            get
+            if (string.IsNullOrEmpty(Database))
             {
-                //bool isValid = false;
-                //using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-                //{
-                //    isValid = connection.Validate();
-                //}
-
-                var connectionDetails = new ConnectionDetails
-                {
-                    Database = this.Database,
-                    Password = this.Password,
-                    IntegratedSecurity = false,
-                    Port = this.Port,
-                    Server = this.Server,
-                    UserName = this.UserName,
-                    ProviderName = Constants.PROVIDER_NAME,
-                    ConnectionString = this.ConnectionString
-                };
-                connectionDetails.ExtendedProperties.Add("Schema", Schema);
-                return connectionDetails;
+                TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
+                return string.Empty;
             }
-            set
+
+            if (string.IsNullOrEmpty(UserName))
             {
-                Database = value.Database;
-                Password = value.Password;
-                Port = value.Port;
-                Server = value.Server;
-                UserName = value.UserName;
-                Schema = ConnectionDetails.ExtendedProperties["Schema"].GetValue<string>();
+                TraceService.Instance.WriteMessage(TraceEvent.Error, "User Name is invalid. Please try again.");
+                return string.Empty;
             }
-        }
 
-        public bool ValidateConnection()
+            #endregion Checks
+
+            return string.Format(PGSQL_CONNECTION_STRING_FORMAT, Server, Port, Database, UserName, Password);
+        }
+    }
+
+    #endregion Public Properties
+
+    #region IConnectionControl Members
+
+    public UserControl ControlContent => this;
+
+    public ConnectionDetails ConnectionDetails
+    {
+        get
         {
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            //bool isValid = false;
+            //using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+            //{
+            //    isValid = connection.Validate();
+            //}
+
+            var connectionDetails = new ConnectionDetails
             {
-                return connection.Validate();
-            }
+                Database = this.Database,
+                Password = this.Password,
+                IntegratedSecurity = false,
+                Port = this.Port,
+                Server = this.Server,
+                UserName = this.UserName,
+                ProviderName = Constants.PROVIDER_NAME,
+                ConnectionString = this.ConnectionString
+            };
+            connectionDetails.ExtendedProperties.Add("Schema", Schema);
+            return connectionDetails;
         }
-
-        #endregion IConnectionControl Members
-
-        public NpgsqlConnectionControl()
+        set
         {
-            InitializeComponent();
+            Database = value.Database;
+            Password = value.Password;
+            Port = value.Port;
+            Server = value.Server;
+            UserName = value.UserName;
+            Schema = ConnectionDetails.ExtendedProperties["Schema"].GetValue<string>();
         }
+    }
+
+    public bool ValidateConnection()
+    {
+        using (var connection = new NpgsqlConnection(ConnectionString))
+        {
+            return connection.Validate();
+        }
+    }
+
+    #endregion IConnectionControl Members
+
+    public NpgsqlConnectionControl()
+    {
+        InitializeComponent();
     }
 }

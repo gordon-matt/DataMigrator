@@ -1,18 +1,17 @@
 ﻿using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 
-namespace DataMigrator.Common
+namespace DataMigrator.Common;
+
+public interface IMigrationPlugin
 {
-    public interface IMigrationPlugin
-    {
-        string ProviderName { get; }
+    string ProviderName { get; }
 
-        IConnectionControl ConnectionControl { get; }
+    IConnectionControl ConnectionControl { get; }
 
-        BaseProvider GetDataProvider(ConnectionDetails connectionDetails);
+    BaseProvider GetDataProvider(ConnectionDetails connectionDetails);
 
-        ISettingsControl SettingsControl { get; }
+    ISettingsControl SettingsControl { get; }
 
-        IEnumerable<IMigrationTool> Tools { get; }
-    }
+    IEnumerable<IMigrationTool> Tools { get; }
 }

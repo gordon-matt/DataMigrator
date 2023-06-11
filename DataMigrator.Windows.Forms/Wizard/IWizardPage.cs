@@ -1,19 +1,18 @@
-﻿namespace DataMigrator.Windows.Forms.Wizard
+﻿namespace DataMigrator.Windows.Forms.Wizard;
+
+public interface IWizardPage
 {
-    public interface IWizardPage
-    {
-        UserControl Content { get; }
+    UserControl Content { get; }
 
-        void Load();
+    void Load();
 
-        void Save();
+    void Save();
 
-        void Cancel();
+    void Cancel();
 
-        bool IsBusy { get; }
+    bool IsBusy { get; }
 
-        bool PageValid { get; }
+    bool PageValid { get; }
 
-        string ValidationMessage { get; }
-    }
+    string ValidationMessage { get; }
 }

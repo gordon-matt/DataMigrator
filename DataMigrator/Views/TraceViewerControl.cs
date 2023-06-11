@@ -1,32 +1,31 @@
 ﻿using DataMigrator.Windows.Forms.Diagnostics;
 
-namespace DataMigrator.Views
+namespace DataMigrator.Views;
+
+public partial class TraceViewerControl : UserControl
 {
-    public partial class TraceViewerControl : UserControl
+    public TraceViewerControl()
     {
-        public TraceViewerControl()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            TraceService.Instance.Trace += new TraceService.TraceEventHandler(Instance_Trace);
-        }
+        TraceService.Instance.Trace += new TraceService.TraceEventHandler(Instance_Trace);
+    }
 
-        private void Instance_Trace(TraceEventArgs e)
+    private void Instance_Trace(TraceEventArgs e)
+    {
+        if (txtTrace.InvokeRequired)
         {
-            if (txtTrace.InvokeRequired)
-            {
-                Invoke(new MethodInvoker(() =>
-                {
-                    txtTrace.AppendText(e.Message);
-                    txtTrace.AppendText(Environment.NewLine);
-                }));
-            }
-            else
+            Invoke(new MethodInvoker(() =>
             {
                 txtTrace.AppendText(e.Message);
                 txtTrace.AppendText(Environment.NewLine);
-            }
-            Application.DoEvents();
+            }));
         }
+        else
+        {
+            txtTrace.AppendText(e.Message);
+            txtTrace.AppendText(Environment.NewLine);
+        }
+        Application.DoEvents();
     }
 }

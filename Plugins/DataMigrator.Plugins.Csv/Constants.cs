@@ -1,7 +1,6 @@
-﻿namespace DataMigrator.Csv
+﻿namespace DataMigrator.Csv;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        internal const string PROVIDER_NAME = "CSV File";
-    }
+    internal const string PROVIDER_NAME = "CSV File";
 }

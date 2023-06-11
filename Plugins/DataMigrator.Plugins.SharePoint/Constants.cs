@@ -1,36 +1,35 @@
-﻿namespace DataMigrator.SharePoint
+﻿namespace DataMigrator.SharePoint;
+
+internal static class Constants
 {
-    internal static class Constants
+    internal const string PROVIDER_NAME = "SharePoint";
+
+    private static string[] systemFields = null;
+
+    public static string[] SystemFields
     {
-        internal const string PROVIDER_NAME = "SharePoint";
-
-        private static string[] systemFields = null;
-
-        public static string[] SystemFields
+        get
         {
-            get
+            if (systemFields == null)
             {
-                if (systemFields == null)
+                systemFields = new string[]
                 {
-                    systemFields = new string[]
-                    {
-                        "Author",
-                        "ContentType",
-                        "Modified",
-                        "Created",
-                        "Editor",
-                        "_UIVersionString",
-                        "Attachments",
-                        "Edit",
-                        "LinkTitleNoMenu",
-                        "LinkTitle",
-                        "DocIcon",
-                        "ItemChildCount",
-                        "FolderChildCount"
-                    };
-                }
-                return systemFields;
+                    "Author",
+                    "ContentType",
+                    "Modified",
+                    "Created",
+                    "Editor",
+                    "_UIVersionString",
+                    "Attachments",
+                    "Edit",
+                    "LinkTitleNoMenu",
+                    "LinkTitle",
+                    "DocIcon",
+                    "ItemChildCount",
+                    "FolderChildCount"
+                };
             }
+            return systemFields;
         }
     }
 }

@@ -1,49 +1,48 @@
 ﻿using DataMigrator.Common.Data;
 
-namespace DataMigrator.Common
+namespace DataMigrator.Common;
+
+public static class AppContext
 {
-    public static class AppContext
+    private static DbTypeConverter dbTypeConverter = null;
+
+    public static DbTypeConverter DbTypeConverter
     {
-        private static DbTypeConverter dbTypeConverter = null;
-
-        public static DbTypeConverter DbTypeConverter
+        get
         {
-            get
+            if (dbTypeConverter == null)
             {
-                if (dbTypeConverter == null)
-                {
-                    dbTypeConverter = new DbTypeConverter();
-                }
-                return dbTypeConverter;
+                dbTypeConverter = new DbTypeConverter();
             }
+            return dbTypeConverter;
         }
+    }
 
-        private static SqlDbTypeConverter sqlDbTypeConverter = null;
+    private static SqlDbTypeConverter sqlDbTypeConverter = null;
 
-        public static SqlDbTypeConverter SqlDbTypeConverter
+    public static SqlDbTypeConverter SqlDbTypeConverter
+    {
+        get
         {
-            get
+            if (sqlDbTypeConverter == null)
             {
-                if (sqlDbTypeConverter == null)
-                {
-                    sqlDbTypeConverter = new SqlDbTypeConverter();
-                }
-                return sqlDbTypeConverter;
+                sqlDbTypeConverter = new SqlDbTypeConverter();
             }
+            return sqlDbTypeConverter;
         }
+    }
 
-        private static SystemTypeConverter systemTypeConverter = null;
+    private static SystemTypeConverter systemTypeConverter = null;
 
-        public static SystemTypeConverter SystemTypeConverter
+    public static SystemTypeConverter SystemTypeConverter
+    {
+        get
         {
-            get
+            if (systemTypeConverter == null)
             {
-                if (systemTypeConverter == null)
-                {
-                    systemTypeConverter = new SystemTypeConverter();
-                }
-                return systemTypeConverter;
+                systemTypeConverter = new SystemTypeConverter();
             }
+            return systemTypeConverter;
         }
     }
 }
