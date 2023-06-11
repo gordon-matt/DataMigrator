@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataMigrator.Windows.Forms.Diagnostics
+﻿namespace DataMigrator.Windows.Forms.Diagnostics
 {
     public enum TraceEvent
     {

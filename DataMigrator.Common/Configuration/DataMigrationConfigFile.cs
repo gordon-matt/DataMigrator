@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Windows.Forms;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using DataMigrator.Common.Models;
 using Extenso;
 using Extenso.IO;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace DataMigrator.Windows.Forms.Wizard
+﻿namespace DataMigrator.Windows.Forms.Wizard
 {
     public partial class WizardHost : Form
     {

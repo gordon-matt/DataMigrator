@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DataMigrator.Common.Models;
+﻿using DataMigrator.Common.Models;
 using Extenso;
 using Extenso.Collections.Generic;
 using NpgsqlTypes;

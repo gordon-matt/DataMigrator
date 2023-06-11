@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Linq;
 using DataMigrator.Common.Models;
 using Extenso.Collections.Generic;
 

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using Krypton.Toolkit;
 using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Windows.Forms;
+using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {

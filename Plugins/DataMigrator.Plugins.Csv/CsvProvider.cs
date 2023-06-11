@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
+﻿using System.Data;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using Extenso;
@@ -26,8 +25,7 @@ namespace DataMigrator.Csv
 
         public override bool CreateField(string tableName, Field field)
         {
-            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = ReadCsv();
             table.Columns.Add(field.Name);
             table.ToCsv(ConnectionDetails.Database, true);
             return true;
@@ -40,8 +38,7 @@ namespace DataMigrator.Csv
 
         public override bool CreateTable(string tableName, IEnumerable<Field> fields)
         {
-            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = ReadCsv();
             fields.ForEach(field => table.Columns.Add(field.Name));
             table.ToCsv(ConnectionDetails.Database, true);
             return true;
@@ -54,15 +51,13 @@ namespace DataMigrator.Csv
 
         public override IEnumerable<string> GetFieldNames(string tableName)
         {
-            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = ReadCsv();
             return table.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
         }
 
         public override FieldCollection GetFields(string tableName)
         {
-            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = ReadCsv();
             var fields = new FieldCollection();
 
             table.Columns.Cast<DataColumn>().ForEach(c => fields.Add(new Field
@@ -86,8 +81,7 @@ namespace DataMigrator.Csv
 
         public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
         {
-            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = ReadCsv();
             foreach (DataRow row in table.Rows)
             {
                 var record = new Record();
@@ -102,8 +96,7 @@ namespace DataMigrator.Csv
 
         public override void InsertRecords(string tableName, IEnumerable<Record> records)
         {
-            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-            var table = new FileInfo(ConnectionDetails.Database).ReadCsv(hasHeaderRow, ",");
+            var table = ReadCsv();
 
             records.ForEach(record =>
                 {
@@ -131,6 +124,23 @@ namespace DataMigrator.Csv
         public override string GetDataProviderFieldType(FieldType fieldType)
         {
             return typeof(string).ToString();
+        }
+
+        private DataTable ReadCsv()
+        {
+            bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
+            using var fileStream = File.OpenRead(ConnectionDetails.Database);
+            using var streamReader = new StreamReader(fileStream);
+            using var csvReader = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                TrimOptions = TrimOptions.Trim,
+                HasHeaderRecord = hasHeaderRow
+            });
+            using var csvDataReader = new CsvDataReader(csvReader);
+
+            var table = new DataTable();
+            table.Load(csvDataReader);
+            return table;
         }
     }
 }

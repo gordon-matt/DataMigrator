@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace DataMigrator.Common
+﻿namespace DataMigrator.Common
 {
     public interface ISettingsControl
     {

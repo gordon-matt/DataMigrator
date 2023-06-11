@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Common.Data;

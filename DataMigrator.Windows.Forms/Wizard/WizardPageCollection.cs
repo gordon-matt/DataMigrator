@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace DataMigrator.Windows.Forms.Wizard
+﻿namespace DataMigrator.Windows.Forms.Wizard
 {
     public enum WizardPageLocation
     {

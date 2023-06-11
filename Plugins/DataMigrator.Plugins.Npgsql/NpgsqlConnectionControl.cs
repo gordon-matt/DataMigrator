@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using DataMigrator.Common;
+﻿using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;

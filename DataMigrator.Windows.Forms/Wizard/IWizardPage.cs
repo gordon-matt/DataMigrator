@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace DataMigrator.Windows.Forms.Wizard
+﻿namespace DataMigrator.Windows.Forms.Wizard
 {
     public interface IWizardPage
     {

@@ -1,11 +1,8 @@
 //Source: http://msdn2.microsoft.com/en-us/library/aa730881(VS.80).aspx
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
-using System.Windows.Forms;
 
 namespace DataMigrator.Windows.Forms.Controls.DataGrids
 {

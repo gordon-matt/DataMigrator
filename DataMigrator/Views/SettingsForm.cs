@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using Krypton.Toolkit;
-using DataMigrator.Common;
+﻿using DataMigrator.Common;
 using Extenso.Collections;
+using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {

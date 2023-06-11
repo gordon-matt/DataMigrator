@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-using DataMigrator.Common.Configuration;
+﻿using DataMigrator.Common.Configuration;
 using DataMigrator.Windows.Forms;
 
 namespace DataMigrator.Controls

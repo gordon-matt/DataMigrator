@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DataMigrator.Common.Data;
+﻿using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 
 namespace DataMigrator.Common
