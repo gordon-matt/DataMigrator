@@ -5,148 +5,147 @@ using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Data.Common;
 using MySql.Data.MySqlClient;
 
-namespace DataMigrator.MySql
+namespace DataMigrator.MySql;
+
+public partial class MySqlConnectionControl : UserControl, IConnectionControl
 {
-    public partial class MySqlConnectionControl : UserControl, IConnectionControl
+    // Setting Sql Server Mode=True no longer necessary, as have implemented "SpaceEscape" in BaseProvider.
+    // Just need to set SpaceEscapeStart and SpaceEscapeEnd in constructor
+    private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};CharSet=utf8";
+
+    private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};CharSet=utf8";
+
+    //private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};Sql Server Mode=True;";
+    //private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};Sql Server Mode=True;";
+
+    #region Public Properties
+
+    public string Server
     {
-        // Setting Sql Server Mode=True no longer necessary, as have implemented "SpaceEscape" in BaseProvider.
-        // Just need to set SpaceEscapeStart and SpaceEscapeEnd in constructor
-        private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};CharSet=utf8";
+        get { return txtServer.Text.Trim(); }
+        set { txtServer.Text = value; }
+    }
 
-        private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};CharSet=utf8";
-
-        //private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};Sql Server Mode=True;";
-        //private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};Sql Server Mode=True;";
-
-        #region Public Properties
-
-        public string Server
+    public int Port
+    {
+        get
         {
-            get { return txtServer.Text.Trim(); }
-            set { txtServer.Text = value; }
-        }
-
-        public int Port
-        {
-            get
+            if (!string.IsNullOrEmpty(txtPort.Text))
             {
-                if (!string.IsNullOrEmpty(txtPort.Text))
-                {
-                    return int.Parse(txtPort.Text.Trim());
-                }
-                return -1;
+                return int.Parse(txtPort.Text.Trim());
             }
-            set { txtPort.Text = value.ToString(); }
+            return -1;
         }
+        set { txtPort.Text = value.ToString(); }
+    }
 
-        public string Database
-        {
-            get { return txtDatabase.Text.Trim(); }
-            set { txtDatabase.Text = value; }
-        }
+    public string Database
+    {
+        get { return txtDatabase.Text.Trim(); }
+        set { txtDatabase.Text = value; }
+    }
 
-        public string UserName
-        {
-            get { return txtUserName.Text.Trim(); }
-            set { txtUserName.Text = value; }
-        }
+    public string UserName
+    {
+        get { return txtUserName.Text.Trim(); }
+        set { txtUserName.Text = value; }
+    }
 
-        public string Password
-        {
-            get { return txtPassword.Text.Trim(); }
-            set { txtPassword.Text = value; }
-        }
+    public string Password
+    {
+        get { return txtPassword.Text.Trim(); }
+        set { txtPassword.Text = value; }
+    }
 
-        public string ConnectionString
+    public string ConnectionString
+    {
+        get
         {
-            get
+            if (this.IsInWinDesignMode())
             {
-                if (this.IsInWinDesignMode())
-                {
-                    return string.Empty;
-                }
+                return string.Empty;
+            }
 
-                #region Checks
+            #region Checks
 
-                if (string.IsNullOrEmpty(Database))
-                {
-                    TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
-                    return string.Empty;
-                }
+            if (string.IsNullOrEmpty(Database))
+            {
+                TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
+                return string.Empty;
+            }
 
-                if (string.IsNullOrEmpty(UserName))
-                {
-                    TraceService.Instance.WriteMessage(TraceEvent.Error, "User Name is invalid. Please try again.");
-                    return string.Empty;
-                }
+            if (string.IsNullOrEmpty(UserName))
+            {
+                TraceService.Instance.WriteMessage(TraceEvent.Error, "User Name is invalid. Please try again.");
+                return string.Empty;
+            }
 
-                #endregion Checks
+            #endregion Checks
 
-                if (Port != -1)
-                {
-                    return string.Format(MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT, Server, Port, Database, UserName, Password);
-                }
-                else
-                {
-                    return string.Format(MYSQL_CONNECTION_STRING_FORMAT_STANDARD, Server, Database, UserName, Password);
-                }
+            if (Port != -1)
+            {
+                return string.Format(MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT, Server, Port, Database, UserName, Password);
+            }
+            else
+            {
+                return string.Format(MYSQL_CONNECTION_STRING_FORMAT_STANDARD, Server, Database, UserName, Password);
             }
         }
+    }
 
-        #endregion Public Properties
+    #endregion Public Properties
 
-        #region IConnectionControl Members
+    #region IConnectionControl Members
 
-        public UserControl ControlContent
+    public UserControl ControlContent
+    {
+        get { return this; }
+    }
+
+    public ConnectionDetails ConnectionDetails
+    {
+        get
         {
-            get { return this; }
-        }
+            //bool isValid = false;
+            //using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+            //{
+            //    isValid = connection.Validate();
+            //}
 
-        public ConnectionDetails ConnectionDetails
-        {
-            get
+            return new ConnectionDetails
             {
-                //bool isValid = false;
-                //using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-                //{
-                //    isValid = connection.Validate();
-                //}
-
-                return new ConnectionDetails
-                {
-                    Database = this.Database,
-                    Password = this.Password,
-                    IntegratedSecurity = false,
-                    Port = this.Port,
-                    Server = this.Server,
-                    UserName = this.UserName,
-                    ProviderName = Constants.PROVIDER_NAME,
-                    ConnectionString = this.ConnectionString
-                };
-            }
-            set
-            {
-                Database = value.Database;
-                Password = value.Password;
-                Port = value.Port;
-                Server = value.Server;
-                UserName = value.UserName;
-            }
+                Database = this.Database,
+                Password = this.Password,
+                IntegratedSecurity = false,
+                Port = this.Port,
+                Server = this.Server,
+                UserName = this.UserName,
+                ProviderName = Constants.PROVIDER_NAME,
+                ConnectionString = this.ConnectionString
+            };
         }
-
-        public bool ValidateConnection()
+        set
         {
-            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-            {
-                return connection.Validate();
-            }
+            Database = value.Database;
+            Password = value.Password;
+            Port = value.Port;
+            Server = value.Server;
+            UserName = value.UserName;
         }
+    }
 
-        #endregion IConnectionControl Members
-
-        public MySqlConnectionControl()
+    public bool ValidateConnection()
+    {
+        using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
-            InitializeComponent();
+            return connection.Validate();
         }
+    }
+
+    #endregion IConnectionControl Members
+
+    public MySqlConnectionControl()
+    {
+        InitializeComponent();
     }
 }

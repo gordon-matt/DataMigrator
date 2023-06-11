@@ -1,50 +1,49 @@
 ﻿using DataMigrator.Common;
 using Extenso.Collections;
 
-namespace DataMigrator.Controls
+namespace DataMigrator.Controls;
+
+public class ToolsTreeView : TreeView
 {
-    public class ToolsTreeView : TreeView
+    private ImageList imageList = null;
+
+    public ToolsTreeView()
     {
-        private ImageList imageList = null;
+        imageList = new ImageList();
+        imageList.ImageSize = new Size(24, 24);
+        imageList.Images.Add(Resources.TreeNode);
+        this.ImageList = imageList;
+    }
 
-        public ToolsTreeView()
+    public TreeNode AddToolsNode(string providerName, IEnumerable<IMigrationTool> tools)
+    {
+        if (!tools.IsNullOrEmpty())
         {
-            imageList = new ImageList();
-            imageList.ImageSize = new Size(24, 24);
-            imageList.Images.Add(Resources.TreeNode);
-            this.ImageList = imageList;
-        }
+            var providerNode = new TreeNode(providerName);
 
-        public TreeNode AddToolsNode(string providerName, IEnumerable<IMigrationTool> tools)
-        {
-            if (!tools.IsNullOrEmpty())
+            foreach (var tool in tools)
             {
-                var providerNode = new TreeNode(providerName);
+                TreeNode toolNode = null;
 
-                foreach (var tool in tools)
+                if (tool.Icon == null)
                 {
-                    TreeNode toolNode = null;
-
-                    if (tool.Icon == null)
-                    {
-                        toolNode = new TreeNode(tool.Name, 0, 0);
-                    }
-                    else
-                    {
-                        imageList.Images.Add(tool.Icon);
-                        int imageIndex = imageList.Images.Count - 1;
-                        toolNode = new TreeNode(tool.Name, imageIndex, imageIndex);
-                    }
-
-                    toolNode.ToolTipText = tool.Description;
-                    toolNode.Tag = tool.ControlContent;
-                    providerNode.Nodes.Add(toolNode);
+                    toolNode = new TreeNode(tool.Name, 0, 0);
+                }
+                else
+                {
+                    imageList.Images.Add(tool.Icon);
+                    int imageIndex = imageList.Images.Count - 1;
+                    toolNode = new TreeNode(tool.Name, imageIndex, imageIndex);
                 }
 
-                this.Nodes.Add(providerNode);
-                return providerNode;
+                toolNode.ToolTipText = tool.Description;
+                toolNode.Tag = tool.ControlContent;
+                providerNode.Nodes.Add(toolNode);
             }
-            return null;
+
+            this.Nodes.Add(providerNode);
+            return providerNode;
         }
+        return null;
     }
 }

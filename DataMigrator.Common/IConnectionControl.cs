@@ -1,13 +1,12 @@
 ﻿using DataMigrator.Common.Models;
 
-namespace DataMigrator.Common
+namespace DataMigrator.Common;
+
+public interface IConnectionControl
 {
-    public interface IConnectionControl
-    {
-        ConnectionDetails ConnectionDetails { get; set; }
+    ConnectionDetails ConnectionDetails { get; set; }
 
-        UserControl ControlContent { get; }
+    UserControl ControlContent { get; }
 
-        bool ValidateConnection();
-    }
+    bool ValidateConnection();
 }

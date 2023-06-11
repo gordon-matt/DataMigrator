@@ -1,237 +1,236 @@
 using System.ComponentModel;
 
-namespace DataMigrator.Windows.Forms.Controls.DataGrids
+namespace DataMigrator.Windows.Forms.Controls.DataGrids;
+
+public class DataGridViewNumericTextBoxColumn : DataGridViewColumn
 {
-    public class DataGridViewNumericTextBoxColumn : DataGridViewColumn
+    public DataGridViewNumericTextBoxColumn()
+        : base(new DataGridViewNumericTextBoxCell())
     {
-        public DataGridViewNumericTextBoxColumn()
-            : base(new DataGridViewNumericTextBoxCell())
-        {
-        }
+    }
 
-        public override DataGridViewCell CellTemplate
+    public override DataGridViewCell CellTemplate
+    {
+        get
         {
-            get
-            {
-                return base.CellTemplate;
-            }
-            set
-            {
-                // Ensure that the cell used for the template is a NumericTextBoxCell.
-                if (value != null &&
-                    !value.GetType().IsAssignableFrom(typeof(DataGridViewNumericTextBoxCell)))
-                {
-                    throw new InvalidCastException("Must be a NumericTextBoxCell");
-                }
-                base.CellTemplate = value;
-            }
+            return base.CellTemplate;
         }
-
-        public override object Clone()
+        set
         {
-            DataGridViewNumericTextBoxColumn col = (DataGridViewNumericTextBoxColumn)base.Clone();
-            return col;
+            // Ensure that the cell used for the template is a NumericTextBoxCell.
+            if (value != null &&
+                !value.GetType().IsAssignableFrom(typeof(DataGridViewNumericTextBoxCell)))
+            {
+                throw new InvalidCastException("Must be a NumericTextBoxCell");
+            }
+            base.CellTemplate = value;
         }
     }
 
-    public class DataGridViewNumericTextBoxCell : DataGridViewTextBoxCell
+    public override object Clone()
     {
-        public DataGridViewNumericTextBoxCell()
-            : base()
+        DataGridViewNumericTextBoxColumn col = (DataGridViewNumericTextBoxColumn)base.Clone();
+        return col;
+    }
+}
+
+public class DataGridViewNumericTextBoxCell : DataGridViewTextBoxCell
+{
+    public DataGridViewNumericTextBoxCell()
+        : base()
+    {
+    }
+
+    public override void InitializeEditingControl(int rowIndex, object
+        initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
+    {
+        // Set the value of the editing control to the current cell value.
+        base.InitializeEditingControl(rowIndex, initialFormattedValue,
+            dataGridViewCellStyle);
+        DataGridViewNumericTextBoxEditingControl ctl =
+           DataGridView.EditingControl as DataGridViewNumericTextBoxEditingControl;
+
+        try
+        {
+            ctl.Text = this.Value.ToString();
+        }
+        catch (Exception)
         {
         }
+    }
 
-        public override void InitializeEditingControl(int rowIndex, object
-            initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
+    public override Type EditType
+    {
+        get
         {
-            // Set the value of the editing control to the current cell value.
-            base.InitializeEditingControl(rowIndex, initialFormattedValue,
-                dataGridViewCellStyle);
-            DataGridViewNumericTextBoxEditingControl ctl =
-               DataGridView.EditingControl as DataGridViewNumericTextBoxEditingControl;
-
-            try
-            {
-                ctl.Text = this.Value.ToString();
-            }
-            catch (Exception)
-            {
-            }
+            // Return the type of the editing contol that  DataGridViewNumericTextBoxCell uses.
+            return typeof(DataGridViewNumericTextBoxEditingControl);
         }
+    }
 
-        public override Type EditType
+    public override Type ValueType
+    {
+        get
         {
-            get
-            {
-                // Return the type of the editing contol that  DataGridViewNumericTextBoxCell uses.
-                return typeof(DataGridViewNumericTextBoxEditingControl);
-            }
+            // Return the type of the value that  DataGridViewNumericTextBoxCell contains.
+            return typeof(System.String);
         }
+    }
 
-        public override Type ValueType
+    public override object DefaultNewRowValue
+    {
+        get
         {
-            get
-            {
-                // Return the type of the value that  DataGridViewNumericTextBoxCell contains.
-                return typeof(System.String);
-            }
+            // Use the current date and time as the default value.
+            return null;
         }
+    }
+}
 
-        public override object DefaultNewRowValue
+[ToolboxItem(false)]
+internal class DataGridViewNumericTextBoxEditingControl : DataMigrator.Windows.Forms.Controls.NumericTextBox,
+    IDataGridViewEditingControl
+{
+    private DataGridView dataGridView;
+    private bool valueChanged = false;
+    private int rowIndex;
+
+    public DataGridViewNumericTextBoxEditingControl()
+    {
+    }
+
+    // Implements the IDataGridViewEditingControl.EditingControlFormattedValue
+    // property.
+    public object EditingControlFormattedValue
+    {
+        get
         {
-            get
+            return this.Text;
+        }
+        set
+        {
+            if (value is String)
             {
-                // Use the current date and time as the default value.
-                return null;
+                this.Text = value.ToString();
             }
         }
     }
 
-    [ToolboxItem(false)]
-    internal class DataGridViewNumericTextBoxEditingControl : DataMigrator.Windows.Forms.Controls.NumericTextBox,
-        IDataGridViewEditingControl
+    // Implements the
+    // IDataGridViewEditingControl.GetEditingControlFormattedValue method.
+    public object GetEditingControlFormattedValue(
+        DataGridViewDataErrorContexts context)
     {
-        private DataGridView dataGridView;
-        private bool valueChanged = false;
-        private int rowIndex;
+        return EditingControlFormattedValue;
+    }
 
-        public DataGridViewNumericTextBoxEditingControl()
+    // Implements the
+    // IDataGridViewEditingControl.ApplyCellStyleToEditingControl method.
+    public void ApplyCellStyleToEditingControl(
+        DataGridViewCellStyle dataGridViewCellStyle)
+    {
+        this.Font = dataGridViewCellStyle.Font;
+    }
+
+    // Implements the IDataGridViewEditingControl.EditingControlRowIndex
+    // property.
+    public int EditingControlRowIndex
+    {
+        get
         {
+            return rowIndex;
         }
-
-        // Implements the IDataGridViewEditingControl.EditingControlFormattedValue
-        // property.
-        public object EditingControlFormattedValue
+        set
         {
-            get
-            {
-                return this.Text;
-            }
-            set
-            {
-                if (value is String)
-                {
-                    this.Text = value.ToString();
-                }
-            }
+            rowIndex = value;
         }
+    }
 
-        // Implements the
-        // IDataGridViewEditingControl.GetEditingControlFormattedValue method.
-        public object GetEditingControlFormattedValue(
-            DataGridViewDataErrorContexts context)
+    // Implements the IDataGridViewEditingControl.EditingControlWantsInputKey
+    // method.
+    public bool EditingControlWantsInputKey(
+        Keys key, bool dataGridViewWantsInputKey)
+    {
+        switch (key & Keys.KeyCode)
         {
-            return EditingControlFormattedValue;
-        }
+            case Keys.Left:
+            case Keys.Up:
+            case Keys.Down:
+            case Keys.Right:
+            case Keys.Home:
+            case Keys.End:
+            case Keys.PageDown:
+            case Keys.PageUp:
+            case Keys.Delete:
+            case Keys.Back:
+                return true;
 
-        // Implements the
-        // IDataGridViewEditingControl.ApplyCellStyleToEditingControl method.
-        public void ApplyCellStyleToEditingControl(
-            DataGridViewCellStyle dataGridViewCellStyle)
-        {
-            this.Font = dataGridViewCellStyle.Font;
-        }
-
-        // Implements the IDataGridViewEditingControl.EditingControlRowIndex
-        // property.
-        public int EditingControlRowIndex
-        {
-            get
-            {
-                return rowIndex;
-            }
-            set
-            {
-                rowIndex = value;
-            }
-        }
-
-        // Implements the IDataGridViewEditingControl.EditingControlWantsInputKey
-        // method.
-        public bool EditingControlWantsInputKey(
-            Keys key, bool dataGridViewWantsInputKey)
-        {
-            switch (key & Keys.KeyCode)
-            {
-                case Keys.Left:
-                case Keys.Up:
-                case Keys.Down:
-                case Keys.Right:
-                case Keys.Home:
-                case Keys.End:
-                case Keys.PageDown:
-                case Keys.PageUp:
-                case Keys.Delete:
-                case Keys.Back:
-                    return true;
-
-                default:
-                    return false;
-            }
-        }
-
-        // Implements the IDataGridViewEditingControl.PrepareEditingControlForEdit
-        // method.
-        public void PrepareEditingControlForEdit(bool selectAll)
-        {
-            // No preparation needs to be done.
-        }
-
-        // Implements the IDataGridViewEditingControl
-        // .RepositionEditingControlOnValueChange property.
-        public bool RepositionEditingControlOnValueChange
-        {
-            get
-            {
+            default:
                 return false;
-            }
         }
+    }
 
-        // Implements the IDataGridViewEditingControl
-        // .EditingControlDataGridView property.
-        public DataGridView EditingControlDataGridView
-        {
-            get
-            {
-                return dataGridView;
-            }
-            set
-            {
-                dataGridView = value;
-            }
-        }
+    // Implements the IDataGridViewEditingControl.PrepareEditingControlForEdit
+    // method.
+    public void PrepareEditingControlForEdit(bool selectAll)
+    {
+        // No preparation needs to be done.
+    }
 
-        // Implements the IDataGridViewEditingControl
-        // .EditingControlValueChanged property.
-        public bool EditingControlValueChanged
+    // Implements the IDataGridViewEditingControl
+    // .RepositionEditingControlOnValueChange property.
+    public bool RepositionEditingControlOnValueChange
+    {
+        get
         {
-            get
-            {
-                return valueChanged;
-            }
-            set
-            {
-                valueChanged = value;
-            }
+            return false;
         }
+    }
 
-        // Implements the IDataGridViewEditingControl
-        // .EditingPanelCursor property.
-        public Cursor EditingPanelCursor
+    // Implements the IDataGridViewEditingControl
+    // .EditingControlDataGridView property.
+    public DataGridView EditingControlDataGridView
+    {
+        get
         {
-            get
-            {
-                return base.Cursor;
-            }
+            return dataGridView;
         }
+        set
+        {
+            dataGridView = value;
+        }
+    }
 
-        protected override void OnTextChanged(EventArgs e)
+    // Implements the IDataGridViewEditingControl
+    // .EditingControlValueChanged property.
+    public bool EditingControlValueChanged
+    {
+        get
         {
-            // Notify the DataGridView that the contents of the cell
-            // have changed.
-            valueChanged = true;
-            this.EditingControlDataGridView.NotifyCurrentCellDirty(true);
-            base.OnTextChanged(e);
+            return valueChanged;
         }
+        set
+        {
+            valueChanged = value;
+        }
+    }
+
+    // Implements the IDataGridViewEditingControl
+    // .EditingPanelCursor property.
+    public Cursor EditingPanelCursor
+    {
+        get
+        {
+            return base.Cursor;
+        }
+    }
+
+    protected override void OnTextChanged(EventArgs e)
+    {
+        // Notify the DataGridView that the contents of the cell
+        // have changed.
+        valueChanged = true;
+        this.EditingControlDataGridView.NotifyCurrentCellDirty(true);
+        base.OnTextChanged(e);
     }
 }

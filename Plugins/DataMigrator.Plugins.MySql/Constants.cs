@@ -1,7 +1,6 @@
-﻿namespace DataMigrator.MySql
+﻿namespace DataMigrator.MySql;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        internal const string PROVIDER_NAME = "MySql";
-    }
+    internal const string PROVIDER_NAME = "MySql";
 }

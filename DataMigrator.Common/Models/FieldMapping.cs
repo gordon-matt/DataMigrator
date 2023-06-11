@@ -1,9 +1,8 @@
-﻿namespace DataMigrator.Common.Models
-{
-    public class FieldMapping
-    {
-        public Field SourceField { get; set; }
+﻿namespace DataMigrator.Common.Models;
 
-        public Field DestinationField { get; set; }
-    }
+public class FieldMapping
+{
+    public Field SourceField { get; set; }
+
+    public Field DestinationField { get; set; }
 }

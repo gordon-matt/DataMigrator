@@ -1,7 +1,6 @@
-﻿namespace DataMigrator.Plugins.Npgsql
+﻿namespace DataMigrator.Plugins.Npgsql;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        internal const string PROVIDER_NAME = "PostgreSQL";
-    }
+    internal const string PROVIDER_NAME = "PostgreSQL";
 }

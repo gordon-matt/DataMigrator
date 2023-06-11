@@ -1,11 +1,10 @@
 ﻿using DataMigrator.Common.Models;
 
-namespace DataMigrator.Common.Data
-{
-    public interface IFieldTypeConverter<T>
-    {
-        FieldType GetDataMigratorFieldType(T providerFieldType);
+namespace DataMigrator.Common.Data;
 
-        T GetDataProviderFieldType(FieldType fieldType);
-    }
+public interface IFieldTypeConverter<T>
+{
+    FieldType GetDataMigratorFieldType(T providerFieldType);
+
+    T GetDataProviderFieldType(FieldType fieldType);
 }

@@ -1,29 +1,28 @@
 ﻿using DataMigrator.Common;
 
-namespace DataMigrator.Controls
+namespace DataMigrator.Controls;
+
+public class SettingsTreeView : TreeView
 {
-    public class SettingsTreeView : TreeView
+    private ImageList imageList = null;
+
+    public SettingsTreeView()
     {
-        private ImageList imageList = null;
+        imageList = new ImageList();
+        imageList.ImageSize = new Size(24, 24);
+        imageList.Images.Add(Resources.TreeNode);
+        this.ImageList = imageList;
+    }
 
-        public SettingsTreeView()
+    public TreeNode AddSettingsNode(string providerName, ISettingsControl tag)
+    {
+        if (tag != null)
         {
-            imageList = new ImageList();
-            imageList.ImageSize = new Size(24, 24);
-            imageList.Images.Add(Resources.TreeNode);
-            this.ImageList = imageList;
+            var treeNode = new TreeNode(providerName);
+            treeNode.Tag = tag;
+            this.Nodes.Add(treeNode);
+            return treeNode;
         }
-
-        public TreeNode AddSettingsNode(string providerName, ISettingsControl tag)
-        {
-            if (tag != null)
-            {
-                var treeNode = new TreeNode(providerName);
-                treeNode.Tag = tag;
-                this.Nodes.Add(treeNode);
-                return treeNode;
-            }
-            return null;
-        }
+        return null;
     }
 }

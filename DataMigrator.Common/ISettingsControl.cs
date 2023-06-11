@@ -1,9 +1,8 @@
-﻿namespace DataMigrator.Common
-{
-    public interface ISettingsControl
-    {
-        UserControl ControlContent { get; }
+﻿namespace DataMigrator.Common;
 
-        void Save();
-    }
+public interface ISettingsControl
+{
+    UserControl ControlContent { get; }
+
+    void Save();
 }
