@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -31,13 +31,13 @@ namespace DataMigrator.Views
         private void InitializeComponent()
         {
             this.grpSourceConnection = new System.Windows.Forms.GroupBox();
-            this.btnValidateSourceConnection = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.pnlSourceConnection = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.cmbSourceConnectionType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.btnValidateSourceConnection = new Krypton.Toolkit.KryptonButton();
+            this.pnlSourceConnection = new Krypton.Toolkit.KryptonPanel();
+            this.cmbSourceConnectionType = new Krypton.Toolkit.KryptonComboBox();
             this.grpDestinationConnection = new System.Windows.Forms.GroupBox();
-            this.btnValidateDestinationConnection = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.pnlDestinationConnection = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.cmbDestinationConnectionType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.btnValidateDestinationConnection = new Krypton.Toolkit.KryptonButton();
+            this.pnlDestinationConnection = new Krypton.Toolkit.KryptonPanel();
+            this.cmbDestinationConnectionType = new Krypton.Toolkit.KryptonComboBox();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.grpSourceConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlSourceConnection)).BeginInit();

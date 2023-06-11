@@ -1,6 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Views;
@@ -16,15 +13,14 @@ namespace DataMigrator
         public static Job CurrentJob { get; set; }
 
         /// <summary>
-        /// The main entry point for the application.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()
         {
-            Configuration = new DataMigrationConfigFile();
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
         }
     }

@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
-using Kore.Collections;
+using Extenso.Collections;
 
 namespace DataMigrator.Views
 {

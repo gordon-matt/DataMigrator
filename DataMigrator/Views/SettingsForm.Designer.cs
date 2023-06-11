@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -31,12 +31,12 @@ namespace DataMigrator.Views
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnOK = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnOK = new Krypton.Toolkit.KryptonButton();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.settingsTreeView = new DataMigrator.Controls.SettingsTreeView();
-            this.contentPanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.panel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.btnCancel = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.contentPanel = new Krypton.Toolkit.KryptonPanel();
+            this.panel = new Krypton.Toolkit.KryptonPanel();
+            this.btnCancel = new Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -122,7 +122,7 @@ namespace DataMigrator.Views
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 464);
             this.Controls.Add(this.splitContainer);
-            this.Icon = global::DataMigrator.Properties.Resources.OptionsIcon;
+            this.Icon = global::DataMigrator.Resources.OptionsIcon;
             this.Name = "SettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";

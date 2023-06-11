@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using ComponentFactory.Krypton.Toolkit;
+using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {

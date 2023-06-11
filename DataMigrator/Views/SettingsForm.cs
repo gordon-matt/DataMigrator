@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using ComponentFactory.Krypton.Toolkit;
+using Krypton.Toolkit;
 using DataMigrator.Common;
-using Kore.Collections;
+using Extenso.Collections;
 
 namespace DataMigrator.Views
 {

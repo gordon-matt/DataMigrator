@@ -2,8 +2,8 @@
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using DataMigrator.Common.Models;
-using Kore;
-using Kore.IO;
+using Extenso;
+using Extenso.IO;
 
 namespace DataMigrator.Common.Configuration
 {
@@ -44,7 +44,7 @@ namespace DataMigrator.Common.Configuration
             }
             else
             {
-                SaveFileDialog dlgSaveFile = new SaveFileDialog();
+                using SaveFileDialog dlgSaveFile = new SaveFileDialog();
                 dlgSaveFile.Filter = "Data Migrator Files|*.dmf";
                 if (dlgSaveFile.ShowDialog() == DialogResult.OK)
                 {

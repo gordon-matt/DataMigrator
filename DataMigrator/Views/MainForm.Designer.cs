@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -59,7 +59,7 @@ namespace DataMigrator.Views
             this.mnuMainToolsShowTraceViewer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMainHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMainHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.kryptonManager = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
+            this.kryptonManager = new Krypton.Toolkit.KryptonManager(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -126,7 +126,7 @@ namespace DataMigrator.Views
             // btnOpen
             // 
             this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnOpen.Image = global::DataMigrator.Properties.Resources.Open;
+            this.btnOpen.Image = global::DataMigrator.Resources.Open;
             this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(36, 36);
@@ -136,7 +136,7 @@ namespace DataMigrator.Views
             // btnSave
             // 
             this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSave.Image = global::DataMigrator.Properties.Resources.Save;
+            this.btnSave.Image = global::DataMigrator.Resources.Save;
             this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(36, 36);
@@ -151,7 +151,7 @@ namespace DataMigrator.Views
             // btnRun
             // 
             this.btnRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRun.Image = global::DataMigrator.Properties.Resources.Run;
+            this.btnRun.Image = global::DataMigrator.Resources.Run;
             this.btnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(36, 36);
@@ -307,7 +307,7 @@ namespace DataMigrator.Views
             // 
             // kryptonManager
             // 
-            this.kryptonManager.GlobalPaletteMode = ComponentFactory.Krypton.Toolkit.PaletteModeManager.Office2010Black;
+            this.kryptonManager.GlobalPaletteMode = Krypton.Toolkit.PaletteModeManager.Office2010Black;
             // 
             // MainForm
             // 
@@ -317,7 +317,7 @@ namespace DataMigrator.Views
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.mnuMain);
-            this.Icon = global::DataMigrator.Properties.Resources.MigrateIcon;
+            this.Icon = global::DataMigrator.Resources.MigrateIcon;
             this.MainMenuStrip = this.mnuMain;
             this.MinimumSize = new System.Drawing.Size(704, 386);
             this.Name = "MainForm";

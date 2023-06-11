@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
-using Kore;
-using Kore.Collections;
-using Kore.Data;
-using Kore.IO;
+using Extenso;
+using Extenso.Collections;
+using Extenso.Data;
+using Extenso.IO;
 
 namespace DataMigrator.Csv
 {
@@ -79,7 +79,7 @@ namespace DataMigrator.Csv
 
         public override int GetRecordCount(string tableName)
         {
-            int rowCount = new FileInfo(ConnectionDetails.ConnectionString).GetText().ToLines().Count();
+            int rowCount = new FileInfo(ConnectionDetails.ConnectionString).ReadAllText().ToLines().Count();
             bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
             return hasHeaderRow ? rowCount - 1 : rowCount;
         }

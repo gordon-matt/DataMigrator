@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.SharePoint
 {
@@ -30,14 +30,14 @@ namespace DataMigrator.SharePoint
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtUrl = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblUrl = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtPassword = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblPassword = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtUserName = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblUserName = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtDomain = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblDomain = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.txtUrl = new Krypton.Toolkit.KryptonTextBox();
+            this.lblUrl = new Krypton.Toolkit.KryptonLabel();
+            this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
+            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
+            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
+            this.txtDomain = new Krypton.Toolkit.KryptonTextBox();
+            this.lblDomain = new Krypton.Toolkit.KryptonLabel();
             this.SuspendLayout();
             // 
             // txtUrl

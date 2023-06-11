@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore.Data.Common;
+using Extenso.Data.Common;
 
 namespace DataMigrator.Access
 {

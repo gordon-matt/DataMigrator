@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Sql;
-using System.Data.SqlClient;
-using System.Windows.Forms;
+﻿using System.Data.SqlClient;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Kore.Collections;
-using Kore.Data.Sql;
-using Kore.Data.SqlClient;
+using Extenso.Collections;
+using Extenso.Data.SqlClient;
 
 namespace DataMigrator.Windows.Forms.Data
 {
@@ -23,23 +18,15 @@ namespace DataMigrator.Windows.Forms.Data
         {
             get
             {
-                if (cmbServer.SelectedIndex != -1)
+                if (!string.IsNullOrWhiteSpace(txtServerName.Text))
                 {
-                    return cmbServer.SelectedItem.ToString();
-                }
-                else if (!string.IsNullOrWhiteSpace(cmbServer.Text))
-                {
-                    return cmbServer.Text;
+                    return txtServerName.Text;
                 }
                 return string.Empty;
             }
             set
             {
-                if (cmbServer.Items.Count > 0)
-                {
-                    cmbServer.SelectedItem = value;
-                }
-                else { cmbServer.Text = value; }
+                txtServerName.Text = value;
             }
         }
 
@@ -181,21 +168,6 @@ namespace DataMigrator.Windows.Forms.Data
                 Tables.ForEach(x => cmbTable.Items.Add(x));
 
                 DatabaseChanged?.Invoke();
-            }
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            cmbServer.Items.Clear();
-            SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServer.Items.Add(x));
-        }
-
-        private void cmbServer_DropDown(object sender, EventArgs e)
-        {
-            if (cmbServer.Items.Count == 0)
-            {
-                SqlDataSourceEnumerator.Instance.GetAvailableSqlServers().ForEach(x => cmbServer.Items.Add(x));
-                //cmbServer.SelectedIndex = 0;
             }
         }
 

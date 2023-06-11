@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Views
 {
@@ -93,7 +93,7 @@ namespace DataMigrator.Views
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.dataGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = global::DataMigrator.Properties.Resources.MigrateIcon;
+            this.Icon = global::DataMigrator.Resources.MigrateIcon;
             this.MaximizeBox = false;
             this.Name = "RunJobsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

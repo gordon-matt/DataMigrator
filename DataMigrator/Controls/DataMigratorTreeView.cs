@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using DataMigrator.Common.Configuration;
-using DataMigrator.Properties;
 using DataMigrator.Windows.Forms;
 
 namespace DataMigrator.Controls
@@ -9,8 +8,8 @@ namespace DataMigrator.Controls
     public class DataMigratorTreeView : TreeView
     {
         private ImageList imageList = null;
-        private ContextMenu mnuContextJobs = null;
-        private ContextMenu mnuContextJobsJob = null;
+        private ContextMenuStrip mnuContextJobs = null;
+        private ContextMenuStrip mnuContextJobsJob = null;
 
         private TreeNode RootNode { get; set; }
         private TreeNode ConnectionsNode { get; set; }
@@ -28,21 +27,21 @@ namespace DataMigrator.Controls
             imageList.ImageSize = new Size(24, 24);
             this.ImageList = imageList;
 
-            mnuContextJobs = new ContextMenu();
+            mnuContextJobs = new ContextMenuStrip();
             mnuContextJobs.Name = "mnuContextJobs";
 
-            var mnuContextJobsNewJob = new MenuItem("New Job");
+            var mnuContextJobsNewJob = new ToolStripMenuItem("New Job");
             mnuContextJobsNewJob.Name = "mnuContextJobsNewJob";
             mnuContextJobsNewJob.Click += new System.EventHandler(mnuContextJobsNewJob_Click);
-            mnuContextJobs.MenuItems.Add(mnuContextJobsNewJob);
+            mnuContextJobs.Items.Add(mnuContextJobsNewJob);
 
-            mnuContextJobsJob = new ContextMenu();
+            mnuContextJobsJob = new ContextMenuStrip();
             mnuContextJobsJob.Name = "mnuContextJobsJob";
 
-            var mnuContextJobsJobRename = new MenuItem("Rename");
+            var mnuContextJobsJobRename = new ToolStripMenuItem("Rename");
             mnuContextJobsJobRename.Name = "mnuContextJobsJobRename";
             mnuContextJobsJobRename.Click += new System.EventHandler(mnuContextJobsJobRename_Click);
-            mnuContextJobsJob.MenuItems.Add(mnuContextJobsJobRename);
+            mnuContextJobsJob.Items.Add(mnuContextJobsJobRename);
         }
 
         public void LoadDefaultNodes()

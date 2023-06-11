@@ -1,4 +1,4 @@
-﻿using ComponentFactory.Krypton.Toolkit;
+﻿using Krypton.Toolkit;
 
 namespace DataMigrator.Access
 {
@@ -30,13 +30,13 @@ namespace DataMigrator.Access
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtPassword = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblPassword = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtUserName = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblUserName = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.txtDatabase = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.lblDatabase = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.btnBrowse = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
+            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
+            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
+            this.txtDatabase = new Krypton.Toolkit.KryptonTextBox();
+            this.lblDatabase = new Krypton.Toolkit.KryptonLabel();
+            this.btnBrowse = new Krypton.Toolkit.KryptonButton();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
