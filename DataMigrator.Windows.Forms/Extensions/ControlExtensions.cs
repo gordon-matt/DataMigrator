@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace DataMigrator.Windows.Forms
 {

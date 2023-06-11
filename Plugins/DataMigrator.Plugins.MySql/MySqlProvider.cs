@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Linq;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;

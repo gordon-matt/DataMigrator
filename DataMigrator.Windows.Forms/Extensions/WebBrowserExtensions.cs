@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Windows.Forms;
+﻿using System.Drawing.Imaging;
 using DataMigrator.Windows.Forms.Win32;
 
 namespace DataMigrator.Windows.Forms

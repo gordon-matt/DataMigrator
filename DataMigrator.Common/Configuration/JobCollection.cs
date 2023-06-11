@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using DataMigrator.Common.Collections;
+﻿using DataMigrator.Common.Collections;
 
 namespace DataMigrator.Common.Configuration
 {

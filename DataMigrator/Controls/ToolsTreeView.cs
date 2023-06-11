@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using DataMigrator.Common;
+﻿using DataMigrator.Common;
 using Extenso.Collections;
 
 namespace DataMigrator.Controls

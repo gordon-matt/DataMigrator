@@ -1,5 +1,4 @@
-﻿
-namespace DataMigrator.MySql
+﻿namespace DataMigrator.MySql
 {
     internal static class Constants
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataMigrator.Common.Collections
+﻿namespace DataMigrator.Common.Collections
 {
     [Serializable]
     public class StandardCollection<T> : ICollection<T>

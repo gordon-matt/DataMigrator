@@ -1,7 +1,3 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace DataMigrator.Windows.Forms.Controls.DataGrids
 {
     public class DataGridViewBarGraphCell : DataGridViewTextBoxCell

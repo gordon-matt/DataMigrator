@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using DataMigrator.Common;
+﻿using DataMigrator.Common;
 
 namespace DataMigrator.Views
 {

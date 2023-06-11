@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using DataMigrator.Windows.Forms.Diagnostics;
+﻿using DataMigrator.Windows.Forms.Diagnostics;
 
 namespace DataMigrator.Views
 {

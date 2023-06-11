@@ -13,10 +13,7 @@
 //PARTICULAR PURPOSE.
 //---------------------------------------------------------------------
 
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace DataMigrator.Windows.Forms.Controls.DataGrids
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.Data;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using Extenso;

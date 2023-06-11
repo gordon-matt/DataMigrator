@@ -1,12 +1,8 @@
-﻿using System;
-using System.Data.Sql;
-using System.Data.SqlClient;
-using System.Windows.Forms;
+﻿using System.Data.SqlClient;
 using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;
-using Extenso;
 using Extenso.Collections;
 using Extenso.Data.Common;
 using Extenso.Data.SqlClient;

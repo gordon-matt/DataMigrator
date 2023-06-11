@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;

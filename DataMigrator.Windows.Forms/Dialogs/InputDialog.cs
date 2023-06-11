@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace DataMigrator.Windows.Forms
+﻿namespace DataMigrator.Windows.Forms
 {
     public partial class InputDialog : Form
     {

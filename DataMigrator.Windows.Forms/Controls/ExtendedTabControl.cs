@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace DataMigrator.Windows.Forms.Controls
+﻿namespace DataMigrator.Windows.Forms.Controls
 {
     public class ExtendedTabControl : TabControl
     {

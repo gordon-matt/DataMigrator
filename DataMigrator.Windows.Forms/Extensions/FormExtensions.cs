@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-
-namespace DataMigrator.Windows.Forms
+﻿namespace DataMigrator.Windows.Forms
 {
     public static class FormExtensions
     {

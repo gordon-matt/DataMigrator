@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using DataMigrator.Common.Models;
+﻿using DataMigrator.Common.Models;
 
 namespace DataMigrator.Common
 {
