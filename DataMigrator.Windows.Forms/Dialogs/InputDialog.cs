@@ -2,6 +2,11 @@
 
 public partial class InputDialog : Form
 {
+    public InputDialog()
+    {
+        InitializeComponent();
+    }
+
     public string LabelText
     {
         get { return lblInput.Text; }
@@ -14,17 +19,12 @@ public partial class InputDialog : Form
         set { txtInput.Text = value; }
     }
 
-    public InputDialog()
-    {
-        InitializeComponent();
-    }
-
-    private void btnOK_Click(object sender, EventArgs e)
+    private void btnCancel_Click(object sender, EventArgs e)
     {
         Close();
     }
 
-    private void btnCancel_Click(object sender, EventArgs e)
+    private void btnOK_Click(object sender, EventArgs e)
     {
         Close();
     }
