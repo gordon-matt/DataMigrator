@@ -10,6 +10,11 @@ public partial class SqlConnectionForm : Form
     private const string SQL_CONNECTION_STRING_FORMAT = "Data Source={0};Initial Catalog={1};User={2}Password={3}";
     private const string SQL_CONNECTION_STRING_FORMAT_WA = "Data Source={0};Initial Catalog={1};Integrated Security=true";
 
+    public SqlConnectionForm()
+    {
+        InitializeComponent();
+    }
+
     public bool AllowTableSelection
     {
         get { return cmbTable.Visible; }
@@ -18,64 +23,6 @@ public partial class SqlConnectionForm : Form
             lblTable.Visible = value;
             cmbTable.Visible = value;
         }
-    }
-
-    public string Server
-    {
-        get
-        {
-            if (!string.IsNullOrWhiteSpace(txtServerName.Text))
-            {
-                return txtServerName.Text;
-            }
-            return string.Empty;
-        }
-        set
-        {
-            txtServerName.Text = value;
-        }
-    }
-
-    public string Database
-    {
-        get
-        {
-            if (cmbDatabase.SelectedIndex != -1)
-            {
-                return cmbDatabase.SelectedItem.ToString();
-            }
-            else if (!string.IsNullOrWhiteSpace(cmbDatabase.Text))
-            {
-                return cmbDatabase.Text;
-            }
-            return "master";
-        }
-        set
-        {
-            if (cmbDatabase.Items.Count > 0)
-            {
-                cmbDatabase.SelectedItem = value;
-            }
-            else { cmbDatabase.Text = value; }
-        }
-    }
-
-    public string UserName
-    {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
-    }
-
-    public string Password
-    {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
-    }
-
-    public bool IntegratedSecurity
-    {
-        get { return rbUseWindowsAuthentication.Checked; }
-        set { rbUseWindowsAuthentication.Checked = value; }
     }
 
     public string ConnectionString
@@ -128,9 +75,62 @@ public partial class SqlConnectionForm : Form
         }
     }
 
-    public SqlConnectionForm()
+    public string Database
     {
-        InitializeComponent();
+        get
+        {
+            if (cmbDatabase.SelectedIndex != -1)
+            {
+                return cmbDatabase.SelectedItem.ToString();
+            }
+            else if (!string.IsNullOrWhiteSpace(cmbDatabase.Text))
+            {
+                return cmbDatabase.Text;
+            }
+            return "master";
+        }
+        set
+        {
+            if (cmbDatabase.Items.Count > 0)
+            {
+                cmbDatabase.SelectedItem = value;
+            }
+            else { cmbDatabase.Text = value; }
+        }
+    }
+
+    public bool IntegratedSecurity
+    {
+        get { return rbUseWindowsAuthentication.Checked; }
+        set { rbUseWindowsAuthentication.Checked = value; }
+    }
+
+    public string Password
+    {
+        get { return txtPassword.Text.Trim(); }
+        set { txtPassword.Text = value; }
+    }
+
+    public string Server
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(txtServerName.Text))
+            {
+                return txtServerName.Text;
+            }
+            return string.Empty;
+        }
+        set
+        {
+            txtServerName.Text = value;
+        }
+    }
+
+    public string UserName
+    {
+        get { return txtUserName.Text.Trim(); }
+        set { txtUserName.Text = value; }
     }
 
     private void btnTestConnection_Click(object sender, EventArgs e)
@@ -158,6 +158,18 @@ public partial class SqlConnectionForm : Form
         }
     }
 
+    private void cmbDatabase_DropDown(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrEmpty(Server))
+        {
+            cmbDatabase.Items.Clear();
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
+            }
+        }
+    }
+
     private void cmbDatabase_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbDatabase.SelectedIndex != -1)
@@ -181,17 +193,5 @@ public partial class SqlConnectionForm : Form
         txtUserName.Enabled = rbUseWindowsAuthentication.Checked;
         lblPassword.Enabled = rbUseWindowsAuthentication.Checked;
         txtPassword.Enabled = rbUseWindowsAuthentication.Checked;
-    }
-
-    private void cmbDatabase_DropDown(object sender, EventArgs e)
-    {
-        if (!string.IsNullOrEmpty(Server))
-        {
-            cmbDatabase.Items.Clear();
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
-            }
-        }
     }
 }

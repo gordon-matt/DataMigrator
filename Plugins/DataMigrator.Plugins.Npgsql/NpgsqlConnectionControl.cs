@@ -3,6 +3,7 @@ using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Data.Common;
+using Extenso.Windows.Forms;
 using Npgsql;
 
 namespace DataMigrator.Plugins.Npgsql;

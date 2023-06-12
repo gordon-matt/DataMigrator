@@ -16,8 +16,7 @@
                     {
                         if (this.GetTabRect(i).Contains(e.Location))
                         {
-                            var args = new TabHeaderRightClickedEventArgs();
-                            args.SelectedIndex = i;
+                            var args = new TabHeaderRightClickedEventArgs { SelectedIndex = i };
                             TabHeaderRightClicked(args);
                             break;
                         }

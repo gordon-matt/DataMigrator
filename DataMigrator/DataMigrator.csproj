@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
     <PackageReference Include="Krypton.Docking" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Navigator" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Ribbon" Version="70.22.11.312" />
