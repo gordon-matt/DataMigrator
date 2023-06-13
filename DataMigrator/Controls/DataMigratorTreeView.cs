@@ -7,7 +7,9 @@ public class DataMigratorTreeView : TreeView
 {
     private readonly ImageList imageList = null;
     private readonly ContextMenuStrip mnuContextJobs = null;
+    private readonly ToolStripMenuItem mnuContextJobsNewJob;
     private readonly ContextMenuStrip mnuContextJobsJob = null;
+    private readonly ToolStripMenuItem mnuContextJobsJobRename;
 
     private TreeNode RootNode { get; set; }
     private TreeNode ConnectionsNode { get; set; }
@@ -30,22 +32,12 @@ public class DataMigratorTreeView : TreeView
             Name = "mnuContextJobs"
         };
 
-        var mnuContextJobsNewJob = new ToolStripMenuItem("New Job")
-        {
-            Name = "mnuContextJobsNewJob"
-        };
+        mnuContextJobsNewJob = new ToolStripMenuItem("New Job") { Name = "mnuContextJobsNewJob" };
         mnuContextJobsNewJob.Click += new System.EventHandler(mnuContextJobsNewJob_Click);
         mnuContextJobs.Items.Add(mnuContextJobsNewJob);
 
-        mnuContextJobsJob = new ContextMenuStrip
-        {
-            Name = "mnuContextJobsJob"
-        };
-
-        var mnuContextJobsJobRename = new ToolStripMenuItem("Rename")
-        {
-            Name = "mnuContextJobsJobRename"
-        };
+        mnuContextJobsJob = new ContextMenuStrip { Name = "mnuContextJobsJob" };
+        mnuContextJobsJobRename = new ToolStripMenuItem("Rename") { Name = "mnuContextJobsJobRename" };
         mnuContextJobsJobRename.Click += new System.EventHandler(mnuContextJobsJobRename_Click);
         mnuContextJobsJob.Items.Add(mnuContextJobsJobRename);
     }
@@ -104,7 +96,7 @@ public class DataMigratorTreeView : TreeView
 
     private void mnuContextJobsJobRename_Click(object sender, System.EventArgs e)
     {
-        var dlgInput = new InputDialog
+        using var dlgInput = new InputDialog
         {
             Text = "Rename Job",
             LabelText = "Enter job name:"
@@ -126,7 +118,7 @@ public class DataMigratorTreeView : TreeView
 
     private void mnuContextJobsNewJob_Click(object sender, System.EventArgs e)
     {
-        var dlgInput = new InputDialog
+        using var dlgInput = new InputDialog
         {
             Text = "Add New Job",
             LabelText = "Enter job name:"
@@ -162,5 +154,15 @@ public class DataMigratorTreeView : TreeView
         }
 
         base.OnMouseUp(e);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        imageList?.Dispose();
+        mnuContextJobsNewJob?.Dispose();
+        mnuContextJobsJobRename?.Dispose();
+        mnuContextJobsJob?.Dispose();
+        mnuContextJobs?.Dispose();
     }
 }
