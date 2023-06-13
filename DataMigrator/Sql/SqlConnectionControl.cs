@@ -1,11 +1,11 @@
-﻿using System.Data.SqlClient;
-using DataMigrator.Common;
+﻿using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Collections;
 using Extenso.Data.Common;
 using Extenso.Data.SqlClient;
 using Extenso.Windows.Forms;
+using Microsoft.Data.SqlClient;
 
 namespace DataMigrator.Sql;
 
@@ -18,15 +18,8 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     public string Server
     {
-        get
-        {
-            if (!string.IsNullOrWhiteSpace(txtServer.Text))
-            {
-                return txtServer.Text;
-            }
-            return string.Empty;
-        }
-        set { txtServer.Text = value; }
+        get => !string.IsNullOrWhiteSpace(txtServer.Text) ? txtServer.Text : string.Empty;
+        set => txtServer.Text = value;
     }
 
     public string Database
@@ -43,25 +36,25 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
             }
             return "master";
         }
-        set { cmbDatabase.Text = value; }
+        set => cmbDatabase.Text = value;
     }
 
     public string UserName
     {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
+        get => txtUserName.Text.Trim();
+        set => txtUserName.Text = value;
     }
 
     public string Password
     {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
+        get => txtPassword.Text.Trim();
+        set => txtPassword.Text = value;
     }
 
     public bool IntegratedSecurity
     {
-        get { return cbIntegratedSecurity.Checked; }
-        set { cbIntegratedSecurity.Checked = value; }
+        get => cbIntegratedSecurity.Checked;
+        set => cbIntegratedSecurity.Checked = value;
     }
 
     public string ConnectionString
@@ -96,14 +89,9 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
             #endregion Checks
 
-            if (IntegratedSecurity)
-            {
-                return string.Format(SQL_CONNECTION_STRING_FORMAT_WA, Server, Database);
-            }
-            else
-            {
-                return string.Format(SQL_CONNECTION_STRING_FORMAT, Server, Database, UserName, Password);
-            }
+            return IntegratedSecurity
+                ? string.Format(SQL_CONNECTION_STRING_FORMAT_WA, Server, Database)
+                : string.Format(SQL_CONNECTION_STRING_FORMAT, Server, Database, UserName, Password);
         }
     }
 
@@ -115,25 +103,16 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     public ConnectionDetails ConnectionDetails
     {
-        get
+        get => new()
         {
-            //bool isValid = false;
-            //using (SqlConnection connection = new SqlConnection(ConnectionString))
-            //{
-            //    isValid = connection.Validate();
-            //}
-
-            return new ConnectionDetails
-            {
-                Database = this.Database,
-                IntegratedSecurity = this.IntegratedSecurity,
-                Password = this.Password,
-                Server = this.Server,
-                UserName = this.UserName,
-                ProviderName = Constants.SQL_PROVIDER_NAME,
-                ConnectionString = this.ConnectionString
-            };
-        }
+            Database = Database,
+            IntegratedSecurity = IntegratedSecurity,
+            Password = Password,
+            Server = Server,
+            UserName = UserName,
+            ProviderName = Constants.SQL_PROVIDER_NAME,
+            ConnectionString = ConnectionString
+        };
         set
         {
             Server = value.Server;
@@ -146,10 +125,8 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     public bool ValidateConnection()
     {
-        using (var connection = new SqlConnection(ConnectionString))
-        {
-            return connection.Validate();
-        }
+        using var connection = new SqlConnection(ConnectionString);
+        return connection.Validate();
     }
 
     #endregion IConnectionControl Members
@@ -170,19 +147,15 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
         if (!string.IsNullOrEmpty(Server) && string.IsNullOrEmpty(cmbDatabase.Text))
         {
             cmbDatabase.Items.Clear();
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
-            }
+            using var connection = new SqlConnection(ConnectionString);
+            connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
         }
     }
 
     private void cmbServer_SelectedIndexChanged(object sender, EventArgs e)
     {
         cmbDatabase.Items.Clear();
-        using (var connection = new SqlConnection(ConnectionString))
-        {
-            connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
-        }
+        using var connection = new SqlConnection(ConnectionString);
+        connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
     }
 }

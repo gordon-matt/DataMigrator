@@ -7,9 +7,9 @@ namespace DataMigrator.MySql;
 
 public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
 {
-    private static TupleList<FieldType, MySqlDbType> fieldTypes = new TupleList<FieldType, MySqlDbType>();
-    private static TupleList<MySqlDbType, FieldType> mySqlDbTypes = new TupleList<MySqlDbType, FieldType>();
-    private static TupleList<MySqlDbType, string> mySqlDbTypes2 = new TupleList<MySqlDbType, string>();
+    private static readonly TupleList<FieldType, MySqlDbType> fieldTypes = new();
+    private static readonly TupleList<MySqlDbType, FieldType> mySqlDbTypes = new();
+    private static readonly TupleList<MySqlDbType, string> mySqlDbTypes2 = new();
 
     static MySqlDbTypeConverter()
     {
@@ -142,21 +142,27 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
 
     #region IFieldTypeConverter<MySqlDbType> Members
 
-    public FieldType GetDataMigratorFieldType(MySqlDbType providerFieldType) => mySqlDbTypes.First(x => x.Item1 == providerFieldType).Item2;
+    public FieldType GetDataMigratorFieldType(MySqlDbType providerFieldType)
+    {
+        return mySqlDbTypes.First(x => x.Item1 == providerFieldType).Item2;
+    }
 
-    public MySqlDbType GetDataProviderFieldType(FieldType fieldType) => fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    public MySqlDbType GetDataProviderFieldType(FieldType fieldType)
+    {
+        return fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    }
 
     #endregion IFieldTypeConverter<MySqlDbType> Members
 
-    public static string GetMySqlDataTypeStringValue(MySqlDbType mySqlDbType) => mySqlDbTypes2.First(x => x.Item1 == mySqlDbType).Item2;
+    public static string GetMySqlDataTypeStringValue(MySqlDbType mySqlDbType)
+    {
+        return mySqlDbTypes2.First(x => x.Item1 == mySqlDbType).Item2;
+    }
 
     public static MySqlDbType GetMySqlDataType(string mySqlDbType)
     {
-        if (mySqlDbType.Equals("INTEGER", System.StringComparison.InvariantCultureIgnoreCase))
-        {
-            return MySqlDbType.Int32;
-        }
-
-        return mySqlDbTypes2.First(x => x.Item2 == mySqlDbType.ToUpperInvariant()).Item1;
+        return mySqlDbType.Equals("INTEGER", System.StringComparison.InvariantCultureIgnoreCase)
+            ? MySqlDbType.Int32
+            : mySqlDbTypes2.First(x => x.Item2 == mySqlDbType.ToUpperInvariant()).Item1;
     }
 }

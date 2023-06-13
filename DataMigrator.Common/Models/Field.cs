@@ -37,20 +37,11 @@ public class Field : ICloneable
 
     [XmlIgnore]
     [Browsable(false)]
-    public bool IsNumeric
-    {
-        get
-        {
+    public bool IsNumeric =>
             //TODO: Test
-            if (Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
+            Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
                 FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single,
-                FieldType.UInt16, FieldType.UInt32, FieldType.UInt64))
-            {
-                return true;
-            }
-            return false;
-        }
-    }
+                FieldType.UInt16, FieldType.UInt32, FieldType.UInt64);
 
     public Field()
     {
@@ -71,11 +62,7 @@ public class Field : ICloneable
 
     public override string ToString()
     {
-        if (Value != null)
-        {
-            return string.Concat(Name, ": ", Value);
-        }
-        return Name;
+        return Value != null ? string.Concat(Name, ": ", Value) : Name;
     }
 
     #region ICloneable Members
@@ -95,7 +82,10 @@ public class Field : ICloneable
         };
     }
 
-    object ICloneable.Clone() => Clone();
+    object ICloneable.Clone()
+    {
+        return Clone();
+    }
 
     #endregion ICloneable Members
 }

@@ -23,7 +23,10 @@ public class Record : ICloneable
         };
     }
 
-    object ICloneable.Clone() => Clone();
+    object ICloneable.Clone()
+    {
+        return Clone();
+    }
 
     #endregion ICloneable Members
 
@@ -56,5 +59,8 @@ public class Record : ICloneable
         }
     }
 
-    public override string ToString() => string.Concat("Fields: ", Fields.Count);
+    public override string ToString()
+    {
+        return string.Concat("Fields: ", Fields.Count);
+    }
 }

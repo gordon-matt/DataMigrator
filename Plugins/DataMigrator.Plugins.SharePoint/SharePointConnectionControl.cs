@@ -8,26 +8,26 @@ public partial class SharePointConnectionControl : UserControl, IConnectionContr
 {
     public string Url
     {
-        get { return txtUrl.Text; }
-        set { txtUrl.Text = value; }
+        get => txtUrl.Text;
+        set => txtUrl.Text = value;
     }
 
     public string UserName
     {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
+        get => txtUserName.Text.Trim();
+        set => txtUserName.Text = value;
     }
 
     public string Password
     {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
+        get => txtPassword.Text.Trim();
+        set => txtPassword.Text = value;
     }
 
     public string Domain
     {
-        get { return txtDomain.Text.Trim(); }
-        set { txtDomain.Text = value; }
+        get => txtDomain.Text.Trim();
+        set => txtDomain.Text = value;
     }
 
     public SharePointConnectionControl()
@@ -39,19 +39,16 @@ public partial class SharePointConnectionControl : UserControl, IConnectionContr
 
     public ConnectionDetails ConnectionDetails
     {
-        get
+        get => new()
         {
-            return new ConnectionDetails
-            {
-                Server = this.Url,
-                IntegratedSecurity = false,
-                Domain = this.Domain,
-                Password = this.Password,
-                UserName = this.UserName,
-                ConnectionString = Url,
-                ProviderName = Constants.PROVIDER_NAME
-            };
-        }
+            Server = this.Url,
+            IntegratedSecurity = false,
+            Domain = this.Domain,
+            Password = this.Password,
+            UserName = this.UserName,
+            ConnectionString = Url,
+            ProviderName = Constants.PROVIDER_NAME
+        };
         set
         {
             Url = value.Server;
@@ -61,22 +58,17 @@ public partial class SharePointConnectionControl : UserControl, IConnectionContr
         }
     }
 
-    public UserControl ControlContent
-    {
-        get { return this; }
-    }
+    public UserControl ControlContent => this;
 
     public bool ValidateConnection()
     {
         try
         {
-            using (var context = SharePointProvider.GetClientContext(ConnectionDetails))
-            {
-                var site = context.Web;
-                var lists = context.LoadQuery(site.Lists);
-                context.ExecuteQuery(); //If can run this line, then credentials OK
-                return true;
-            }
+            using var context = SharePointProvider.GetClientContext(ConnectionDetails);
+            var site = context.Web;
+            var lists = context.LoadQuery(site.Lists);
+            context.ExecuteQuery(); //If can run this line, then credentials OK
+            return true;
         }
         catch (Exception x)
         {

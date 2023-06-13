@@ -49,11 +49,7 @@ public class ExtendedProperty
 
     public TValue GetValue<TValue>()
     {
-        if (Value != null)
-        {
-            return (TValue)Value;
-        }
-        return default(TValue);
+        return Value != null ? (TValue)Value : default;
     }
 }
 
@@ -61,5 +57,8 @@ public class ExtendedPropertyCollection : List<ExtendedProperty>
 {
     public ExtendedProperty this[string key] => this.SingleOrDefault(x => x.Key == key);
 
-    public void Add(string key, object value) => this.Add(new ExtendedProperty { Key = key, Value = value });
+    public void Add(string key, object value)
+    {
+        this.Add(new ExtendedProperty { Key = key, Value = value });
+    }
 }

@@ -2,7 +2,6 @@
 using System.ComponentModel.Composition.Hosting;
 using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
-using DataMigrator.Windows.Forms;
 using Extenso.Windows.Forms;
 using Krypton.Toolkit;
 
@@ -13,9 +12,9 @@ public partial class MainForm : KryptonForm
     private UserControl currentControl = null;
 
     [ImportMany(typeof(IMigrationPlugin))]
-    private IEnumerable<IMigrationPlugin> plugins = null;
+    private readonly IEnumerable<IMigrationPlugin> plugins = null;
 
-    private readonly TraceViewerControl traceViewer = new TraceViewerControl();
+    private readonly TraceViewerControl traceViewer = new();
 
     #region Constructor
 
@@ -69,7 +68,7 @@ public partial class MainForm : KryptonForm
 
     private DialogResult CheckSaveChanges()
     {
-        DialogResult dialogResult = MessageBox.Show(
+        var dialogResult = MessageBox.Show(
             "Do you want to save the current file?",
             "Save Changes?",
             MessageBoxButtons.YesNoCancel,
@@ -89,7 +88,7 @@ public partial class MainForm : KryptonForm
     private T LoadUserControl<T>() where T : UserControl
     {
         //SaveCurrentControl();
-        T control = Activator.CreateInstance<T>();
+        var control = Activator.CreateInstance<T>();
         panelMain.Controls.Clear();
         panelMain.Controls.Add(control);
         control.Dock = DockStyle.Fill;

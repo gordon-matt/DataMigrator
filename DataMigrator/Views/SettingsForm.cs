@@ -26,10 +26,7 @@ public partial class SettingsForm : KryptonForm
         if (contentPanel.HasChildren)
         {
             var currentControl = contentPanel.Controls[0] as ISettingsControl;
-            if (currentControl != null)
-            {
-                currentControl.Save();
-            }
+            currentControl?.Save();
         }
     }
 

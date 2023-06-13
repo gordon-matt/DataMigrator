@@ -5,9 +5,9 @@ namespace DataMigrator.Controls;
 
 public class DataMigratorTreeView : TreeView
 {
-    private ImageList imageList = null;
-    private ContextMenuStrip mnuContextJobs = null;
-    private ContextMenuStrip mnuContextJobsJob = null;
+    private readonly ImageList imageList = null;
+    private readonly ContextMenuStrip mnuContextJobs = null;
+    private readonly ContextMenuStrip mnuContextJobsJob = null;
 
     private TreeNode RootNode { get; set; }
     private TreeNode ConnectionsNode { get; set; }
@@ -25,19 +25,27 @@ public class DataMigratorTreeView : TreeView
         imageList.ImageSize = new Size(24, 24);
         this.ImageList = imageList;
 
-        mnuContextJobs = new ContextMenuStrip();
-        mnuContextJobs.Name = "mnuContextJobs";
+        mnuContextJobs = new ContextMenuStrip
+        {
+            Name = "mnuContextJobs"
+        };
 
-        var mnuContextJobsNewJob = new ToolStripMenuItem("New Job");
-        mnuContextJobsNewJob.Name = "mnuContextJobsNewJob";
+        var mnuContextJobsNewJob = new ToolStripMenuItem("New Job")
+        {
+            Name = "mnuContextJobsNewJob"
+        };
         mnuContextJobsNewJob.Click += new System.EventHandler(mnuContextJobsNewJob_Click);
         mnuContextJobs.Items.Add(mnuContextJobsNewJob);
 
-        mnuContextJobsJob = new ContextMenuStrip();
-        mnuContextJobsJob.Name = "mnuContextJobsJob";
+        mnuContextJobsJob = new ContextMenuStrip
+        {
+            Name = "mnuContextJobsJob"
+        };
 
-        var mnuContextJobsJobRename = new ToolStripMenuItem("Rename");
-        mnuContextJobsJobRename.Name = "mnuContextJobsJobRename";
+        var mnuContextJobsJobRename = new ToolStripMenuItem("Rename")
+        {
+            Name = "mnuContextJobsJobRename"
+        };
         mnuContextJobsJobRename.Click += new System.EventHandler(mnuContextJobsJobRename_Click);
         mnuContextJobsJob.Items.Add(mnuContextJobsJobRename);
     }
@@ -59,8 +67,10 @@ public class DataMigratorTreeView : TreeView
 
     public TreeNode AddJob(string jobName)
     {
-        var jobNode = new TreeNode(jobName, 4, 4);
-        jobNode.Tag = new Job { Name = jobName };
+        var jobNode = new TreeNode(jobName, 4, 4)
+        {
+            Tag = new Job { Name = jobName }
+        };
         JobsNode.Nodes.Add(jobNode);
 
         JobsNode.Expand();
@@ -70,8 +80,10 @@ public class DataMigratorTreeView : TreeView
 
     public TreeNode AddJob(Job job)
     {
-        var jobNode = new TreeNode(job.Name, 4, 4);
-        jobNode.Tag = job;
+        var jobNode = new TreeNode(job.Name, 4, 4)
+        {
+            Tag = job
+        };
         JobsNode.Nodes.Add(jobNode);
 
         JobsNode.Expand();
@@ -92,9 +104,11 @@ public class DataMigratorTreeView : TreeView
 
     private void mnuContextJobsJobRename_Click(object sender, System.EventArgs e)
     {
-        var dlgInput = new InputDialog();
-        dlgInput.Text = "Rename Job";
-        dlgInput.LabelText = "Enter job name:";
+        var dlgInput = new InputDialog
+        {
+            Text = "Rename Job",
+            LabelText = "Enter job name:"
+        };
         if (dlgInput.ShowDialog() == DialogResult.OK)
         {
             string newJobName = dlgInput.UserInput;
@@ -112,9 +126,11 @@ public class DataMigratorTreeView : TreeView
 
     private void mnuContextJobsNewJob_Click(object sender, System.EventArgs e)
     {
-        var dlgInput = new InputDialog();
-        dlgInput.Text = "Add New Job";
-        dlgInput.LabelText = "Enter job name:";
+        var dlgInput = new InputDialog
+        {
+            Text = "Add New Job",
+            LabelText = "Enter job name:"
+        };
         if (dlgInput.ShowDialog() == DialogResult.OK)
         {
             string jobName = dlgInput.UserInput;

@@ -13,28 +13,14 @@ public partial class TableMappingControl : UserControl
 
     public string SourceTable
     {
-        get
-        {
-            if (cmbSourceTable.SelectedIndex != -1)
-            {
-                return cmbSourceTable.SelectedItem.ToString();
-            }
-            return string.Empty;
-        }
-        set { cmbSourceTable.SelectedItem = value; }
+        get => cmbSourceTable.SelectedIndex != -1 ? cmbSourceTable.SelectedItem.ToString() : string.Empty;
+        set => cmbSourceTable.SelectedItem = value;
     }
 
     public string DestinationTable
     {
-        get
-        {
-            if (cmbDestinationTable.SelectedIndex != -1)
-            {
-                return cmbDestinationTable.SelectedItem.ToString();
-            }
-            return string.Empty;
-        }
-        set { cmbDestinationTable.SelectedItem = value; }
+        get => cmbDestinationTable.SelectedIndex != -1 ? cmbDestinationTable.SelectedItem.ToString() : string.Empty;
+        set => cmbDestinationTable.SelectedItem = value;
     }
 
     public IEnumerable<FieldMapping> FieldMappings
@@ -48,9 +34,7 @@ public partial class TableMappingControl : UserControl
                 return mappings;
             }
 
-            if (MappingsTable != null)
-            {
-                MappingsTable.Rows.Cast<DataRow>().ForEach(row =>
+            MappingsTable?.Rows.Cast<DataRow>().ForEach(row =>
                 {
                     mappings.Add(new FieldMapping
                     {
@@ -58,7 +42,6 @@ public partial class TableMappingControl : UserControl
                         DestinationField = DestinationFields[row["Destination"].ToString()]
                     });
                 });
-            }
             return mappings;
         }
     }
@@ -114,7 +97,7 @@ public partial class TableMappingControl : UserControl
         MappingsTable = new DataTable();
         MappingsTable.Columns.AddRange("Source", "Destination");
 
-        foreach (FieldMapping mapping in Program.CurrentJob.FieldMappings)
+        foreach (var mapping in Program.CurrentJob.FieldMappings)
         {
             var row = MappingsTable.NewRow();
             row["Source"] = mapping.SourceField.Name;

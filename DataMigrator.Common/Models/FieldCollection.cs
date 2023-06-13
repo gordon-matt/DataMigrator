@@ -10,7 +10,7 @@ public class FieldCollection : List<Field>
 
     public FieldCollection(IEnumerable<Field> fields)
     {
-        foreach (Field field in fields)
+        foreach (var field in fields)
         {
             this.Add(field.Clone());
         }

@@ -7,8 +7,8 @@ namespace DataMigrator.SharePoint;
 
 public class SPFieldTypeConverter : IFieldTypeConverter<SPFieldType>
 {
-    private static TupleList<FieldType, SPFieldType> fieldTypes = new TupleList<FieldType, SPFieldType>();
-    private static TupleList<SPFieldType, FieldType> providerFieldTypes = new TupleList<SPFieldType, FieldType>();
+    private static readonly TupleList<FieldType, SPFieldType> fieldTypes = new();
+    private static readonly TupleList<SPFieldType, FieldType> providerFieldTypes = new();
 
     static SPFieldTypeConverter()
     {
@@ -77,9 +77,15 @@ public class SPFieldTypeConverter : IFieldTypeConverter<SPFieldType>
 
     #region IFieldTypeConverter<DbType> Members
 
-    public FieldType GetDataMigratorFieldType(SPFieldType providerFieldType) => providerFieldTypes.First(x => x.Item1 == providerFieldType).Item2;
+    public FieldType GetDataMigratorFieldType(SPFieldType providerFieldType)
+    {
+        return providerFieldTypes.First(x => x.Item1 == providerFieldType).Item2;
+    }
 
-    public SPFieldType GetDataProviderFieldType(FieldType fieldType) => fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    public SPFieldType GetDataProviderFieldType(FieldType fieldType)
+    {
+        return fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    }
 
     #endregion IFieldTypeConverter<DbType> Members
 }

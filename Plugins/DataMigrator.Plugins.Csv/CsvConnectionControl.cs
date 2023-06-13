@@ -8,14 +8,14 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
 {
     public string FilePath
     {
-        get { return txtFile.Text.Trim(); }
-        set { txtFile.Text = value; }
+        get => txtFile.Text.Trim();
+        set => txtFile.Text = value;
     }
 
     public bool HasHeaderRow
     {
-        get { return cbHasHeaderRow.Checked; }
-        set { cbHasHeaderRow.Checked = value; }
+        get => cbHasHeaderRow.Checked;
+        set => cbHasHeaderRow.Checked = value;
     }
 
     public string ConnectionString
@@ -66,7 +66,10 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
         }
     }
 
-    public bool ValidateConnection() => File.Exists(FilePath);
+    public bool ValidateConnection()
+    {
+        return File.Exists(FilePath);
+    }
 
     #endregion IConnectionControl Members
 

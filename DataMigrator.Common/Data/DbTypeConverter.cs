@@ -6,8 +6,8 @@ namespace DataMigrator.Common.Data;
 
 public class DbTypeConverter : IFieldTypeConverter<DbType>
 {
-    private static TupleList<FieldType, DbType> fieldTypes = new TupleList<FieldType, DbType>();
-    private static TupleList<DbType, FieldType> dbTypes = new TupleList<DbType, FieldType>();
+    private static readonly TupleList<FieldType, DbType> fieldTypes = new();
+    private static readonly TupleList<DbType, FieldType> dbTypes = new();
 
     static DbTypeConverter()
     {

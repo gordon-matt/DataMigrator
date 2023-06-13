@@ -3,7 +3,7 @@ using Krypton.Toolkit;
 
 namespace DataMigrator.Views;
 
-partial class AboutForm : KryptonForm
+internal partial class AboutForm : KryptonForm
 {
     public AboutForm()
     {
@@ -22,7 +22,7 @@ partial class AboutForm : KryptonForm
     {
         get
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
             if (attributes.Length > 0)
             {
                 var titleAttribute = (AssemblyTitleAttribute)attributes[0];
@@ -41,12 +41,8 @@ partial class AboutForm : KryptonForm
     {
         get
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-            if (attributes.Length == 0)
-            {
-                return string.Empty;
-            }
-            return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+            object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+            return attributes.Length == 0 ? string.Empty : ((AssemblyDescriptionAttribute)attributes[0]).Description;
         }
     }
 
@@ -54,12 +50,8 @@ partial class AboutForm : KryptonForm
     {
         get
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-            if (attributes.Length == 0)
-            {
-                return string.Empty;
-            }
-            return ((AssemblyProductAttribute)attributes[0]).Product;
+            object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+            return attributes.Length == 0 ? string.Empty : ((AssemblyProductAttribute)attributes[0]).Product;
         }
     }
 
@@ -67,12 +59,8 @@ partial class AboutForm : KryptonForm
     {
         get
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-            if (attributes.Length == 0)
-            {
-                return string.Empty;
-            }
-            return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+            object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+            return attributes.Length == 0 ? string.Empty : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
         }
     }
 
@@ -80,12 +68,8 @@ partial class AboutForm : KryptonForm
     {
         get
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-            if (attributes.Length == 0)
-            {
-                return string.Empty;
-            }
-            return ((AssemblyCompanyAttribute)attributes[0]).Company;
+            object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+            return attributes.Length == 0 ? string.Empty : ((AssemblyCompanyAttribute)attributes[0]).Company;
         }
     }
 

@@ -10,9 +10,7 @@ internal static class Constants
     {
         get
         {
-            if (systemFields == null)
-            {
-                systemFields = new string[]
+            systemFields ??= new string[]
                 {
                     "Author",
                     "ContentType",
@@ -28,7 +26,6 @@ internal static class Constants
                     "ItemChildCount",
                     "FolderChildCount"
                 };
-            }
             return systemFields;
         }
     }

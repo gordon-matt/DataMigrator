@@ -6,8 +6,8 @@ public partial class DataMigratorSettingsControl : UserControl, ISettingsControl
 {
     public int BatchSize
     {
-        get { return (int)nudBatchSize.Value; }
-        set { nudBatchSize.Value = value; }
+        get => (int)nudBatchSize.Value;
+        set => nudBatchSize.Value = value;
     }
 
     public DataMigratorSettingsControl()

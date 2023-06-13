@@ -49,22 +49,20 @@ public abstract class BaseProvider
     {
         get
         {
-            using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+            using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+            string[] restrictions = new string[4];
+            restrictions[3] = "Base Table";
+
+            connection.Open();
+            var schema = connection.GetSchema("Tables", restrictions);
+            connection.Close();
+
+            var tableNames = new List<string>();
+            foreach (DataRow row in schema.Rows)
             {
-                string[] restrictions = new string[4];
-                restrictions[3] = "Base Table";
-
-                connection.Open();
-                var schema = connection.GetSchema("Tables", restrictions);
-                connection.Close();
-
-                var tableNames = new List<string>();
-                foreach (DataRow row in schema.Rows)
-                {
-                    tableNames.Add(row.Field<string>("TABLE_NAME"));
-                }
-                return tableNames;
+                tableNames.Add(row.Field<string>("TABLE_NAME"));
             }
+            return tableNames;
         }
     }
 
@@ -95,7 +93,7 @@ public abstract class BaseProvider
         if (!ok)
         { return false; }
 
-        foreach (Field field in fields)
+        foreach (var field in fields)
         {
             CreateField(tableName, field);
         }
@@ -116,127 +114,123 @@ public abstract class BaseProvider
             return false;
         }
 
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        string fieldType = GetDataProviderFieldType(field.Type);
+        string maxLength = string.Empty;
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
         {
-            string fieldType = GetDataProviderFieldType(field.Type);
-            string maxLength = string.Empty;
-            if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+            if (field.MaxLength is > 0 and <= 8000)
             {
-                if (field.MaxLength > 0 && field.MaxLength <= 8000)
+                maxLength = string.Concat("(", field.MaxLength, ")");
+            }
+            else
+            {
+                if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
                 {
-                    maxLength = string.Concat("(", field.MaxLength, ")");
-                }
-                else
-                {
-                    if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
-                    {
-                        maxLength = "(MAX)";
-                    }
+                    maxLength = "(MAX)";
                 }
             }
-            string isRequired = string.Empty;
-            if (field.IsRequired)
-            { isRequired = " NOT NULL"; }
-
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format(
-                Constants.Data.CMD_ADD_COLUMN,
-                tableName,
-                string.Concat(
-                    EncloseIdentifier(field.Name), " ",
-                    fieldType,
-                    maxLength,
-                    isRequired));
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-            return true;
         }
+        string isRequired = string.Empty;
+        if (field.IsRequired)
+        { isRequired = " NOT NULL"; }
+
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(
+            Constants.Data.CMD_ADD_COLUMN,
+            tableName,
+            string.Concat(
+                EncloseIdentifier(field.Name), " ",
+                fieldType,
+                maxLength,
+                isRequired));
+        connection.Open();
+        command.ExecuteNonQuery();
+        connection.Close();
+        return true;
     }
 
     public virtual IEnumerable<string> GetFieldNames(string tableName)
     {
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
-            var columns = new List<string>();
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
+        var columns = new List<string>();
 
-            connection.Open();
-            using (var reader = command.ExecuteReader())
+        connection.Open();
+        using (var reader = command.ExecuteReader())
+        {
+            while (reader.Read())
             {
-                while (reader.Read())
-                {
-                    columns.Add(reader.GetString(0));
-                }
+                columns.Add(reader.GetString(0));
             }
-            connection.Close();
-            return columns;
         }
+        connection.Close();
+        return columns;
     }
 
     public virtual FieldCollection GetFields(string tableName)
     {
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMNS, tableName);
+        var fields = new FieldCollection();
+
+        connection.Open();
+        using (var reader = command.ExecuteReader())
         {
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMNS, tableName);
-            var fields = new FieldCollection();
+            while (reader.Read())
+            {
+                var field = new Field
+                {
+                    Name = reader.GetString(0)
+                };
+                if (!reader.IsDBNull(1))
+                { field.Ordinal = reader.GetInt32(1); }
+                if (!reader.IsDBNull(2))
+                { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
+                if (!reader.IsDBNull(3))
+                { field.IsRequired = reader.GetString(3) == "NO"; }
+                if (!reader.IsDBNull(4))
+                { field.MaxLength = reader.GetInt32(4); }
+                fields.Add(field);
+            }
+        }
+        connection.Close();
+
+        try
+        {
+            command.CommandText = string.Format(Constants.Data.CMD_IS_PRIMARY_KEY_FORMAT, tableName);
 
             connection.Open();
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    var field = new Field();
-                    field.Name = reader.GetString(0);
-                    if (!reader.IsDBNull(1))
-                    { field.Ordinal = reader.GetInt32(1); }
-                    if (!reader.IsDBNull(2))
-                    { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
-                    if (!reader.IsDBNull(3))
-                    { field.IsRequired = reader.GetString(3) == "NO"; }
-                    if (!reader.IsDBNull(4))
-                    { field.MaxLength = reader.GetInt32(4); }
-                    fields.Add(field);
-                }
-            }
-            connection.Close();
-
-            try
-            {
-                command.CommandText = string.Format(Constants.Data.CMD_IS_PRIMARY_KEY_FORMAT, tableName);
-
-                connection.Open();
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
+                    string pkColumn = reader.GetString(0);
+                    var match = fields.SingleOrDefault(f => f.Name == pkColumn);
+                    if (match != null)
                     {
-                        string pkColumn = reader.GetString(0);
-                        var match = fields.SingleOrDefault(f => f.Name == pkColumn);
-                        if (match != null)
-                        {
-                            match.IsPrimaryKey = true;
-                        }
+                        match.IsPrimaryKey = true;
                     }
                 }
+            }
 
+            connection.Close();
+        }
+        catch (Exception x)
+        {
+            TraceService.Instance.WriteConcat(TraceEvent.Error, "Error: Could not get primary key info - ", x.Message);
+            if (connection.State != ConnectionState.Closed)
+            {
                 connection.Close();
             }
-            catch (Exception x)
-            {
-                TraceService.Instance.WriteConcat(TraceEvent.Error, "Error: Could not get primary key info - ", x.Message);
-                if (connection.State != ConnectionState.Closed)
-                {
-                    connection.Close();
-                }
-            }
-
-            return fields;
         }
+
+        return fields;
     }
 
     #endregion Field Methods
@@ -245,18 +239,16 @@ public abstract class BaseProvider
 
     public virtual int GetRecordCount(string tableName)
     {
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format("SELECT COUNT(*) FROM {0}{1}{2}", EscapeIdentifierStart, tableName, EscapeIdentifierEnd);
-            //command.CommandText = new Query().SelectCountAll().From(tableName).ToString();
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format("SELECT COUNT(*) FROM {0}{1}{2}", EscapeIdentifierStart, tableName, EscapeIdentifierEnd);
+        //command.CommandText = new Query().SelectCountAll().From(tableName).ToString();
 
-            connection.Open();
-            int rowCount = (int)command.ExecuteScalar();
-            connection.Close();
-            return rowCount;
-        }
+        connection.Open();
+        int rowCount = (int)command.ExecuteScalar();
+        connection.Close();
+        return rowCount;
     }
 
     public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName)
@@ -279,28 +271,26 @@ public abstract class BaseProvider
         sb.Append(" FROM ");
         sb.Append(tableName);
 
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandType = CommandType.Text;
-            command.CommandText = sb.ToString();
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = sb.ToString();
 
-            connection.Open();
-            using (var reader = command.ExecuteReader())
+        connection.Open();
+        using (var reader = command.ExecuteReader())
+        {
+            while (reader.Read())
             {
-                while (reader.Read())
+                var record = new Record();
+                record.Fields.AddRange(fields);
+                fields.ForEach(f =>
                 {
-                    var record = new Record();
-                    record.Fields.AddRange(fields);
-                    fields.ForEach(f =>
-                    {
-                        record[f.Name].Value = reader[f.Name];
-                    });
-                    yield return record;
-                }
+                    record[f.Name].Value = reader[f.Name];
+                });
+                yield return record;
             }
-            connection.Close();
         }
+        connection.Close();
     }
 
     protected IDictionary<string, string> CreateParameterNames(IEnumerable<string> fieldNames)
@@ -330,41 +320,39 @@ public abstract class BaseProvider
             .Prepend(EscapeIdentifierStart) // "["
             .Append(EscapeIdentifierEnd); // "]"
 
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        connection.Open();
+        using (var transaction = connection.BeginTransaction())
         {
-            connection.Open();
-            using (var transaction = connection.BeginTransaction())
+            using (var command = connection.CreateCommand())
             {
-                using (var command = connection.CreateCommand())
+                command.Transaction = transaction;
+                command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames.Values.Join(","));
+                //command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames);
+
+                records.ElementAt(0).Fields.ForEach(field =>
                 {
-                    command.Transaction = transaction;
-                    command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames.Values.Join(","));
-                    //command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames);
+                    var parameter = command.CreateParameter();
+                    //parameter.ParameterName = string.Concat("@", field.Name);
+                    parameter.ParameterName = parameterNames[field.Name];
+                    parameter.DbType = AppContext.DbTypeConverter.GetDataProviderFieldType(field.Type);
+                    command.Parameters.Add(parameter);
+                });
 
-                    records.ElementAt(0).Fields.ForEach(field =>
+                records.ForEach(record =>
+                {
+                    record.Fields.ForEach(field =>
                     {
-                        var parameter = command.CreateParameter();
-                        //parameter.ParameterName = string.Concat("@", field.Name);
-                        parameter.ParameterName = parameterNames[field.Name];
-                        parameter.DbType = AppContext.DbTypeConverter.GetDataProviderFieldType(field.Type);
-                        command.Parameters.Add(parameter);
+                        command.Parameters[parameterNames[field.Name]].Value = field.Value;
+                        //command.Parameters[string.Concat("@", field.Name)].Value = field.Value.ToString();
                     });
 
-                    records.ForEach(record =>
-                    {
-                        record.Fields.ForEach(field =>
-                        {
-                            command.Parameters[parameterNames[field.Name]].Value = field.Value;
-                            //command.Parameters[string.Concat("@", field.Name)].Value = field.Value.ToString();
-                        });
-
-                        command.ExecuteNonQuery();
-                    });
-                }
-                transaction.Commit();
+                    command.ExecuteNonQuery();
+                });
             }
-            connection.Close();
+            transaction.Commit();
         }
+        connection.Close();
     }
 
     #endregion Record Methods
@@ -404,26 +392,22 @@ public abstract class BaseProvider
 
     protected virtual void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        {
-            const string CMD_CREATE_TABLE_FORMAT = "CREATE TABLE {0}({1} {2} {3} NOT NULL CONSTRAINT {4} PRIMARY KEY)";
-            string commandText = string.Format(
-                CMD_CREATE_TABLE_FORMAT,
-                EncloseIdentifier(tableName),
-                pkColumnName,
-                EncloseIdentifier(pkDataType),
-                pkIsIdentity ? "IDENTITY(1,1)" : string.Empty,
-                EncloseIdentifier("PK_" + tableName));
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        const string CMD_CREATE_TABLE_FORMAT = "CREATE TABLE {0}({1} {2} {3} NOT NULL CONSTRAINT {4} PRIMARY KEY)";
+        string commandText = string.Format(
+            CMD_CREATE_TABLE_FORMAT,
+            EncloseIdentifier(tableName),
+            pkColumnName,
+            EncloseIdentifier(pkDataType),
+            pkIsIdentity ? "IDENTITY(1,1)" : string.Empty,
+            EncloseIdentifier("PK_" + tableName));
 
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandType = CommandType.Text;
-                command.CommandText = commandText;
-                connection.Open();
-                command.ExecuteNonQuery();
-                connection.Close();
-            }
-        }
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = commandText;
+        connection.Open();
+        command.ExecuteNonQuery();
+        connection.Close();
     }
 
     #region Field Conversion Methods

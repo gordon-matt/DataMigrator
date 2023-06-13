@@ -8,10 +8,7 @@ namespace DataMigrator.Sql;
 
 public class SqlProvider : BaseProvider
 {
-    public override string DbProviderName
-    {
-        get { return "System.Data.SqlClient"; }
-    }
+    public override string DbProviderName => "System.Data.SqlClient";
 
     public SqlProvider(ConnectionDetails connectionDetails)
         : base(connectionDetails)

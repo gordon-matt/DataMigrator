@@ -4,12 +4,14 @@ namespace DataMigrator.Controls;
 
 public class SettingsTreeView : TreeView
 {
-    private ImageList imageList = null;
+    private readonly ImageList imageList = null;
 
     public SettingsTreeView()
     {
-        imageList = new ImageList();
-        imageList.ImageSize = new Size(24, 24);
+        imageList = new ImageList
+        {
+            ImageSize = new Size(24, 24)
+        };
         imageList.Images.Add(Resources.TreeNode);
         this.ImageList = imageList;
     }
@@ -18,8 +20,10 @@ public class SettingsTreeView : TreeView
     {
         if (tag != null)
         {
-            var treeNode = new TreeNode(providerName);
-            treeNode.Tag = tag;
+            var treeNode = new TreeNode(providerName)
+            {
+                Tag = tag
+            };
             this.Nodes.Add(treeNode);
             return treeNode;
         }
