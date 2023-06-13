@@ -12,7 +12,7 @@ public partial class MainForm : KryptonForm
     private UserControl currentControl = null;
 
     [ImportMany(typeof(IMigrationPlugin))]
-    private readonly IEnumerable<IMigrationPlugin> plugins = null;
+    private readonly ICollection<IMigrationPlugin> plugins = new List<IMigrationPlugin>();
 
     private readonly TraceViewerControl traceViewer = new();
 

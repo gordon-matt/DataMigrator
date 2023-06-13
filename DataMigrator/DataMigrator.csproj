@@ -14,6 +14,7 @@
     <PackageReference Include="Krypton.Ribbon" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Toolkit" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Workspace" Version="70.22.11.312" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
 
