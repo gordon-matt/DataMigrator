@@ -104,18 +104,18 @@ public partial class TableMappingControl : UserControl
             row["Destination"] = mapping.DestinationField.Name;
             MappingsTable.Rows.Add(row);
 
-            var sourceRow = dgvSource.Rows.Cast<DataGridViewRow>()
+            using var sourceRow = dgvSource.Rows.Cast<DataGridViewRow>()
                 .Where(x => x.Index != dgvSource.NewRowIndex)
                 .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.SourceField.Name);
-
-            var destinationRow = dgvDestination.Rows.Cast<DataGridViewRow>()
-                .Where(x => x.Index != dgvDestination.NewRowIndex)
-                .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.DestinationField.Name);
 
             if (sourceRow != null)
             {
                 dgvSource.Rows.Remove(sourceRow);
             }
+
+            using var destinationRow = dgvDestination.Rows.Cast<DataGridViewRow>()
+                .Where(x => x.Index != dgvDestination.NewRowIndex)
+                .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.DestinationField.Name);
 
             if (destinationRow != null)
             {

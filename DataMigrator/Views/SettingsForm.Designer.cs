@@ -20,6 +20,7 @@ partial class SettingsForm
             components.Dispose();
         }
         base.Dispose(disposing);
+        dataMigratorSettingsControl?.Dispose();
     }
 
     #region Windows Form Designer generated code

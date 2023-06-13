@@ -13,7 +13,7 @@ public class SettingsTreeView : TreeView
             ImageSize = new Size(24, 24)
         };
         imageList.Images.Add(Resources.TreeNode);
-        this.ImageList = imageList;
+        ImageList = imageList;
     }
 
     public TreeNode AddSettingsNode(string providerName, ISettingsControl tag)
@@ -24,9 +24,15 @@ public class SettingsTreeView : TreeView
             {
                 Tag = tag
             };
-            this.Nodes.Add(treeNode);
+            Nodes.Add(treeNode);
             return treeNode;
         }
         return null;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        imageList?.Dispose();
     }
 }

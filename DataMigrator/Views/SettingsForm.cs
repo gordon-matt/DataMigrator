@@ -6,6 +6,8 @@ namespace DataMigrator.Views;
 
 public partial class SettingsForm : KryptonForm
 {
+    private DataMigratorSettingsControl dataMigratorSettingsControl;
+
     public SettingsForm()
     {
         InitializeComponent();
@@ -13,7 +15,9 @@ public partial class SettingsForm : KryptonForm
 
     private void SettingsForm_Load(object sender, EventArgs e)
     {
-        settingsTreeView.AddSettingsNode("General", new DataMigratorSettingsControl());
+        dataMigratorSettingsControl = new DataMigratorSettingsControl();
+
+        settingsTreeView.AddSettingsNode("General", dataMigratorSettingsControl);
 
         Program.Plugins.OrderBy(p => p.ProviderName).ForEach(plugin =>
         {

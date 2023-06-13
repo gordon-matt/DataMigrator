@@ -14,7 +14,7 @@ public class ToolsTreeView : TreeView
             ImageSize = new Size(24, 24)
         };
         imageList.Images.Add(Resources.TreeNode);
-        this.ImageList = imageList;
+        ImageList = imageList;
     }
 
     public TreeNode AddToolsNode(string providerName, IEnumerable<IMigrationTool> tools)
@@ -25,7 +25,7 @@ public class ToolsTreeView : TreeView
 
             foreach (var tool in tools)
             {
-                TreeNode toolNode = null;
+                TreeNode toolNode;
 
                 if (tool.Icon == null)
                 {
@@ -43,9 +43,15 @@ public class ToolsTreeView : TreeView
                 providerNode.Nodes.Add(toolNode);
             }
 
-            this.Nodes.Add(providerNode);
+            Nodes.Add(providerNode);
             return providerNode;
         }
         return null;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        imageList?.Dispose();
     }
 }
