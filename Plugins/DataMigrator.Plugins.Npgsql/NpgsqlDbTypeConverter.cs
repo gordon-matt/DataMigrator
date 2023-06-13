@@ -7,8 +7,8 @@ namespace DataMigrator.Plugins.Npgsql;
 
 public class NpgsqlDbTypeConverter
 {
-    private static TupleList<FieldType, NpgsqlDbType> fieldTypes = new TupleList<FieldType, NpgsqlDbType>();
-    private static TupleList<NpgsqlDbType, FieldType> npgsqlDbTypes = new TupleList<NpgsqlDbType, FieldType>();
+    private static readonly TupleList<FieldType, NpgsqlDbType> fieldTypes = new();
+    private static readonly TupleList<NpgsqlDbType, FieldType> npgsqlDbTypes = new();
 
     static NpgsqlDbTypeConverter()
     {
@@ -111,25 +111,30 @@ public class NpgsqlDbTypeConverter
 
     #region IFieldTypeConverter<NpgsqlDbType> Members
 
-    public FieldType GetDataMigratorFieldType(NpgsqlDbType providerFieldType) => npgsqlDbTypes.First(x => x.Item1 == providerFieldType).Item2;
+    public FieldType GetDataMigratorFieldType(NpgsqlDbType providerFieldType)
+    {
+        return npgsqlDbTypes.First(x => x.Item1 == providerFieldType).Item2;
+    }
 
-    public NpgsqlDbType GetDataProviderFieldType(FieldType fieldType) => fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    public NpgsqlDbType GetDataProviderFieldType(FieldType fieldType)
+    {
+        return fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    }
 
     #endregion IFieldTypeConverter<NpgsqlDbType> Members
 
     public static string GetNpgsqlDataTypeStringValue(NpgsqlDbType npgsqlDbType)
     {
-        switch (npgsqlDbType)
+        return npgsqlDbType switch
         {
-            case NpgsqlDbType.Char: return "character";
-            case NpgsqlDbType.Varchar:
-            case NpgsqlDbType.Text: return "character varying";
-            case NpgsqlDbType.Timestamp: return "timestamp without time zone";
-            case NpgsqlDbType.TimestampTZ: return "timestamp with time zone";
-            case NpgsqlDbType.Time: return "time without time zone";
-            case NpgsqlDbType.TimeTZ: return "time with time zone";
-            default: return npgsqlDbType.ToString().ToLowerInvariant();
-        }
+            NpgsqlDbType.Char => "character",
+            NpgsqlDbType.Varchar or NpgsqlDbType.Text => "character varying",
+            NpgsqlDbType.Timestamp => "timestamp without time zone",
+            NpgsqlDbType.TimestampTZ => "timestamp with time zone",
+            NpgsqlDbType.Time => "time without time zone",
+            NpgsqlDbType.TimeTZ => "time with time zone",
+            _ => npgsqlDbType.ToString().ToLowerInvariant(),
+        };
 
         //return npgsqlDbTypes2.First(x => x.Item1 == npgsqlDbType).Item2;
     }
@@ -138,15 +143,15 @@ public class NpgsqlDbTypeConverter
     {
         string dataType = npgsqlDbType.ToLowerInvariant();
 
-        switch (dataType)
+        return dataType switch
         {
-            case "character": return NpgsqlDbType.Char;
-            case "character varying": return NpgsqlDbType.Varchar;
-            case "timestamp with time zone": return NpgsqlDbType.TimestampTZ;
-            case "timestamp without time zone": return NpgsqlDbType.Timestamp;
-            case "time with time zone": return NpgsqlDbType.TimeTZ;
-            case "time without time zone": return NpgsqlDbType.Time;
-            default: return EnumExtensions.Parse<NpgsqlDbType>(npgsqlDbType);
-        }
+            "character" => NpgsqlDbType.Char,
+            "character varying" => NpgsqlDbType.Varchar,
+            "timestamp with time zone" => NpgsqlDbType.TimestampTZ,
+            "timestamp without time zone" => NpgsqlDbType.Timestamp,
+            "time with time zone" => NpgsqlDbType.TimeTZ,
+            "time without time zone" => NpgsqlDbType.Time,
+            _ => EnumExtensions.Parse<NpgsqlDbType>(npgsqlDbType),
+        };
     }
 }

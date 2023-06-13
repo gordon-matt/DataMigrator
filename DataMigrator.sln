@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{169C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{C66A2563-2A8A-43DD-B5AF-F992C17A2CD1}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		_Misc\Logo.png = _Misc\Logo.png
 		_Misc\Screenshot_01_Connections.PNG = _Misc\Screenshot_01_Connections.PNG
 		_Misc\Screenshot_02_Job.PNG = _Misc\Screenshot_02_Job.PNG
@@ -20,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{C66A2563
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigrator.Plugins.Access", "Plugins\DataMigrator.Plugins.Access\DataMigrator.Plugins.Access.csproj", "{454375C1-9FF3-444D-AD11-3E14D4F0CD6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigrator.Plugins.Csv", "Plugins\DataMigrator.Plugins.Csv\DataMigrator.Plugins.Csv.csproj", "{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Plugins.Csv", "Plugins\DataMigrator.Plugins.Csv\DataMigrator.Plugins.Csv.csproj", "{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Plugins.Excel", "Plugins\DataMigrator.Plugins.Excel\DataMigrator.Plugins.Excel.csproj", "{8181ECE8-40C6-45F9-A386-7C3998B8D7F6}"
 EndProject

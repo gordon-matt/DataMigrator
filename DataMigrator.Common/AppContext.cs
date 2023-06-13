@@ -10,10 +10,7 @@ public static class AppContext
     {
         get
         {
-            if (dbTypeConverter == null)
-            {
-                dbTypeConverter = new DbTypeConverter();
-            }
+            dbTypeConverter ??= new DbTypeConverter();
             return dbTypeConverter;
         }
     }
@@ -24,10 +21,7 @@ public static class AppContext
     {
         get
         {
-            if (sqlDbTypeConverter == null)
-            {
-                sqlDbTypeConverter = new SqlDbTypeConverter();
-            }
+            sqlDbTypeConverter ??= new SqlDbTypeConverter();
             return sqlDbTypeConverter;
         }
     }
@@ -38,10 +32,7 @@ public static class AppContext
     {
         get
         {
-            if (systemTypeConverter == null)
-            {
-                systemTypeConverter = new SystemTypeConverter();
-            }
+            systemTypeConverter ??= new SystemTypeConverter();
             return systemTypeConverter;
         }
     }

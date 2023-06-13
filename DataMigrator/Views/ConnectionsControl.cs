@@ -9,50 +9,20 @@ public partial class ConnectionsControl : UserControl
     private IConnectionControl sourceConnectionControl = null;
     private IConnectionControl destinationConnectionControl = null;
 
-    public ConnectionDetails SourceConnection
-    {
-        get
-        {
-            if (sourceConnectionControl == null)
-            { return null; }
-            return sourceConnectionControl.ConnectionDetails;
-        }
-    }
+    public ConnectionDetails SourceConnection => sourceConnectionControl?.ConnectionDetails;
 
-    public ConnectionDetails DestinationConnection
-    {
-        get
-        {
-            if (destinationConnectionControl == null)
-            { return null; }
-            return destinationConnectionControl.ConnectionDetails;
-        }
-    }
+    public ConnectionDetails DestinationConnection => destinationConnectionControl?.ConnectionDetails;
 
     public string SourceConnectionType
     {
-        get
-        {
-            if (cmbSourceConnectionType.SelectedIndex != -1)
-            {
-                return cmbSourceConnectionType.SelectedItem.ToString();
-            }
-            return string.Empty;
-        }
-        set { cmbSourceConnectionType.SelectedItem = value.ToString(); }
+        get => cmbSourceConnectionType.SelectedIndex != -1 ? cmbSourceConnectionType.SelectedItem.ToString() : string.Empty;
+        set => cmbSourceConnectionType.SelectedItem = value.ToString();
     }
 
     public string DestinationConnectionType
     {
-        get
-        {
-            if (cmbDestinationConnectionType.SelectedIndex != -1)
-            {
-                return cmbDestinationConnectionType.SelectedItem.ToString();
-            }
-            return string.Empty;
-        }
-        set { cmbDestinationConnectionType.SelectedItem = value.ToString(); }
+        get => cmbDestinationConnectionType.SelectedIndex != -1 ? cmbDestinationConnectionType.SelectedItem.ToString() : string.Empty;
+        set => cmbDestinationConnectionType.SelectedItem = value.ToString();
     }
 
     public ConnectionsControl()

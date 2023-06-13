@@ -16,9 +16,15 @@ public sealed class TraceService
 
     public static TraceService Instance => new();
 
-    public void WriteConcat(TraceEvent traceEvent, params object[] args) => WriteMessage(traceEvent, string.Concat(args));
+    public void WriteConcat(TraceEvent traceEvent, params object[] args)
+    {
+        WriteMessage(traceEvent, string.Concat(args));
+    }
 
-    public void WriteException(Exception x) => WriteException(x, string.Empty);
+    public void WriteException(Exception x)
+    {
+        WriteException(x, string.Empty);
+    }
 
     public void WriteException(Exception x, string additionalInfo)
     {
@@ -43,11 +49,20 @@ public sealed class TraceService
         WriteMessage(errorMessage);
     }
 
-    public void WriteFormat(TraceEvent traceEvent, string format, params object[] args) => WriteMessage(traceEvent, string.Format(format, args));
+    public void WriteFormat(TraceEvent traceEvent, string format, params object[] args)
+    {
+        WriteMessage(traceEvent, string.Format(format, args));
+    }
 
-    public void WriteMessage(string message) => Trace?.Invoke(new TraceEventArgs(message));
+    public void WriteMessage(string message)
+    {
+        Trace?.Invoke(new TraceEventArgs(message));
+    }
 
-    public void WriteMessage(TraceEvent traceEvent, string message) => WriteMessage(string.Concat(traceEvent.ToString().ToUpperInvariant(), ": ", message));
+    public void WriteMessage(TraceEvent traceEvent, string message)
+    {
+        WriteMessage(string.Concat(traceEvent.ToString().ToUpperInvariant(), ": ", message));
+    }
 }
 
 public sealed class TraceEventArgs : EventArgs

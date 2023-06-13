@@ -14,7 +14,10 @@ public class SharePointMigrationPlugin : IMigrationPlugin
 
     public IConnectionControl ConnectionControl => new SharePointConnectionControl();
 
-    public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new SharePointProvider(connectionDetails);
+    public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
+    {
+        return new SharePointProvider(connectionDetails);
+    }
 
     public ISettingsControl SettingsControl => null;
 

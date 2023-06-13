@@ -5,12 +5,14 @@ namespace DataMigrator.Controls;
 
 public class ToolsTreeView : TreeView
 {
-    private ImageList imageList = null;
+    private readonly ImageList imageList = null;
 
     public ToolsTreeView()
     {
-        imageList = new ImageList();
-        imageList.ImageSize = new Size(24, 24);
+        imageList = new ImageList
+        {
+            ImageSize = new Size(24, 24)
+        };
         imageList.Images.Add(Resources.TreeNode);
         this.ImageList = imageList;
     }

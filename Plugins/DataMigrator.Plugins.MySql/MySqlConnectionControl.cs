@@ -1,6 +1,5 @@
 ﻿using DataMigrator.Common;
 using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Data.Common;
 using Extenso.Windows.Forms;
@@ -23,39 +22,32 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     public string Server
     {
-        get { return txtServer.Text.Trim(); }
-        set { txtServer.Text = value; }
+        get => txtServer.Text.Trim();
+        set => txtServer.Text = value;
     }
 
     public int Port
     {
-        get
-        {
-            if (!string.IsNullOrEmpty(txtPort.Text))
-            {
-                return int.Parse(txtPort.Text.Trim());
-            }
-            return -1;
-        }
-        set { txtPort.Text = value.ToString(); }
+        get => !string.IsNullOrEmpty(txtPort.Text) ? int.Parse(txtPort.Text.Trim()) : -1;
+        set => txtPort.Text = value.ToString();
     }
 
     public string Database
     {
-        get { return txtDatabase.Text.Trim(); }
-        set { txtDatabase.Text = value; }
+        get => txtDatabase.Text.Trim();
+        set => txtDatabase.Text = value;
     }
 
     public string UserName
     {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
+        get => txtUserName.Text.Trim();
+        set => txtUserName.Text = value;
     }
 
     public string Password
     {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
+        get => txtPassword.Text.Trim();
+        set => txtPassword.Text = value;
     }
 
     public string ConnectionString
@@ -83,14 +75,9 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
             #endregion Checks
 
-            if (Port != -1)
-            {
-                return string.Format(MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT, Server, Port, Database, UserName, Password);
-            }
-            else
-            {
-                return string.Format(MYSQL_CONNECTION_STRING_FORMAT_STANDARD, Server, Database, UserName, Password);
-            }
+            return Port != -1
+                                    ? string.Format(MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT, Server, Port, Database, UserName, Password)
+                                    : string.Format(MYSQL_CONNECTION_STRING_FORMAT_STANDARD, Server, Database, UserName, Password);
         }
     }
 
@@ -98,22 +85,18 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     #region IConnectionControl Members
 
-    public UserControl ControlContent
-    {
-        get { return this; }
-    }
+    public UserControl ControlContent => this;
 
     public ConnectionDetails ConnectionDetails
     {
-        get
-        {
+        get =>
             //bool isValid = false;
             //using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             //{
             //    isValid = connection.Validate();
             //}
 
-            return new ConnectionDetails
+            new()
             {
                 Database = this.Database,
                 Password = this.Password,
@@ -124,7 +107,6 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
                 ProviderName = Constants.PROVIDER_NAME,
                 ConnectionString = this.ConnectionString
             };
-        }
         set
         {
             Database = value.Database;
@@ -137,10 +119,8 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     public bool ValidateConnection()
     {
-        using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-        {
-            return connection.Validate();
-        }
+        using var connection = new MySqlConnection(ConnectionString);
+        return connection.Validate();
     }
 
     #endregion IConnectionControl Members

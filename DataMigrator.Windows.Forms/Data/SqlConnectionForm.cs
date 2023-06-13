@@ -1,7 +1,7 @@
-﻿using System.Data.SqlClient;
-using Extenso.Collections;
+﻿using Extenso.Collections;
 using Extenso.Data.Common;
 using Extenso.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DataMigrator.Windows.Forms.Data;
 
@@ -17,7 +17,7 @@ public partial class SqlConnectionForm : Form
 
     public bool AllowTableSelection
     {
-        get { return cmbTable.Visible; }
+        get => cmbTable.Visible;
         set
         {
             lblTable.Visible = value;
@@ -64,14 +64,9 @@ public partial class SqlConnectionForm : Form
 
             #endregion Checks
 
-            if (IntegratedSecurity)
-            {
-                return string.Format(SQL_CONNECTION_STRING_FORMAT_WA, Server, Database);
-            }
-            else
-            {
-                return string.Format(SQL_CONNECTION_STRING_FORMAT, Server, Database, UserName, Password);
-            }
+            return IntegratedSecurity
+                ? string.Format(SQL_CONNECTION_STRING_FORMAT_WA, Server, Database)
+                : string.Format(SQL_CONNECTION_STRING_FORMAT, Server, Database, UserName, Password);
         }
     }
 
@@ -101,60 +96,48 @@ public partial class SqlConnectionForm : Form
 
     public bool IntegratedSecurity
     {
-        get { return rbUseWindowsAuthentication.Checked; }
-        set { rbUseWindowsAuthentication.Checked = value; }
+        get => rbUseWindowsAuthentication.Checked;
+        set => rbUseWindowsAuthentication.Checked = value;
     }
 
     public string Password
     {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
+        get => txtPassword.Text.Trim();
+        set => txtPassword.Text = value;
     }
 
     public string Server
     {
-        get
-        {
-            if (!string.IsNullOrWhiteSpace(txtServerName.Text))
-            {
-                return txtServerName.Text;
-            }
-            return string.Empty;
-        }
-        set
-        {
-            txtServerName.Text = value;
-        }
+        get => !string.IsNullOrWhiteSpace(txtServerName.Text) ? txtServerName.Text : string.Empty;
+        set => txtServerName.Text = value;
     }
 
     public string UserName
     {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
+        get => txtUserName.Text.Trim();
+        set => txtUserName.Text = value;
     }
 
     private void btnTestConnection_Click(object sender, EventArgs e)
     {
-        using (SqlConnection connection = new SqlConnection(ConnectionString))
+        using var connection = new SqlConnection(ConnectionString);
+        if (connection.Validate())
         {
-            if (connection.Validate())
-            {
-                MessageBox.Show(
-                    "Connected to Sql Server.",
-                    "Success!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                return;
-            }
-            else
-            {
-                MessageBox.Show(
-                    "Could not connect to Sql Server.",
-                    "Error!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return;
-            }
+            MessageBox.Show(
+                "Connected to Sql Server.",
+                "Success!",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+        else
+        {
+            MessageBox.Show(
+                "Could not connect to Sql Server.",
+                "Error!",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
         }
     }
 
@@ -163,10 +146,8 @@ public partial class SqlConnectionForm : Form
         if (!string.IsNullOrEmpty(Server))
         {
             cmbDatabase.Items.Clear();
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
-            }
+            using var connection = new SqlConnection(ConnectionString);
+            connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
         }
     }
 
@@ -178,11 +159,9 @@ public partial class SqlConnectionForm : Form
 
             if (AllowTableSelection)
             {
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    string databaseName = cmbDatabase.SelectedItem.ToString();
-                    connection.GetTableNames(databaseName).ForEach(x => cmbTable.Items.Add(x));
-                }
+                using var connection = new SqlConnection(ConnectionString);
+                string databaseName = cmbDatabase.SelectedItem.ToString();
+                connection.GetTableNames(databaseName).ForEach(x => cmbTable.Items.Add(x));
             }
         }
     }

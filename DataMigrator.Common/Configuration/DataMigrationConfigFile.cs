@@ -29,7 +29,7 @@ public class DataMigrationConfigFile
 
     public static DataMigrationConfigFile Load(string fileName)
     {
-        DataMigrationConfigFile configFile = new FileInfo(fileName).XmlDeserialize<DataMigrationConfigFile>();
+        var configFile = new FileInfo(fileName).XmlDeserialize<DataMigrationConfigFile>();
         configFile.FileName = fileName;
         return configFile;
     }
@@ -42,7 +42,7 @@ public class DataMigrationConfigFile
         }
         else
         {
-            using SaveFileDialog dlgSaveFile = new SaveFileDialog();
+            using var dlgSaveFile = new SaveFileDialog();
             dlgSaveFile.Filter = "Data Migrator Files|*.dmf";
             if (dlgSaveFile.ShowDialog() == DialogResult.OK)
             {

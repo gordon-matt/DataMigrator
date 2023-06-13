@@ -11,7 +11,7 @@ namespace DataMigrator.MySql;
 //TODO: Test! This class not yet tested.
 public class MySqlProvider : BaseProvider
 {
-    private MySqlDbTypeConverter typeConverter = new MySqlDbTypeConverter();
+    private readonly MySqlDbTypeConverter typeConverter = new();
 
     public override string DbProviderName => "MySql.Data.MySqlClient";
 
@@ -39,7 +39,10 @@ public class MySqlProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity) => throw new NotSupportedException();
+    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    {
+        throw new NotSupportedException();
+    }
 
     public override bool CreateField(string tableName, Field field)
     {
@@ -51,35 +54,33 @@ public class MySqlProvider : BaseProvider
             return false;
         }
 
-        using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
+        using var connection = new MySqlConnection(ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        string fieldType = GetDataProviderFieldType(field.Type);
+        string maxLength = string.Empty;
+        string characterSet = string.Empty;
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
         {
-            string fieldType = GetDataProviderFieldType(field.Type);
-            string maxLength = string.Empty;
-            string characterSet = string.Empty;
-            if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+            if (field.MaxLength > 0)
             {
-                if (field.MaxLength > 0)
-                {
-                    maxLength = string.Concat("(", field.MaxLength, ")");
-                }
-                //MySql does not have MAX keyword
-                characterSet = " CHARACTER SET utf8";
+                maxLength = string.Concat("(", field.MaxLength, ")");
             }
-            string isRequired = string.Empty;
-            if (field.IsRequired)
-            { isRequired = " NOT NULL"; }
-
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format(
-                "ALTER TABLE {0} ADD {1}",
-                EncloseIdentifier(tableName),
-                string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, characterSet, isRequired));
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-            return true;
+            //MySql does not have MAX keyword
+            characterSet = " CHARACTER SET utf8";
         }
+        string isRequired = string.Empty;
+        if (field.IsRequired)
+        { isRequired = " NOT NULL"; }
+
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(
+            "ALTER TABLE {0} ADD {1}",
+            EncloseIdentifier(tableName),
+            string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, characterSet, isRequired));
+        connection.Open();
+        command.ExecuteNonQuery();
+        connection.Close();
+        return true;
     }
 
     //public override void InsertRecords(string tableName, IEnumerable<Record> records)
@@ -145,5 +146,8 @@ public class MySqlProvider : BaseProvider
         return MySqlDbTypeConverter.GetMySqlDataTypeStringValue(mySqlType);
     }
 
-    protected override DbConnection CreateDbConnection(string providerName, string connectionString) => new MySqlConnection(connectionString);
+    protected override DbConnection CreateDbConnection(string providerName, string connectionString)
+    {
+        return new MySqlConnection(connectionString);
+    }
 }

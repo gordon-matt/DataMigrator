@@ -72,7 +72,7 @@ public static class Controller
                 buffer = new RecordCollection();
 
                 double percent = processedRecordCount / (double)recordCount;
-                percent = percent * 100;
+                percent *= 100;
                 backgroundWorker.ReportProgress((int)percent);
                 TraceService.Instance.WriteFormat(TraceEvent.Information, "{0}/{1} Records Processed", processedRecordCount, recordCount);
 

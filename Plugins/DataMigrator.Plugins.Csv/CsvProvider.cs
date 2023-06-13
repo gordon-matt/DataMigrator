@@ -28,7 +28,10 @@ public class CsvProvider : BaseProvider
         return true;
     }
 
-    public override bool CreateTable(string tableName) => throw new NotSupportedException();
+    public override bool CreateTable(string tableName)
+    {
+        throw new NotSupportedException();
+    }
 
     public override bool CreateTable(string tableName, IEnumerable<Field> fields)
     {
@@ -38,9 +41,15 @@ public class CsvProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity) => throw new NotSupportedException();
+    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    {
+        throw new NotSupportedException();
+    }
 
-    public override IEnumerable<string> GetFieldNames(string tableName) => ReadCsv().Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+    public override IEnumerable<string> GetFieldNames(string tableName)
+    {
+        return ReadCsv().Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+    }
 
     public override FieldCollection GetFields(string tableName)
     {
@@ -88,7 +97,7 @@ public class CsvProvider : BaseProvider
 
         records.ForEach(record =>
         {
-            DataRow row = table.NewRow();
+            var row = table.NewRow();
             record.Fields.ForEach(field =>
                 {
                     row[field.Name] = field.Value.ToString();
@@ -101,9 +110,15 @@ public class CsvProvider : BaseProvider
 
     public override IEnumerable<string> TableNames => new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) };
 
-    public override FieldType GetDataMigratorFieldType(string providerFieldType) => FieldType.String;
+    public override FieldType GetDataMigratorFieldType(string providerFieldType)
+    {
+        return FieldType.String;
+    }
 
-    public override string GetDataProviderFieldType(FieldType fieldType) => typeof(string).ToString();
+    public override string GetDataProviderFieldType(FieldType fieldType)
+    {
+        return typeof(string).ToString();
+    }
 
     private DataTable ReadCsv()
     {

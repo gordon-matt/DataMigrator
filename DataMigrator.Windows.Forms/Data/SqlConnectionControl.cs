@@ -1,8 +1,8 @@
-﻿using System.Data.SqlClient;
-using DataMigrator.Windows.Forms.Diagnostics;
+﻿using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Collections;
 using Extenso.Data.SqlClient;
 using Extenso.Windows.Forms;
+using Microsoft.Data.SqlClient;
 
 namespace DataMigrator.Windows.Forms.Data;
 
@@ -58,14 +58,9 @@ public partial class SqlConnectionControl : UserControl
 
             #endregion Checks
 
-            if (IntegratedSecurity)
-            {
-                return string.Format(SQL_CONNECTION_STRING_FORMAT_WA, Server, Database);
-            }
-            else
-            {
-                return string.Format(SQL_CONNECTION_STRING_FORMAT, Server, Database, UserName, Password);
-            }
+            return IntegratedSecurity
+                ? string.Format(SQL_CONNECTION_STRING_FORMAT_WA, Server, Database)
+                : string.Format(SQL_CONNECTION_STRING_FORMAT, Server, Database, UserName, Password);
         }
     }
 
@@ -95,53 +90,36 @@ public partial class SqlConnectionControl : UserControl
 
     public bool IntegratedSecurity
     {
-        get { return cbIntegratedSecurity.Checked; }
-        set { cbIntegratedSecurity.Checked = value; }
+        get => cbIntegratedSecurity.Checked;
+        set => cbIntegratedSecurity.Checked = value;
     }
 
     public string Password
     {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
+        get => txtPassword.Text.Trim();
+        set => txtPassword.Text = value;
     }
 
     public string Server
     {
-        get
-        {
-            if (!string.IsNullOrWhiteSpace(txtServerName.Text))
-            {
-                return txtServerName.Text;
-            }
-            return string.Empty;
-        }
-        set
-        {
-            txtServerName.Text = value;
-        }
+        get => !string.IsNullOrWhiteSpace(txtServerName.Text) ? txtServerName.Text : string.Empty;
+        set => txtServerName.Text = value;
     }
 
     public bool ShowTable { get; set; }
 
     public string Table
     {
-        get
-        {
-            if (cmbTable.SelectedIndex != -1)
-            {
-                return cmbTable.SelectedItem.ToString();
-            }
-            return string.Empty;
-        }
-        set { cmbTable.SelectedItem = value; }
+        get => cmbTable.SelectedIndex != -1 ? cmbTable.SelectedItem.ToString() : string.Empty;
+        set => cmbTable.SelectedItem = value;
     }
 
     public IEnumerable<string> Tables { get; set; }
 
     public string UserName
     {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
+        get => txtUserName.Text.Trim();
+        set => txtUserName.Text = value;
     }
 
     //private void cmbServer_SelectedIndexChanged(object sender, EventArgs e)
@@ -165,22 +143,18 @@ public partial class SqlConnectionControl : UserControl
         if (!string.IsNullOrEmpty(Server))
         {
             cmbDatabase.Items.Clear();
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
-            {
-                connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
-            }
+            using var connection = new SqlConnection(ConnectionString);
+            connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
         }
     }
 
     private void cmbDatabase_SelectedIndexChanged(object sender, EventArgs e)
     {
         cmbTable.Items.Clear();
-        using (SqlConnection connection = new SqlConnection(ConnectionString))
-        {
-            Tables = connection.GetTableNames();
-            Tables.ForEach(x => cmbTable.Items.Add(x));
+        using var connection = new SqlConnection(ConnectionString);
+        Tables = connection.GetTableNames();
+        Tables.ForEach(x => cmbTable.Items.Add(x));
 
-            DatabaseChanged?.Invoke();
-        }
+        DatabaseChanged?.Invoke();
     }
 }

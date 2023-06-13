@@ -14,7 +14,10 @@ public class CsvMigrationPlugin : IMigrationPlugin
 
     public IConnectionControl ConnectionControl => new CsvConnectionControl();
 
-    public BaseProvider GetDataProvider(ConnectionDetails connectionDetails) => new CsvProvider(connectionDetails);
+    public BaseProvider GetDataProvider(ConnectionDetails connectionDetails)
+    {
+        return new CsvProvider(connectionDetails);
+    }
 
     public ISettingsControl SettingsControl => null;
 

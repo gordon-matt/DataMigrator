@@ -7,9 +7,9 @@ namespace DataMigrator.Common.Data;
 
 public class SystemTypeConverter : IFieldTypeConverter<Type>
 {
-    private static TupleList<Type, FieldType> netTypes = new TupleList<Type, FieldType>();
-    private static TupleList<DbType, FieldType> dbTypes = new TupleList<DbType, FieldType>();
-    private static TupleList<FieldType, Type> fieldTypes = new TupleList<FieldType, Type>();
+    private static readonly TupleList<Type, FieldType> netTypes = new();
+    private static readonly TupleList<DbType, FieldType> dbTypes = new();
+    private static readonly TupleList<FieldType, Type> fieldTypes = new();
 
     static SystemTypeConverter()
     {

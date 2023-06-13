@@ -13,7 +13,7 @@ namespace DataMigrator.Plugins.Npgsql;
 
 public class NpgsqlProvider : BaseProvider
 {
-    private NpgsqlDbTypeConverter typeConverter = new NpgsqlDbTypeConverter();
+    private readonly NpgsqlDbTypeConverter typeConverter = new();
 
     public override string DbProviderName => "Npgsql";
 
@@ -50,7 +50,10 @@ public class NpgsqlProvider : BaseProvider
         }
     }
 
-    protected override DbConnection CreateDbConnection(string providerName, string connectionString) => new NpgsqlConnection(connectionString);
+    protected override DbConnection CreateDbConnection(string providerName, string connectionString)
+    {
+        return new NpgsqlConnection(connectionString);
+    }
 
     public override bool CreateTable(string tableName)
     {
@@ -70,7 +73,10 @@ public class NpgsqlProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity) => throw new NotSupportedException();
+    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    {
+        throw new NotSupportedException();
+    }
 
     public override bool CreateField(string tableName, Field field)
     {
@@ -82,37 +88,35 @@ public class NpgsqlProvider : BaseProvider
             return false;
         }
 
-        using (var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
+        using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        string fieldType = GetDataProviderFieldType(field.Type);
+        string maxLength = string.Empty;
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
         {
-            string fieldType = GetDataProviderFieldType(field.Type);
-            string maxLength = string.Empty;
-            if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+            if (field.MaxLength > 0)
             {
-                if (field.MaxLength > 0)
-                {
-                    maxLength = string.Concat("(", field.MaxLength, ")");
-                }
-                else
-                {
-                    fieldType = "text";
-                }
+                maxLength = string.Concat("(", field.MaxLength, ")");
             }
-            string isRequired = string.Empty;
-            if (field.IsRequired)
-            { isRequired = " NOT NULL"; }
-
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format(
-                @"ALTER TABLE {0}.""{1}"" ADD {2}",
-                Schema,
-                tableName,
-                string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, isRequired));
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-            return true;
+            else
+            {
+                fieldType = "text";
+            }
         }
+        string isRequired = string.Empty;
+        if (field.IsRequired)
+        { isRequired = " NOT NULL"; }
+
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(
+            @"ALTER TABLE {0}.""{1}"" ADD {2}",
+            Schema,
+            tableName,
+            string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, isRequired));
+        connection.Open();
+        command.ExecuteNonQuery();
+        connection.Close();
+        return true;
     }
 
     public override int GetRecordCount(string tableName)
@@ -134,36 +138,34 @@ public class NpgsqlProvider : BaseProvider
         sb.Append('.');
         sb.Append(EncloseIdentifier(tableName));
 
-        using (var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandType = CommandType.Text;
-            command.CommandText = sb.ToString();
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = sb.ToString();
 
-            connection.Open();
-            using (var reader = command.ExecuteReader())
+        connection.Open();
+        using (var reader = command.ExecuteReader())
+        {
+            while (reader.Read())
             {
-                while (reader.Read())
+                var record = new Record();
+                record.Fields.AddRange(fields);
+                fields.ForEach(f =>
                 {
-                    var record = new Record();
-                    record.Fields.AddRange(fields);
-                    fields.ForEach(f =>
-                    {
-                        var value = reader[f.Name];
-                        //if (f.Type.In(FieldType.Date, FieldType.DateTime, FieldType.DateTimeOffset, FieldType.Time, FieldType.Timestamp))
-                        //{
-                        //    if (value.ToString() == string.Empty)
-                        //    {
-                        //        value = DBNull.Value;
-                        //    }
-                        //}
-                        record[f.Name].Value = value;
-                    });
-                    yield return record;
-                }
+                    object value = reader[f.Name];
+                    //if (f.Type.In(FieldType.Date, FieldType.DateTime, FieldType.DateTimeOffset, FieldType.Time, FieldType.Timestamp))
+                    //{
+                    //    if (value.ToString() == string.Empty)
+                    //    {
+                    //        value = DBNull.Value;
+                    //    }
+                    //}
+                    record[f.Name].Value = value;
+                });
+                yield return record;
             }
-            connection.Close();
         }
+        connection.Close();
     }
 
     public override void InsertRecords(string tableName, IEnumerable<Record> records)

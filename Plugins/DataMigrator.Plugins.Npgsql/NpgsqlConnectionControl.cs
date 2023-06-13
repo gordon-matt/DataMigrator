@@ -1,6 +1,5 @@
 ﻿using DataMigrator.Common;
 using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms;
 using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Data.Common;
 using Extenso.Windows.Forms;
@@ -16,45 +15,38 @@ public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
 
     public string Server
     {
-        get { return txtServer.Text.Trim(); }
-        set { txtServer.Text = value; }
+        get => txtServer.Text.Trim();
+        set => txtServer.Text = value;
     }
 
     public int Port
     {
-        get
-        {
-            if (!string.IsNullOrEmpty(txtPort.Text))
-            {
-                return int.Parse(txtPort.Text.Trim());
-            }
-            return -1;
-        }
-        set { txtPort.Text = value.ToString(); }
+        get => !string.IsNullOrEmpty(txtPort.Text) ? int.Parse(txtPort.Text.Trim()) : -1;
+        set => txtPort.Text = value.ToString();
     }
 
     public string Database
     {
-        get { return txtDatabase.Text.Trim(); }
-        set { txtDatabase.Text = value; }
+        get => txtDatabase.Text.Trim();
+        set => txtDatabase.Text = value;
     }
 
     public string UserName
     {
-        get { return txtUserName.Text.Trim(); }
-        set { txtUserName.Text = value; }
+        get => txtUserName.Text.Trim();
+        set => txtUserName.Text = value;
     }
 
     public string Password
     {
-        get { return txtPassword.Text.Trim(); }
-        set { txtPassword.Text = value; }
+        get => txtPassword.Text.Trim();
+        set => txtPassword.Text = value;
     }
 
     public string Schema
     {
-        get { return txtSchema.Text.Trim(); }
-        set { txtSchema.Text = value; }
+        get => txtSchema.Text.Trim();
+        set => txtSchema.Text = value;
     }
 
     public string ConnectionString
@@ -129,10 +121,8 @@ public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
 
     public bool ValidateConnection()
     {
-        using (var connection = new NpgsqlConnection(ConnectionString))
-        {
-            return connection.Validate();
-        }
+        using var connection = new NpgsqlConnection(ConnectionString);
+        return connection.Validate();
     }
 
     #endregion IConnectionControl Members
