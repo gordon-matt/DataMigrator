@@ -7,8 +7,8 @@ namespace DataMigrator.Windows.Forms.Data;
 
 public partial class SqlConnectionForm : Form
 {
-    private const string SQL_CONNECTION_STRING_FORMAT = "Data Source={0};Initial Catalog={1};User={2}Password={3}";
-    private const string SQL_CONNECTION_STRING_FORMAT_WA = "Data Source={0};Initial Catalog={1};Integrated Security=true";
+    private const string SQL_CONNECTION_STRING_FORMAT = "Data Source={0};Initial Catalog={1};User={2}Password={3};TrustServerCertificate=True";
+    private const string SQL_CONNECTION_STRING_FORMAT_WA = "Data Source={0};Initial Catalog={1};Integrated Security=true;TrustServerCertificate=True";
 
     public SqlConnectionForm()
     {
