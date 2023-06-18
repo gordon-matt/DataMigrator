@@ -33,12 +33,7 @@ public class ConnectionDetails
 
     [XmlArray("ExtendedProperties")]
     [XmlArrayItem("Property")]
-    public ExtendedPropertyCollection ExtendedProperties { get; set; }
-
-    public ConnectionDetails()
-    {
-        ExtendedProperties = new ExtendedPropertyCollection();
-    }
+    public ExtendedPropertyCollection ExtendedProperties { get; set; } = new ExtendedPropertyCollection();
 }
 
 public class ExtendedProperty

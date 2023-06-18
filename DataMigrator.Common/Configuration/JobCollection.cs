@@ -1,8 +1,6 @@
-﻿using DataMigrator.Common.Collections;
+﻿namespace DataMigrator.Common.Configuration;
 
-namespace DataMigrator.Common.Configuration;
-
-public class JobCollection : StandardList<Job>
+public class JobCollection : List<Job>
 {
     public Job this[string name] => this.SingleOrDefault(j => j.Name == name);
 

@@ -29,7 +29,7 @@ public class Field : ICloneable
     public int Ordinal { get; set; }
 
     [XmlAttribute]
-    public FieldType Type { get; set; }
+    public FieldType Type { get; set; } = FieldType.String;
 
     [XmlIgnore]
     [Browsable(false)]
@@ -38,19 +38,16 @@ public class Field : ICloneable
     [XmlIgnore]
     [Browsable(false)]
     public bool IsNumeric =>
-            //TODO: Test
-            Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
-                FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single,
-                FieldType.UInt16, FieldType.UInt32, FieldType.UInt64);
+        Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
+            FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single,
+            FieldType.UInt16, FieldType.UInt32, FieldType.UInt64);
 
     public Field()
     {
-        Type = FieldType.String;
     }
 
     public Field(string name, object value)
     {
-        Type = FieldType.String;
         Name = name;
         Value = value;
     }

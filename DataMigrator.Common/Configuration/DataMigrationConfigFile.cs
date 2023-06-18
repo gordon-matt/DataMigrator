@@ -8,7 +8,7 @@ namespace DataMigrator.Common.Configuration;
 public class DataMigrationConfigFile
 {
     [XmlAttribute]
-    public int BatchSize { get; set; }
+    public int BatchSize { get; set; } = 10000;
 
     public ConnectionDetails SourceConnection { get; set; }
 
@@ -19,13 +19,7 @@ public class DataMigrationConfigFile
 
     [XmlArray]
     [XmlArrayItem("Job")]
-    public JobCollection Jobs { get; set; }
-
-    public DataMigrationConfigFile()
-    {
-        Jobs = new JobCollection();
-        BatchSize = 10000;
-    }
+    public JobCollection Jobs { get; set; } = new JobCollection();
 
     public static DataMigrationConfigFile Load(string fileName)
     {
@@ -38,7 +32,7 @@ public class DataMigrationConfigFile
     {
         if (!string.IsNullOrEmpty(FileName))
         {
-            this.SaveAs(FileName);
+            SaveAs(FileName);
         }
         else
         {
@@ -46,7 +40,7 @@ public class DataMigrationConfigFile
             dlgSaveFile.Filter = "Data Migrator Files|*.dmf";
             if (dlgSaveFile.ShowDialog() == DialogResult.OK)
             {
-                this.SaveAs(dlgSaveFile.FileName);
+                SaveAs(dlgSaveFile.FileName);
             }
         }
     }
@@ -54,6 +48,6 @@ public class DataMigrationConfigFile
     public void SaveAs(string fileName)
     {
         this.XmlSerialize(fileName);
-        this.FileName = fileName;
+        FileName = fileName;
     }
 }

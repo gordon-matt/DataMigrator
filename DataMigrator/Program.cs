@@ -8,7 +8,7 @@ internal static class Program
 {
     public static IEnumerable<IMigrationPlugin> Plugins { get; set; }
 
-    public static DataMigrationConfigFile Configuration { get; set; }
+    public static DataMigrationConfigFile Configuration { get; set; } = new DataMigrationConfigFile();
 
     public static Job CurrentJob { get; set; }
 

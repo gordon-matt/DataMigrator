@@ -4,29 +4,15 @@ namespace DataMigrator.Common.Models;
 
 public class Record : ICloneable
 {
-    public FieldCollection Fields { get; set; }
+    public FieldCollection Fields { get; set; } = new FieldCollection();
 
     public Field this[string name] => Fields.SingleOrDefault(f => f.Name == name);
 
-    public Record()
-    {
-        Fields = new FieldCollection();
-    }
-
     #region ICloneable Members
 
-    public Record Clone()
-    {
-        return new Record
-        {
-            Fields = new FieldCollection(this.Fields)
-        };
-    }
+    public Record Clone() => new() { Fields = new FieldCollection(Fields) };
 
-    object ICloneable.Clone()
-    {
-        return Clone();
-    }
+    object ICloneable.Clone() => Clone();
 
     #endregion ICloneable Members
 
@@ -59,8 +45,5 @@ public class Record : ICloneable
         }
     }
 
-    public override string ToString()
-    {
-        return string.Concat("Fields: ", Fields.Count);
-    }
+    public override string ToString() => $"Fields: {Fields.Count}";
 }

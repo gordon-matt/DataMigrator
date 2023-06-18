@@ -103,8 +103,5 @@ public partial class RunJobsForm : KryptonForm
         btnCancel.Enabled = false;
     }
 
-    private void btnCancel_Click(object sender, EventArgs e)
-    {
-        backgroundWorker.CancelAsync();
-    }
+    private void btnCancel_Click(object sender, EventArgs e) => backgroundWorker.CancelAsync();
 }
