@@ -20,10 +20,7 @@ public partial class DataMigratorSettingsControl : UserControl, ISettingsControl
 
     public UserControl ControlContent => this;
 
-    public void Save()
-    {
-        Program.Configuration.BatchSize = this.BatchSize;
-    }
+    public void Save() => Program.Configuration.BatchSize = this.BatchSize;
 
     #endregion ISettingsControl Members
 }

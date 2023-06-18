@@ -28,15 +28,9 @@ public partial class ToolsForm : KryptonForm
         }
     }
 
-    private void btnOK_Click(object sender, EventArgs e)
-    {
-        this.Close();
-    }
+    private void btnOK_Click(object sender, EventArgs e) => Close();
 
-    private void btnCancel_Click(object sender, EventArgs e)
-    {
-        this.Close();
-    }
+    private void btnCancel_Click(object sender, EventArgs e) => Close();
 
     private void toolsTreeView_AfterSelect(object sender, TreeViewEventArgs e)
     {

@@ -19,9 +19,9 @@ public abstract class BaseProvider
     /// <summary>
     /// Used in T-SQL queries for escaping spaces and reserved words
     /// </summary>
-    protected virtual string EscapeIdentifierStart { get; set; }
+    protected virtual string EscapeIdentifierStart { get; set; } = "[";
 
-    protected virtual string EscapeIdentifierEnd { get; set; }
+    protected virtual string EscapeIdentifierEnd { get; set; } = "]";
 
     #endregion Public Properties
 
@@ -34,11 +34,7 @@ public abstract class BaseProvider
 
     public BaseProvider(ConnectionDetails connectionDetails)
     {
-        this.ConnectionDetails = connectionDetails;
-        EscapeIdentifierStart = "[";
-        EscapeIdentifierEnd = "]";
-        //MaxTextFieldLength = "MAX";
-        //MaxRichTextFieldLength = "MAX";
+        ConnectionDetails = connectionDetails;
     }
 
     #endregion Constructor

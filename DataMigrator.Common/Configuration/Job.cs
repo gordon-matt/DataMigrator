@@ -14,10 +14,5 @@ public class Job
     [XmlAttribute]
     public string DestinationTable { get; set; }
 
-    public List<FieldMapping> FieldMappings { get; set; }
-
-    public Job()
-    {
-        FieldMappings = new List<FieldMapping>();
-    }
+    public List<FieldMapping> FieldMappings { get; set; } = new List<FieldMapping>();
 }

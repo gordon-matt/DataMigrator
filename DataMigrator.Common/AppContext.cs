@@ -6,6 +6,10 @@ public static class AppContext
 {
     private static DbTypeConverter dbTypeConverter = null;
 
+    private static SqlDbTypeConverter sqlDbTypeConverter = null;
+
+    private static SystemTypeConverter systemTypeConverter = null;
+
     public static DbTypeConverter DbTypeConverter
     {
         get
@@ -15,8 +19,6 @@ public static class AppContext
         }
     }
 
-    private static SqlDbTypeConverter sqlDbTypeConverter = null;
-
     public static SqlDbTypeConverter SqlDbTypeConverter
     {
         get
@@ -25,8 +27,6 @@ public static class AppContext
             return sqlDbTypeConverter;
         }
     }
-
-    private static SystemTypeConverter systemTypeConverter = null;
 
     public static SystemTypeConverter SystemTypeConverter
     {

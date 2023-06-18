@@ -19,13 +19,7 @@ public partial class InputDialog : Form
         set => txtInput.Text = value;
     }
 
-    private void btnCancel_Click(object sender, EventArgs e)
-    {
-        Close();
-    }
+    private void btnCancel_Click(object sender, EventArgs e) => Close();
 
-    private void btnOK_Click(object sender, EventArgs e)
-    {
-        Close();
-    }
+    private void btnOK_Click(object sender, EventArgs e) => Close();
 }

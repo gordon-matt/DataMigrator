@@ -19,34 +19,4 @@ public class RecordCollection : List<Record>
             record.ReMapFields(fieldToReMap);
         }
     }
-
-    public DataTable ToDataTable()
-    {
-        var table = new DataTable();
-
-        if (Count == 0)
-        {
-            return table;
-        }
-
-        var record1 = this[0];
-        record1.Fields.ForEach(field =>
-        {
-            table.Columns.Add(
-                field.Name,
-                AppContext.SystemTypeConverter.GetDataProviderFieldType(field.Type));
-        });
-
-        ForEach(record =>
-        {
-            var row = table.NewRow();
-            record.Fields.ForEach(field =>
-            {
-                row[field.Name] = field.Value;
-            });
-            table.Rows.Add(row);
-        });
-
-        return table;
-    }
 }

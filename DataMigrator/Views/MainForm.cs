@@ -85,7 +85,7 @@ public partial class MainForm : KryptonForm
         return dialogResult;
     }
 
-    private T LoadUserControl<T>() where T : UserControl
+    private void LoadUserControl<T>() where T : UserControl
     {
         //SaveCurrentControl();
         var control = Activator.CreateInstance<T>();
@@ -98,15 +98,20 @@ public partial class MainForm : KryptonForm
             this.Height = this.Height - panelMain.Height + control.MinimumSize.Height;
         }
 
+        if (currentControl != traceViewer)
+        {
+            currentControl?.Dispose();
+        }
+
         currentControl = control;
         mnuMainToolsShowTraceViewer.Checked = false;
-        return control;
     }
 
     private void NewFile()
     {
         CheckSaveChanges();
         Program.Configuration = new DataMigrationConfigFile();
+        panelMain.Controls.Clear();
         treeView.Reset();
         HideTraceViewer();
     }
@@ -120,6 +125,7 @@ public partial class MainForm : KryptonForm
         if (dlgOpenFile.ShowDialog() == DialogResult.OK)
         {
             Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
+            panelMain.Controls.Clear();
             treeView.Reset();
             foreach (var job in Program.Configuration.Jobs.OrderBy(j => j.Name))
             {
@@ -176,15 +182,9 @@ public partial class MainForm : KryptonForm
 
     #region Control Event Handlers
 
-    private void btnNew_Click(object sender, EventArgs e)
-    {
-        NewFile();
-    }
+    private void btnNew_Click(object sender, EventArgs e) => NewFile();
 
-    private void btnOpen_Click(object sender, EventArgs e)
-    {
-        OpenFile();
-    }
+    private void btnOpen_Click(object sender, EventArgs e) => OpenFile();
 
     private void btnRun_Click(object sender, EventArgs e)
     {
@@ -194,10 +194,7 @@ public partial class MainForm : KryptonForm
         form.ShowDialog();
     }
 
-    private void btnSave_Click(object sender, EventArgs e)
-    {
-        SaveFile();
-    }
+    private void btnSave_Click(object sender, EventArgs e) => SaveFile();
 
     private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
     {
@@ -229,25 +226,13 @@ public partial class MainForm : KryptonForm
 
     #region Main Menu
 
-    private void mnuMainFileExit_Click(object sender, EventArgs e)
-    {
-        this.Close();
-    }
+    private void mnuMainFileExit_Click(object sender, EventArgs e) => Close();
 
-    private void mnuMainFileNew_Click(object sender, EventArgs e)
-    {
-        NewFile();
-    }
+    private void mnuMainFileNew_Click(object sender, EventArgs e) => NewFile();
 
-    private void mnuMainFileOpen_Click(object sender, EventArgs e)
-    {
-        OpenFile();
-    }
+    private void mnuMainFileOpen_Click(object sender, EventArgs e) => OpenFile();
 
-    private void mnuMainFileSave_Click(object sender, EventArgs e)
-    {
-        SaveFile();
-    }
+    private void mnuMainFileSave_Click(object sender, EventArgs e) => SaveFile();
 
     private void mnuMainFileSaveAs_Click(object sender, EventArgs e)
     {
