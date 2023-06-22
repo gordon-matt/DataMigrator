@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Data.Common;
-using System.Reflection;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using Extenso;
@@ -34,14 +33,14 @@ public class SqlProvider : BaseProvider
         return AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
     }
 
-    public override void InsertRecords(string tableName, IEnumerable<Record> records)
+    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         connection.Open();
         var table = records.ToDataTable();
 
         using var bulkCopy = new SqlBulkCopy(connection as SqlConnection);
-        bulkCopy.DestinationTableName = tableName;
+        bulkCopy.DestinationTableName = GetFullTableName(tableName, schemaName);
 
         foreach (DataColumn column in table.Columns)
         {

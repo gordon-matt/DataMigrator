@@ -44,11 +44,14 @@ public static class Controller
         var sourceFields = job.FieldMappings.Select(f => f.SourceField);
         var destinationFields = job.FieldMappings.Select(f => f.DestinationField);
 
-        int recordCount = sourceProvider.GetRecordCount(job.SourceTable);
+        string sourceSchema = job.SourceTable.Contains('.') ? job.SourceTable.LeftOf('.') : string.Empty;
+        string sourceTable = job.SourceTable.Contains('.') ? job.SourceTable.RightOf('.') : job.SourceTable;
+
+        int recordCount = sourceProvider.GetRecordCount(sourceTable, sourceSchema);
 
         var buffer = new RecordCollection();
         int processedRecordCount = 0;
-        var recordsEnumerator = sourceProvider.GetRecordsEnumerator(job.SourceTable, sourceFields);
+        var recordsEnumerator = sourceProvider.GetRecordsEnumerator(sourceTable, sourceSchema, sourceFields);
 
         while (recordsEnumerator.MoveNext())
         {
@@ -68,7 +71,10 @@ public static class Controller
                 //  Create an ITransformerPlugin and let users assign them to columns
                 //  Then run them here on each record in `buffer`.
 
-                destinationProvider.InsertRecords(job.DestinationTable, buffer);
+                string destinationSchema = job.DestinationTable.Contains('.') ? job.DestinationTable.LeftOf('.') : string.Empty;
+                string destinationTable = job.DestinationTable.Contains('.') ? job.DestinationTable.RightOf('.') : job.DestinationTable;
+
+                destinationProvider.InsertRecords(destinationTable, destinationSchema, buffer);
                 buffer = new RecordCollection();
 
                 double percent = processedRecordCount / (double)recordCount;
@@ -87,6 +93,9 @@ public static class Controller
         var sourceProvider = GetProvider(Program.Configuration.SourceConnection);
         var destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
 
-        return destinationProvider.CreateTable(tableName, sourceProvider.GetFields(tableName));
+        string schemaName = tableName.Contains('.') ? tableName.LeftOf('.') : string.Empty;
+        string tableNameWithoutSchema = tableName.Contains('.') ? tableName.RightOf('.') : tableName;
+
+        return destinationProvider.CreateTable(tableNameWithoutSchema, schemaName, sourceProvider.GetFields(tableNameWithoutSchema, schemaName));
     }
 }

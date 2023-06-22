@@ -56,12 +56,12 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override bool CreateTable(string tableName)
+    public override bool CreateTable(string tableName, string schemaName)
     {
-        return CreateTable(tableName, null);
+        return CreateTable(tableName, schemaName, null);
     }
 
-    public override bool CreateTable(string tableName, IEnumerable<Field> fields)
+    public override bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         try
         {
@@ -71,7 +71,7 @@ public class SharePointProvider : BaseProvider
             // Create a list.
             var listCreationInfo = new SP.ListCreationInformation
             {
-                Title = tableName,
+                Title = GetFullTableName(tableName, schemaName),
                 TemplateType = (int)SP.ListTemplateType.GenericList,
                 QuickLaunchOption = SP.QuickLaunchOptions.On
             };
@@ -83,7 +83,7 @@ public class SharePointProvider : BaseProvider
             {
                 fields.ForEach(field =>
                 {
-                    CreateField(tableName, field);
+                    CreateField(tableName, schemaName, field);
                 });
             }
 
@@ -96,12 +96,14 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override bool CreateField(string tableName, Field field)
+    public override bool CreateField(string tableName, string schemaName, Field field)
     {
-        var existingFieldNames = GetFieldNames(tableName);
+        string fullTableName = GetFullTableName(tableName, schemaName);
+
+        var existingFieldNames = GetFieldNames(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
-            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the list, {1}", field.Name, tableName);
+            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the list, {1}", field.Name, fullTableName);
             //throw new ArgumentException("etc");
             return false;
         }
@@ -110,7 +112,7 @@ public class SharePointProvider : BaseProvider
         {
             using var context = GetClientContext(ConnectionDetails);
             var site = context.Web;
-            var list = context.Web.Lists.GetByTitle(tableName);
+            var list = context.Web.Lists.GetByTitle(fullTableName);
 
             var spField = list.Fields.Add(field.Name, typeConverter.GetDataProviderFieldType(field.Type), true);
             list.Update();
@@ -124,13 +126,13 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override IEnumerable<string> GetFieldNames(string tableName)
+    public override IEnumerable<string> GetFieldNames(string tableName, string schemaName)
     {
         var spFieldNames = new List<string>();
         using (var context = GetClientContext(ConnectionDetails))
         {
             var site = context.Web;
-            var list = context.Web.Lists.GetByTitle(tableName);
+            var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
             var fields = context.LoadQuery(list.Fields);
             context.ExecuteQuery();
 
@@ -145,13 +147,13 @@ public class SharePointProvider : BaseProvider
         return spFieldNames;
     }
 
-    public override FieldCollection GetFields(string tableName)
+    public override FieldCollection GetFields(string tableName, string schemaName)
     {
         var fields = new FieldCollection();
         using (var context = GetClientContext(ConnectionDetails))
         {
             var site = context.Web;
-            var list = context.Web.Lists.GetByTitle(tableName);
+            var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
             var spFields = context.LoadQuery(list.Fields);
             context.ExecuteQuery();
 
@@ -180,11 +182,11 @@ public class SharePointProvider : BaseProvider
         return fields;
     }
 
-    public override int GetRecordCount(string tableName)
+    public override int GetRecordCount(string tableName, string schemaName)
     {
         using var context = GetClientContext(ConnectionDetails);
         var site = context.Web;
-        var list = context.Web.Lists.GetByTitle(tableName);
+        var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
         var camlQuery = new SP.CamlQuery
         {
             // retrieve only one field, to make the query as small and quick as possible.
@@ -196,23 +198,23 @@ public class SharePointProvider : BaseProvider
         return listItems.Count;
     }
 
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName)
+    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName)
     {
-        return GetRecordsEnumeratorInternal(tableName, GetFields(tableName));
+        return GetRecordsEnumeratorInternal(tableName, schemaName, GetFields(tableName, schemaName));
     }
 
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
+    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        return GetRecordsEnumeratorInternal(tableName, fields);
+        return GetRecordsEnumeratorInternal(tableName, schemaName, fields);
     }
 
-    public override void InsertRecords(string tableName, IEnumerable<Record> records)
+    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {
         //ProcessBatchData not available in Client OM. Maybe can use custom solution similar to base class ADO.NET version
         //But first need to test - maybe this is already fast enough
         using var context = GetClientContext(ConnectionDetails);
         var site = context.Web;
-        var list = context.Web.Lists.GetByTitle(tableName);
+        var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
         var itemCreateInfo = new SP.ListItemCreationInformation();
 
         records.ForEach(record =>
@@ -245,11 +247,11 @@ public class SharePointProvider : BaseProvider
         context.ExecuteQuery();
     }
 
-    private IEnumerator<Record> GetRecordsEnumeratorInternal(string tableName, IEnumerable<Field> fields)
+    private IEnumerator<Record> GetRecordsEnumeratorInternal(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         using var context = GetClientContext(ConnectionDetails);
         var site = context.Web;
-        var list = context.Web.Lists.GetByTitle(tableName);
+        var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
         var spFields = context.LoadQuery(list.Fields);
 
         const string FIELD_REF_FORMAT = "<FieldRef Name='{0}'/>";
@@ -296,4 +298,7 @@ public class SharePointProvider : BaseProvider
     {
         return typeConverter.GetDataProviderFieldType(fieldType).ToString();
     }
+
+    protected override string GetFullTableName(string tableName, string schemaName) =>
+        !string.IsNullOrEmpty(schemaName) ? $"{schemaName}_{tableName}" : tableName;
 }

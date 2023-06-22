@@ -7,7 +7,7 @@ namespace DataMigrator.Common.Data;
 public class SystemTypeConverter : IFieldTypeConverter<Type>
 {
     private static readonly List<(Type SystemType, FieldType FieldType)> netTypes = new();
-    private static readonly List<(DbType DbType, FieldType FieldType)> dbTypes = new();
+    //private static readonly List<(DbType DbType, FieldType FieldType)> dbTypes = new();
     private static readonly List<(FieldType FieldType, Type SystemType)> fieldTypes = new();
 
     static SystemTypeConverter()
@@ -22,7 +22,7 @@ public class SystemTypeConverter : IFieldTypeConverter<Type>
         fieldTypes.Add((FieldType.Choice, typeof(string)));
         fieldTypes.Add((FieldType.Calculated, typeof(string)));
         fieldTypes.Add((FieldType.Currency, typeof(decimal)));
-        fieldTypes.Add((FieldType.Date, typeof(DateTime)));
+        fieldTypes.Add((FieldType.Date, typeof(DateOnly)));
         fieldTypes.Add((FieldType.DateTime, typeof(DateTime)));
         fieldTypes.Add((FieldType.DateTimeOffset, typeof(DateTimeOffset)));
         fieldTypes.Add((FieldType.Decimal, typeof(decimal)));
@@ -41,7 +41,7 @@ public class SystemTypeConverter : IFieldTypeConverter<Type>
         fieldTypes.Add((FieldType.SByte, typeof(sbyte)));
         fieldTypes.Add((FieldType.Single, typeof(float)));
         fieldTypes.Add((FieldType.String, typeof(string)));
-        fieldTypes.Add((FieldType.Time, typeof(TimeSpan)));
+        fieldTypes.Add((FieldType.Time, typeof(TimeOnly)));
         fieldTypes.Add((FieldType.Timestamp, typeof(byte[])));
         fieldTypes.Add((FieldType.UInt16, typeof(ushort)));
         fieldTypes.Add((FieldType.UInt32, typeof(uint)));
@@ -62,13 +62,14 @@ public class SystemTypeConverter : IFieldTypeConverter<Type>
         netTypes.Add((typeof(long), FieldType.Int64));
         netTypes.Add((typeof(decimal), FieldType.Decimal));
         netTypes.Add((typeof(double), FieldType.Double));
+        netTypes.Add((typeof(DateOnly), FieldType.Date));
         netTypes.Add((typeof(DateTime), FieldType.DateTime));
         netTypes.Add((typeof(DateTimeOffset), FieldType.DateTimeOffset));
         netTypes.Add((typeof(Guid), FieldType.Guid));
         netTypes.Add((typeof(float), FieldType.Single));
         netTypes.Add((typeof(string), FieldType.String));
         netTypes.Add((typeof(sbyte), FieldType.SByte));
-        netTypes.Add((typeof(TimeSpan), FieldType.Time));
+        netTypes.Add((typeof(TimeOnly), FieldType.Time));
         netTypes.Add((typeof(ushort), FieldType.UInt16));
         netTypes.Add((typeof(uint), FieldType.UInt32));
         netTypes.Add((typeof(ulong), FieldType.UInt64));
@@ -78,33 +79,33 @@ public class SystemTypeConverter : IFieldTypeConverter<Type>
 
         #region dbTypes
 
-        dbTypes.Add((DbType.AnsiString, FieldType.String));
-        dbTypes.Add((DbType.AnsiStringFixedLength, FieldType.String));
-        dbTypes.Add((DbType.Binary, FieldType.Binary));
-        dbTypes.Add((DbType.Boolean, FieldType.Boolean));
-        dbTypes.Add((DbType.Byte, FieldType.Byte));
-        dbTypes.Add((DbType.Currency, FieldType.Decimal));
-        dbTypes.Add((DbType.Date, FieldType.Date));
-        dbTypes.Add((DbType.DateTime, FieldType.DateTime));
-        dbTypes.Add((DbType.DateTime2, FieldType.DateTime));
-        dbTypes.Add((DbType.DateTimeOffset, FieldType.DateTimeOffset));
-        dbTypes.Add((DbType.Decimal, FieldType.Decimal));
-        dbTypes.Add((DbType.Double, FieldType.Double));
-        dbTypes.Add((DbType.Guid, FieldType.Guid));
-        dbTypes.Add((DbType.Int16, FieldType.Int16));
-        dbTypes.Add((DbType.Int32, FieldType.Int32));
-        dbTypes.Add((DbType.Int64, FieldType.Int64));
-        dbTypes.Add((DbType.Object, FieldType.Object));
-        dbTypes.Add((DbType.SByte, FieldType.SByte));
-        dbTypes.Add((DbType.Single, FieldType.Single));
-        dbTypes.Add((DbType.String, FieldType.String));
-        dbTypes.Add((DbType.StringFixedLength, FieldType.String));
-        dbTypes.Add((DbType.Time, FieldType.Time));
-        dbTypes.Add((DbType.UInt16, FieldType.UInt16));
-        dbTypes.Add((DbType.UInt32, FieldType.UInt32));
-        dbTypes.Add((DbType.UInt64, FieldType.UInt64));
-        dbTypes.Add((DbType.VarNumeric, FieldType.Decimal));
-        dbTypes.Add((DbType.Xml, FieldType.Xml));
+        //dbTypes.Add((DbType.AnsiString, FieldType.String));
+        //dbTypes.Add((DbType.AnsiStringFixedLength, FieldType.String));
+        //dbTypes.Add((DbType.Binary, FieldType.Binary));
+        //dbTypes.Add((DbType.Boolean, FieldType.Boolean));
+        //dbTypes.Add((DbType.Byte, FieldType.Byte));
+        //dbTypes.Add((DbType.Currency, FieldType.Decimal));
+        //dbTypes.Add((DbType.Date, FieldType.Date));
+        //dbTypes.Add((DbType.DateTime, FieldType.DateTime));
+        //dbTypes.Add((DbType.DateTime2, FieldType.DateTime));
+        //dbTypes.Add((DbType.DateTimeOffset, FieldType.DateTimeOffset));
+        //dbTypes.Add((DbType.Decimal, FieldType.Decimal));
+        //dbTypes.Add((DbType.Double, FieldType.Double));
+        //dbTypes.Add((DbType.Guid, FieldType.Guid));
+        //dbTypes.Add((DbType.Int16, FieldType.Int16));
+        //dbTypes.Add((DbType.Int32, FieldType.Int32));
+        //dbTypes.Add((DbType.Int64, FieldType.Int64));
+        //dbTypes.Add((DbType.Object, FieldType.Object));
+        //dbTypes.Add((DbType.SByte, FieldType.SByte));
+        //dbTypes.Add((DbType.Single, FieldType.Single));
+        //dbTypes.Add((DbType.String, FieldType.String));
+        //dbTypes.Add((DbType.StringFixedLength, FieldType.String));
+        //dbTypes.Add((DbType.Time, FieldType.Time));
+        //dbTypes.Add((DbType.UInt16, FieldType.UInt16));
+        //dbTypes.Add((DbType.UInt32, FieldType.UInt32));
+        //dbTypes.Add((DbType.UInt64, FieldType.UInt64));
+        //dbTypes.Add((DbType.VarNumeric, FieldType.Decimal));
+        //dbTypes.Add((DbType.Xml, FieldType.Xml));
 
         #endregion dbTypes
     }
@@ -113,7 +114,7 @@ public class SystemTypeConverter : IFieldTypeConverter<Type>
 
     public FieldType GetDataMigratorFieldType(Type providerFieldType) => netTypes.First(x => x.SystemType == providerFieldType).FieldType;
 
-    public FieldType GetDataMigratorFieldType(DbType dbType) => dbTypes.First(x => x.DbType == dbType).FieldType;
+    //public FieldType GetDataMigratorFieldType(DbType dbType) => dbTypes.First(x => x.DbType == dbType).FieldType;
 
     public Type GetDataProviderFieldType(FieldType fieldType) => fieldTypes.First(x => x.FieldType == fieldType).SystemType;
 

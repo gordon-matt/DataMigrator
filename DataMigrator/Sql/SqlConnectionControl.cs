@@ -14,6 +14,11 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
     private const string SQL_CONNECTION_STRING_FORMAT = "Data Source={0};Initial Catalog={1};User={2};Password={3};TrustServerCertificate=True";
     private const string SQL_CONNECTION_STRING_FORMAT_WA = "Data Source={0};Initial Catalog={1};Integrated Security=true;TrustServerCertificate=True";
 
+    public SqlConnectionControl()
+    {
+        InitializeComponent();
+    }
+
     #region Public Properties
 
     public string Server
@@ -53,8 +58,8 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     public bool IntegratedSecurity
     {
-        get => cbIntegratedSecurity.Checked;
-        set => cbIntegratedSecurity.Checked = value;
+        get => rbUseWindowsAuthentication.Checked;
+        set => rbUseWindowsAuthentication.Checked = value;
     }
 
     public string ConnectionString
@@ -131,11 +136,6 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     #endregion IConnectionControl Members
 
-    public SqlConnectionControl()
-    {
-        InitializeComponent();
-    }
-
     private void cbIntegratedSecurity_CheckedChanged(object sender, EventArgs e)
     {
         txtUserName.Enabled = !IntegratedSecurity;
@@ -150,12 +150,5 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
             using var connection = new SqlConnection(ConnectionString);
             connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
         }
-    }
-
-    private void cmbServer_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        cmbDatabase.Items.Clear();
-        using var connection = new SqlConnection(ConnectionString);
-        connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
     }
 }
