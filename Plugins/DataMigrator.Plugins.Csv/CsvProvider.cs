@@ -20,7 +20,7 @@ public class CsvProvider : BaseProvider
     {
     }
 
-    public override bool CreateField(string tableName, Field field)
+    public override bool CreateField(string tableName, string schemaName, Field field)
     {
         var table = ReadCsv();
         table.Columns.Add(field.Name);
@@ -28,12 +28,12 @@ public class CsvProvider : BaseProvider
         return true;
     }
 
-    public override bool CreateTable(string tableName)
+    public override bool CreateTable(string tableName, string schemaName)
     {
         throw new NotSupportedException();
     }
 
-    public override bool CreateTable(string tableName, IEnumerable<Field> fields)
+    public override bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var table = ReadCsv();
         fields.ForEach(field => table.Columns.Add(field.Name));
@@ -41,17 +41,17 @@ public class CsvProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
         throw new NotSupportedException();
     }
 
-    public override IEnumerable<string> GetFieldNames(string tableName)
+    public override IEnumerable<string> GetFieldNames(string tableName, string schemaName)
     {
         return ReadCsv().Columns.Cast<DataColumn>().Select(c => c.ColumnName);
     }
 
-    public override FieldCollection GetFields(string tableName)
+    public override FieldCollection GetFields(string tableName, string schemaName)
     {
         var table = ReadCsv();
         var fields = new FieldCollection();
@@ -69,14 +69,14 @@ public class CsvProvider : BaseProvider
         return fields;
     }
 
-    public override int GetRecordCount(string tableName)
+    public override int GetRecordCount(string tableName, string schemaName)
     {
         int rowCount = new FileInfo(ConnectionDetails.ConnectionString).ReadAllText().ToLines().Count();
         bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
         return hasHeaderRow ? rowCount - 1 : rowCount;
     }
 
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
+    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var table = ReadCsv();
         foreach (DataRow row in table.Rows)
@@ -91,7 +91,7 @@ public class CsvProvider : BaseProvider
         }
     }
 
-    public override void InsertRecords(string tableName, IEnumerable<Record> records)
+    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {
         var table = ReadCsv();
 
@@ -99,9 +99,9 @@ public class CsvProvider : BaseProvider
         {
             var row = table.NewRow();
             record.Fields.ForEach(field =>
-                {
-                    row[field.Name] = field.Value.ToString();
-                });
+            {
+                row[field.Name] = field.Value.ToString();
+            });
             table.Rows.Add(row);
         });
 

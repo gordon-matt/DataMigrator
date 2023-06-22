@@ -24,38 +24,38 @@ public class NpgsqlProvider : BaseProvider
         EscapeIdentifierEnd = "\"";
     }
 
-    public string Schema
-    {
-        get
-        {
-            string schema = "public";
-            if (!ConnectionDetails.ExtendedProperties.IsNullOrEmpty())
-            {
-                string value = ConnectionDetails.ExtendedProperties["Schema"].GetValue<string>();
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    schema = value;
-                }
-            }
-            return schema;
-        }
-    }
+    //public string Schema
+    //{
+    //    get
+    //    {
+    //        string schema = "public";
+    //        if (!ConnectionDetails.ExtendedProperties.IsNullOrEmpty())
+    //        {
+    //            string value = ConnectionDetails.ExtendedProperties["Schema"].GetValue<string>();
+    //            if (!string.IsNullOrWhiteSpace(value))
+    //            {
+    //                schema = value;
+    //            }
+    //        }
+    //        return schema;
+    //    }
+    //}
 
-    public override IEnumerable<string> TableNames
-    {
-        get
-        {
-            using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
-            return connection.GetTableNames(schema: Schema);
-        }
-    }
+    //public override IEnumerable<string> TableNames
+    //{
+    //    get
+    //    {
+    //        using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
+    //        return connection.GetTableNames(schema: Schema);
+    //    }
+    //}
 
     protected override DbConnection CreateDbConnection(string providerName, string connectionString)
     {
         return new NpgsqlConnection(connectionString);
     }
 
-    public override bool CreateTable(string tableName)
+    public override bool CreateTable(string tableName, string schemaName)
     {
         using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
@@ -63,7 +63,7 @@ public class NpgsqlProvider : BaseProvider
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(
             @"CREATE TABLE {0}.""{1}""()",
-            Schema,
+            schemaName,
             tableName);
 
         connection.Open();
@@ -73,17 +73,17 @@ public class NpgsqlProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
         throw new NotSupportedException();
     }
 
-    public override bool CreateField(string tableName, Field field)
+    public override bool CreateField(string tableName, string schemaName, Field field)
     {
-        var existingFieldNames = GetFieldNames(tableName);
+        var existingFieldNames = GetFieldNames(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
-            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, tableName);
+            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
             //throw new ArgumentException("etc");
             return false;
         }
@@ -110,7 +110,7 @@ public class NpgsqlProvider : BaseProvider
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(
             @"ALTER TABLE {0}.""{1}"" ADD {2}",
-            Schema,
+            schemaName,
             tableName,
             string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, isRequired));
         connection.Open();
@@ -119,13 +119,13 @@ public class NpgsqlProvider : BaseProvider
         return true;
     }
 
-    public override int GetRecordCount(string tableName)
+    public override int GetRecordCount(string tableName, string schemaName)
     {
         using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
-        return connection.GetRowCount(Schema, tableName);
+        return connection.GetRowCount(schemaName, tableName);
     }
 
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
+    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var sb = new StringBuilder();
         sb.Append("SELECT ");
@@ -134,9 +134,7 @@ public class NpgsqlProvider : BaseProvider
             .Prepend(EscapeIdentifierStart)
             .Append(EscapeIdentifierEnd));
         sb.Append(" FROM ");
-        sb.Append(Schema);
-        sb.Append('.');
-        sb.Append(EncloseIdentifier(tableName));
+        sb.Append(GetFullTableName(tableName, schemaName));
 
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
@@ -168,7 +166,7 @@ public class NpgsqlProvider : BaseProvider
         connection.Close();
     }
 
-    public override void InsertRecords(string tableName, IEnumerable<Record> records)
+    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {
         const string INSERT_INTO_FORMAT = @"INSERT INTO {0}.""{1}""({2}) VALUES({3})";
 
@@ -187,7 +185,7 @@ public class NpgsqlProvider : BaseProvider
             using (var command = connection.CreateCommand())
             {
                 command.Transaction = transaction;
-                command.CommandText = string.Format(INSERT_INTO_FORMAT, Schema, tableName, fieldNames, parameterNames.Values.Join(","));
+                command.CommandText = string.Format(INSERT_INTO_FORMAT, schemaName, tableName, fieldNames, parameterNames.Values.Join(","));
 
                 records.ElementAt(0).Fields.ForEach(field =>
                 {

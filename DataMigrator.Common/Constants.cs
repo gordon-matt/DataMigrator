@@ -14,7 +14,7 @@ WHERE TABLE_NAME = '{0}'";
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = '{0}'";
 
-        internal const string CMD_ADD_COLUMN = "ALTER TABLE [{0}] ADD {1}";
+        internal const string CMD_ADD_COLUMN = "ALTER TABLE {0} ADD {1}";
 
         internal const string CMD_IS_PRIMARY_KEY_FORMAT =
 @"SELECT COLUMN_NAME

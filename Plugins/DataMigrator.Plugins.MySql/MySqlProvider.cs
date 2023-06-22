@@ -22,7 +22,7 @@ public class MySqlProvider : BaseProvider
         EscapeIdentifierEnd = "`";
     }
 
-    public override bool CreateTable(string tableName)
+    public override bool CreateTable(string tableName, string schemaName)
     {
         using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
         using (var command = connection.CreateCommand())
@@ -30,7 +30,7 @@ public class MySqlProvider : BaseProvider
             command.CommandType = CommandType.Text;
             command.CommandText = string.Format(
                 "CREATE TABLE {0}(Id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(Id)) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci",
-                tableName);
+                GetFullTableName(tableName, schemaName));
 
             connection.Open();
             command.ExecuteNonQuery();
@@ -39,17 +39,17 @@ public class MySqlProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
         throw new NotSupportedException();
     }
 
-    public override bool CreateField(string tableName, Field field)
+    public override bool CreateField(string tableName, string schemaName, Field field)
     {
-        var existingFieldNames = GetFieldNames(tableName);
+        var existingFieldNames = GetFieldNames(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
-            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, tableName);
+            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
             //throw new ArgumentException("etc");
             return false;
         }
@@ -75,7 +75,7 @@ public class MySqlProvider : BaseProvider
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(
             "ALTER TABLE {0} ADD {1}",
-            EncloseIdentifier(tableName),
+            GetFullTableName(tableName, schemaName),
             string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, characterSet, isRequired));
         connection.Open();
         command.ExecuteNonQuery();

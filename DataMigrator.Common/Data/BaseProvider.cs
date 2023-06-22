@@ -4,7 +4,9 @@ using System.Text;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso;
+using Extenso.Data;
 using Extenso.Collections;
+using Extenso.Data.Common;
 
 namespace DataMigrator.Common.Data;
 
@@ -56,17 +58,20 @@ public abstract class BaseProvider
             var tableNames = new List<string>();
             foreach (DataRow row in schema.Rows)
             {
-                tableNames.Add(row.Field<string>("TABLE_NAME"));
+                string schemaName = row.Field<string>("TABLE_SCHEMA");
+                string tableName = row.Field<string>("TABLE_NAME");
+
+                tableNames.Add($"{schemaName}.{tableName}");
             }
             return tableNames;
         }
     }
 
-    public virtual bool CreateTable(string tableName)
+    public virtual bool CreateTable(string tableName, string schemaName)
     {
         try
         {
-            CreateTable(tableName, "Id", GetDataProviderFieldType(FieldType.Int32), true);
+            CreateTable(tableName, schemaName, "Id", GetDataProviderFieldType(FieldType.Int32), true);
         }
         catch (DbException x)
         {
@@ -82,16 +87,16 @@ public abstract class BaseProvider
         return true;
     }
 
-    public virtual bool CreateTable(string tableName, IEnumerable<Field> fields)
+    public virtual bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        bool ok = CreateTable(tableName);
+        bool ok = CreateTable(tableName, schemaName);
 
         if (!ok)
         { return false; }
 
         foreach (var field in fields)
         {
-            CreateField(tableName, field);
+            CreateField(tableName, schemaName, field);
         }
         return true;
     }
@@ -100,12 +105,12 @@ public abstract class BaseProvider
 
     #region Field Methods
 
-    public virtual bool CreateField(string tableName, Field field)
+    public virtual bool CreateField(string tableName, string schemaName, Field field)
     {
-        var existingFieldNames = GetFieldNames(tableName);
+        var existingFieldNames = GetFieldNames(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
-            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, tableName);
+            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
             //throw new ArgumentException("etc");
             return false;
         }
@@ -135,7 +140,7 @@ public abstract class BaseProvider
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(
             Constants.Data.CMD_ADD_COLUMN,
-            tableName,
+            GetFullTableName(tableName, schemaName),
             string.Concat(
                 EncloseIdentifier(field.Name), " ",
                 fieldType,
@@ -147,12 +152,18 @@ public abstract class BaseProvider
         return true;
     }
 
-    public virtual IEnumerable<string> GetFieldNames(string tableName)
+    public virtual IEnumerable<string> GetFieldNames(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
+
+        if (!string.IsNullOrEmpty(schemaName))
+        {
+            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
+        }
+
         var columns = new List<string>();
 
         connection.Open();
@@ -167,12 +178,18 @@ public abstract class BaseProvider
         return columns;
     }
 
-    public virtual FieldCollection GetFields(string tableName)
+    public virtual FieldCollection GetFields(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMNS, tableName);
+
+        if (!string.IsNullOrEmpty(schemaName))
+        {
+            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
+        }
+
         var fields = new FieldCollection();
 
         connection.Open();
@@ -233,26 +250,18 @@ public abstract class BaseProvider
 
     #region Record Methods
 
-    public virtual int GetRecordCount(string tableName)
+    public virtual int GetRecordCount(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        using var command = connection.CreateCommand();
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format("SELECT COUNT(*) FROM {0}{1}{2}", EscapeIdentifierStart, tableName, EscapeIdentifierEnd);
-        //command.CommandText = new Query().SelectCountAll().From(tableName).ToString();
-
-        connection.Open();
-        int rowCount = (int)command.ExecuteScalar();
-        connection.Close();
-        return rowCount;
+        return connection.ExecuteScalar($"SELECT COUNT(*) FROM {GetFullTableName(tableName, schemaName)}");
     }
 
-    public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName)
+    public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName)
     {
-        return GetRecordsEnumerator(tableName, GetFields(tableName));
+        return GetRecordsEnumerator(tableName, schemaName, GetFields(tableName, schemaName));
     }
 
-    public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName, IEnumerable<Field> fields)
+    public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         //Query query = new Query();
         //fields.ForEach(f => { query.Select(f.Name); });
@@ -265,7 +274,7 @@ public abstract class BaseProvider
             .Prepend(EscapeIdentifierStart)
             .Append(EscapeIdentifierEnd));
         sb.Append(" FROM ");
-        sb.Append(tableName);
+        sb.Append(GetFullTableName(tableName, schemaName));
 
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
@@ -302,7 +311,7 @@ public abstract class BaseProvider
     }
 
     // TODO: See if can improve performance.
-    public virtual void InsertRecords(string tableName, IEnumerable<Record> records)
+    public virtual void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {
         const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
         //string fieldNames = records.ElementAt(0).Fields.Select(f => f.Name).Join(",");
@@ -323,7 +332,7 @@ public abstract class BaseProvider
             using (var command = connection.CreateCommand())
             {
                 command.Transaction = transaction;
-                command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames.Values.Join(","));
+                command.CommandText = string.Format(INSERT_INTO_FORMAT, GetFullTableName(tableName, schemaName), fieldNames, parameterNames.Values.Join(","));
                 //command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames);
 
                 records.ElementAt(0).Fields.ForEach(field =>
@@ -386,17 +395,16 @@ public abstract class BaseProvider
 
     #endregion Public Static Methods
 
-    protected virtual void CreateTable(string tableName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    protected virtual void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        const string CMD_CREATE_TABLE_FORMAT = "CREATE TABLE {0}({1} {2} {3} NOT NULL CONSTRAINT {4} PRIMARY KEY)";
-        string commandText = string.Format(
-            CMD_CREATE_TABLE_FORMAT,
-            EncloseIdentifier(tableName),
-            pkColumnName,
-            EncloseIdentifier(pkDataType),
-            pkIsIdentity ? "IDENTITY(1,1)" : string.Empty,
-            EncloseIdentifier("PK_" + tableName));
+
+        string commandText =
+$@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
+(
+    {EncloseIdentifier(pkColumnName)} {pkDataType} {(pkIsIdentity ? "IDENTITY(1,1)" : string.Empty)} NOT NULL
+        CONSTRAINT {EncloseIdentifier("PK_" + tableName)} PRIMARY KEY
+)";
 
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
@@ -405,6 +413,11 @@ public abstract class BaseProvider
         command.ExecuteNonQuery();
         connection.Close();
     }
+
+    protected virtual string GetFullTableName(string tableName, string schemaName) =>
+        !string.IsNullOrEmpty(schemaName)
+            ? $"{EncloseIdentifier(schemaName)}.{EncloseIdentifier(tableName)}"
+            : EncloseIdentifier(tableName);
 
     #region Field Conversion Methods
 

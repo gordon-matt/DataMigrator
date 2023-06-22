@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using DataMigrator.Common.Configuration;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
 using Extenso;
@@ -17,11 +18,37 @@ public partial class TableMappingControl : UserControl
         set => cmbSourceTable.SelectedItem = value;
     }
 
+    //public string SourceSchema
+    //{
+    //    get
+    //    {
+    //        string sourceTable = SourceTable;
+    //        if (sourceTable.Contains('.'))
+    //        {
+    //            return sourceTable.LeftOf('.');
+    //        }
+    //        return string.Empty;
+    //    }
+    //}
+
     public string DestinationTable
     {
         get => cmbDestinationTable.SelectedIndex != -1 ? cmbDestinationTable.SelectedItem.ToString() : string.Empty;
         set => cmbDestinationTable.SelectedItem = value;
     }
+
+    //public string DestinationSchema
+    //{
+    //    get
+    //    {
+    //        string destinationTable = DestinationTable;
+    //        if (destinationTable.Contains('.'))
+    //        {
+    //            return destinationTable.LeftOf('.');
+    //        }
+    //        return string.Empty;
+    //    }
+    //}
 
     public IEnumerable<FieldMapping> FieldMappings
     {
@@ -35,13 +62,13 @@ public partial class TableMappingControl : UserControl
             }
 
             MappingsTable?.Rows.Cast<DataRow>().ForEach(row =>
+            {
+                mappings.Add(new FieldMapping
                 {
-                    mappings.Add(new FieldMapping
-                    {
-                        SourceField = SourceFields[row["Source"].ToString()],
-                        DestinationField = DestinationFields[row["Destination"].ToString()]
-                    });
+                    SourceField = SourceFields[row["Source"].ToString()],
+                    DestinationField = DestinationFields[row["Destination"].ToString()]
                 });
+            });
             return mappings;
         }
     }
@@ -280,7 +307,9 @@ public partial class TableMappingControl : UserControl
         if (cmbSourceTable.SelectedIndex != -1)
         {
             dgvSource.DataSource = null;
-            SourceFields = SourceController.GetFields(cmbSourceTable.SelectedItem.ToString());
+            string sourceSchema = SourceTable.Contains('.') ? SourceTable.LeftOf('.') : string.Empty;
+            string sourceTable = SourceTable.Contains('.') ? SourceTable.RightOf('.') : SourceTable;
+            SourceFields = SourceController.GetFields(sourceTable, sourceSchema);
             dgvSource.DataSource = GetFieldsDataTable(SourceFields);
         }
     }
@@ -290,7 +319,9 @@ public partial class TableMappingControl : UserControl
         if (cmbDestinationTable.SelectedIndex != -1)
         {
             dgvDestination.DataSource = null;
-            DestinationFields = DestinationController.GetFields(cmbDestinationTable.SelectedItem.ToString());
+            string destinationSchema = DestinationTable.Contains('.') ? DestinationTable.LeftOf('.') : string.Empty;
+            string destinationTable = DestinationTable.Contains('.') ? DestinationTable.RightOf('.') : DestinationTable;
+            DestinationFields = DestinationController.GetFields(destinationTable, destinationSchema);
             dgvDestination.DataSource = GetFieldsDataTable(DestinationFields);
         }
     }
