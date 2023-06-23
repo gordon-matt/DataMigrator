@@ -6,16 +6,16 @@ namespace DataMigrator.Common.Data
     {
         string DbProviderName { get; }
 
-        IEnumerable<string> TableNames { get; }
+        Task<IEnumerable<string>> GetTableNamesAsync();
 
-        bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields);
+        Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields);
 
-        FieldCollection GetFields(string tableName, string schemaName);
+        Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName);
 
         int GetRecordCount(string tableName, string schemaName);
 
-        IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields);
+        IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields);
 
-        void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records);
+        Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records);
     }
 }

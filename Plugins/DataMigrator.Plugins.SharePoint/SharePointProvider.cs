@@ -36,32 +36,29 @@ public class SharePointProvider : BaseProvider
         return context;
     }
 
-    public override IEnumerable<string> TableNames
+    public override async Task<IEnumerable<string>> GetTableNamesAsync()
     {
-        get
+        var listNames = new List<string>();
+        using (var context = GetClientContext(ConnectionDetails))
         {
-            var listNames = new List<string>();
-            using (var context = GetClientContext(ConnectionDetails))
+            var site = context.Web;
+            var lists = context.LoadQuery(site.Lists);
+            await context.ExecuteQueryAsync();
+
+            lists.ForEach(list =>
             {
-                var site = context.Web;
-                var lists = context.LoadQuery(site.Lists);
-                context.ExecuteQuery();
-
-                lists.ForEach(list =>
-                {
-                    listNames.Add(list.Title);
-                });
-            }
-            return listNames;
+                listNames.Add(list.Title);
+            });
         }
+        return listNames;
     }
 
-    protected override bool CreateTable(string tableName, string schemaName)
+    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
-        return CreateTable(tableName, schemaName, null);
+        return await CreateTableAsync(tableName, schemaName, null);
     }
 
-    public override bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
+    public override async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         try
         {
@@ -77,13 +74,13 @@ public class SharePointProvider : BaseProvider
             };
             var list = site.Lists.Add(listCreationInfo);
             list.Update();
-            context.ExecuteQuery();
+            await context.ExecuteQueryAsync();
 
             if (!fields.IsNullOrEmpty())
             {
-                fields.ForEach(field =>
+                fields.ForEach(async field =>
                 {
-                    CreateField(tableName, schemaName, field);
+                    await CreateFieldAsync(tableName, schemaName, field);
                 });
             }
 
@@ -96,11 +93,11 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    protected override bool CreateField(string tableName, string schemaName, Field field)
+    protected override async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
         string fullTableName = GetFullTableName(tableName, schemaName);
 
-        var existingFieldNames = GetFieldNames(tableName, schemaName);
+        var existingFieldNames = await GetFieldNamesAsync(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
             TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the list, {1}", field.Name, fullTableName);
@@ -116,7 +113,7 @@ public class SharePointProvider : BaseProvider
 
             var spField = list.Fields.Add(field.Name, typeConverter.GetDataProviderFieldType(field.Type), true);
             list.Update();
-            context.ExecuteQuery();
+            await context.ExecuteQueryAsync();
             return true;
         }
         catch (Exception x)
@@ -126,7 +123,7 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    protected override IEnumerable<string> GetFieldNames(string tableName, string schemaName)
+    protected override async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
     {
         var spFieldNames = new List<string>();
         using (var context = GetClientContext(ConnectionDetails))
@@ -134,7 +131,7 @@ public class SharePointProvider : BaseProvider
             var site = context.Web;
             var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
             var fields = context.LoadQuery(list.Fields);
-            context.ExecuteQuery();
+            await context.ExecuteQueryAsync();
 
             fields.ForEach(spField =>
             {
@@ -147,7 +144,7 @@ public class SharePointProvider : BaseProvider
         return spFieldNames;
     }
 
-    public override FieldCollection GetFields(string tableName, string schemaName)
+    public override async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
         var fields = new FieldCollection();
         using (var context = GetClientContext(ConnectionDetails))
@@ -155,7 +152,7 @@ public class SharePointProvider : BaseProvider
             var site = context.Web;
             var list = context.Web.Lists.GetByTitle(GetFullTableName(tableName, schemaName));
             var spFields = context.LoadQuery(list.Fields);
-            context.ExecuteQuery();
+            await context.ExecuteQueryAsync();
 
             spFields.ForEach(spField =>
             {
@@ -198,12 +195,7 @@ public class SharePointProvider : BaseProvider
         return listItems.Count;
     }
 
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
-    {
-        return GetRecordsEnumeratorInternal(tableName, schemaName, fields);
-    }
-
-    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
+    public override async Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
     {
         //ProcessBatchData not available in Client OM. Maybe can use custom solution similar to base class ADO.NET version
         //But first need to test - maybe this is already fast enough
@@ -239,10 +231,10 @@ public class SharePointProvider : BaseProvider
 
             listItem.Update();
         });
-        context.ExecuteQuery();
+        await context.ExecuteQueryAsync();
     }
 
-    private IEnumerator<Record> GetRecordsEnumeratorInternal(string tableName, string schemaName, IEnumerable<Field> fields)
+    public override async IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         using var context = GetClientContext(ConnectionDetails);
         var site = context.Web;
@@ -264,7 +256,7 @@ public class SharePointProvider : BaseProvider
 
         var listItems = list.GetItems(camlQuery);
         context.Load(listItems);
-        context.ExecuteQuery();
+        await context.ExecuteQueryAsync();
 
         foreach (var item in listItems)
         {

@@ -29,10 +29,10 @@ public class SqlProvider : BaseProvider
     protected override string GetDataProviderFieldType(FieldType fieldType) =>
         AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
 
-    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
+    public override async Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        connection.Open();
+        await connection.OpenAsync();
         var table = records.ToDataTable();
 
         using var bulkCopy = new SqlBulkCopy(connection as SqlConnection);
@@ -43,7 +43,7 @@ public class SqlProvider : BaseProvider
             bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
         }
 
-        bulkCopy.WriteToServer(table);
-        connection.Close();
+        await bulkCopy.WriteToServerAsync(table);
+        await connection.CloseAsync();
     }
 }

@@ -22,7 +22,7 @@ public class MySqlProvider : BaseProvider
         EscapeIdentifierEnd = "`";
     }
 
-    protected override bool CreateTable(string tableName, string schemaName)
+    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
         using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
         using (var command = connection.CreateCommand())
@@ -32,19 +32,19 @@ public class MySqlProvider : BaseProvider
                 "CREATE TABLE {0}(Id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(Id)) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci",
                 GetFullTableName(tableName, schemaName));
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+            await connection.CloseAsync();
         }
         return true;
     }
 
-    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
+    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
         throw new NotSupportedException();
 
-    protected override bool CreateField(string tableName, string schemaName, Field field)
+    protected override async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
-        var existingFieldNames = GetFieldNames(tableName, schemaName);
+        var existingFieldNames = await GetFieldNamesAsync(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
             TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
@@ -77,9 +77,9 @@ public class MySqlProvider : BaseProvider
             "ALTER TABLE {0} ADD {1}",
             GetFullTableName(tableName, schemaName),
             string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, characterSet, isRequired));
-        connection.Open();
-        command.ExecuteNonQuery();
-        connection.Close();
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
         return true;
     }
 
