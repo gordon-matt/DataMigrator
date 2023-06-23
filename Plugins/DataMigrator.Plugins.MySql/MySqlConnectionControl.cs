@@ -1,7 +1,9 @@
 ﻿using DataMigrator.Common;
 using DataMigrator.Common.Models;
 using DataMigrator.Windows.Forms.Diagnostics;
+using Extenso.Collections;
 using Extenso.Data.Common;
+using Extenso.Data.MySql;
 using Extenso.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -12,11 +14,12 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
     // Setting Sql Server Mode=True no longer necessary, as have implemented "SpaceEscape" in BaseProvider.
     // Just need to set SpaceEscapeStart and SpaceEscapeEnd in constructor
     private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};CharSet=utf8";
-
     private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};CharSet=utf8";
 
-    //private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};Sql Server Mode=True;";
-    //private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};Sql Server Mode=True;";
+    public MySqlConnectionControl()
+    {
+        InitializeComponent();
+    }
 
     #region Public Properties
 
@@ -34,8 +37,19 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     public string Database
     {
-        get => txtDatabase.Text.Trim();
-        set => txtDatabase.Text = value;
+        get
+        {
+            if (cmbDatabase.SelectedIndex != -1)
+            {
+                return cmbDatabase.SelectedItem.ToString();
+            }
+            else if (!string.IsNullOrWhiteSpace(cmbDatabase.Text))
+            {
+                return cmbDatabase.Text;
+            }
+            return string.Empty;
+        }
+        set => cmbDatabase.Text = value;
     }
 
     public string UserName
@@ -61,6 +75,12 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
             #region Checks
 
+            if (string.IsNullOrWhiteSpace(Server))
+            {
+                TraceService.Instance.WriteMessage(TraceEvent.Error, "Server is invalid. Please try again.");
+                return string.Empty;
+            }
+
             if (string.IsNullOrEmpty(Database))
             {
                 TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
@@ -76,8 +96,8 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
             #endregion Checks
 
             return Port != -1
-                                    ? string.Format(MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT, Server, Port, Database, UserName, Password)
-                                    : string.Format(MYSQL_CONNECTION_STRING_FORMAT_STANDARD, Server, Database, UserName, Password);
+                ? string.Format(MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT, Server, Port, Database, UserName, Password)
+                : string.Format(MYSQL_CONNECTION_STRING_FORMAT_STANDARD, Server, Database, UserName, Password);
         }
     }
 
@@ -89,24 +109,17 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     public ConnectionDetails ConnectionDetails
     {
-        get =>
-            //bool isValid = false;
-            //using (MySqlConnection connection = new MySqlConnection(ConnectionString))
-            //{
-            //    isValid = connection.Validate();
-            //}
-
-            new()
-            {
-                Database = this.Database,
-                Password = this.Password,
-                IntegratedSecurity = false,
-                Port = this.Port,
-                Server = this.Server,
-                UserName = this.UserName,
-                ProviderName = Constants.PROVIDER_NAME,
-                ConnectionString = this.ConnectionString
-            };
+        get => new()
+        {
+            Database = Database,
+            Password = Password,
+            IntegratedSecurity = false,
+            Port = Port,
+            Server = Server,
+            UserName = UserName,
+            ProviderName = Constants.PROVIDER_NAME,
+            ConnectionString = ConnectionString
+        };
         set
         {
             Database = value.Database;
@@ -125,8 +138,13 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     #endregion IConnectionControl Members
 
-    public MySqlConnectionControl()
+    private void cmbDatabase_DropDown(object sender, EventArgs e)
     {
-        InitializeComponent();
+        if (!string.IsNullOrEmpty(Server) && string.IsNullOrEmpty(cmbDatabase.Text))
+        {
+            cmbDatabase.Items.Clear();
+            using var connection = new MySqlConnection(ConnectionString);
+            connection.GetDatabaseNames().ForEach(x => cmbDatabase.Items.Add(x));
+        }
     }
 }
