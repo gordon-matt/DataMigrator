@@ -4,7 +4,7 @@ public sealed class TraceService
 {
     public delegate void TraceEventHandler(TraceEventArgs e);
 
-    public event TraceEventHandler Trace;
+    public static event TraceEventHandler Trace;
 
     public static TraceService Instance => new();
 

@@ -8,7 +8,7 @@ public partial class TraceViewerControl : UserControl
     {
         InitializeComponent();
 
-        TraceService.Instance.Trace += new TraceService.TraceEventHandler(Instance_Trace);
+        TraceService.Trace += Instance_Trace;
     }
 
     private void Instance_Trace(TraceEventArgs e)
