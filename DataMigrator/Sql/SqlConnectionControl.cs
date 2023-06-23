@@ -78,11 +78,13 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
                 TraceService.Instance.WriteMessage(TraceEvent.Error, "Server is invalid. Please try again.");
                 return string.Empty;
             }
+
             if (string.IsNullOrWhiteSpace(Database))
             {
                 TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
                 return string.Empty;
             }
+
             if (!IntegratedSecurity)
             {
                 if (string.IsNullOrWhiteSpace(UserName))
