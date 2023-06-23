@@ -22,7 +22,7 @@ public class MySqlProvider : BaseProvider
         EscapeIdentifierEnd = "`";
     }
 
-    public override bool CreateTable(string tableName, string schemaName)
+    protected override bool CreateTable(string tableName, string schemaName)
     {
         using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
         using (var command = connection.CreateCommand())
@@ -39,12 +39,10 @@ public class MySqlProvider : BaseProvider
         return true;
     }
 
-    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
-    {
+    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
         throw new NotSupportedException();
-    }
 
-    public override bool CreateField(string tableName, string schemaName, Field field)
+    protected override bool CreateField(string tableName, string schemaName, Field field)
     {
         var existingFieldNames = GetFieldNames(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
@@ -59,16 +57,18 @@ public class MySqlProvider : BaseProvider
         string fieldType = GetDataProviderFieldType(field.Type);
         string maxLength = string.Empty;
         string characterSet = string.Empty;
+        string isRequired = string.Empty;
+
         if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
         {
             if (field.MaxLength > 0)
             {
-                maxLength = string.Concat("(", field.MaxLength, ")");
+                maxLength = $"({field.MaxLength})";
             }
             //MySql does not have MAX keyword
             characterSet = " CHARACTER SET utf8";
         }
-        string isRequired = string.Empty;
+
         if (field.IsRequired)
         { isRequired = " NOT NULL"; }
 
@@ -134,20 +134,17 @@ public class MySqlProvider : BaseProvider
     //    }
     //}
 
-    public override FieldType GetDataMigratorFieldType(string providerFieldType)
+    protected override FieldType GetDataMigratorFieldType(string providerFieldType)
     {
         var mySqlType = MySqlDbTypeConverter.GetMySqlDataType(providerFieldType);
         return typeConverter.GetDataMigratorFieldType(mySqlType);
     }
 
-    public override string GetDataProviderFieldType(FieldType fieldType)
+    protected override string GetDataProviderFieldType(FieldType fieldType)
     {
         var mySqlType = typeConverter.GetDataProviderFieldType(fieldType);
         return MySqlDbTypeConverter.GetMySqlDataTypeStringValue(mySqlType);
     }
 
-    protected override DbConnection CreateDbConnection(string providerName, string connectionString)
-    {
-        return new MySqlConnection(connectionString);
-    }
+    protected override DbConnection CreateDbConnection(string providerName, string connectionString) => new MySqlConnection(connectionString);
 }

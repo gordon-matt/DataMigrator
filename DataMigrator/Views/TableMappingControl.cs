@@ -77,9 +77,9 @@ public partial class TableMappingControl : UserControl
 
     #region Private Properties
 
-    private BaseProvider SourceController { get; set; }
+    private IProvider SourceController { get; set; }
 
-    private BaseProvider DestinationController { get; set; }
+    private IProvider DestinationController { get; set; }
 
     private DataTable MappingsTable { get; set; }
 

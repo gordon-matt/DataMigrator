@@ -23,15 +23,11 @@ public class SqlProvider : BaseProvider
         DbProviderFactories.RegisterFactory("Microsoft.Data.SqlClient", SqlClientFactory.Instance);
     }
 
-    public override FieldType GetDataMigratorFieldType(string providerFieldType)
-    {
-        return AppContext.SqlDbTypeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SqlDbType>(providerFieldType, true));
-    }
+    protected override FieldType GetDataMigratorFieldType(string providerFieldType) =>
+        AppContext.SqlDbTypeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SqlDbType>(providerFieldType, true));
 
-    public override string GetDataProviderFieldType(FieldType fieldType)
-    {
-        return AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
-    }
+    protected override string GetDataProviderFieldType(FieldType fieldType) =>
+        AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
 
     public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {

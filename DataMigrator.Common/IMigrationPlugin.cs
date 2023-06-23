@@ -9,7 +9,7 @@ public interface IMigrationPlugin
 
     IConnectionControl ConnectionControl { get; }
 
-    BaseProvider GetDataProvider(ConnectionDetails connectionDetails);
+    IProvider GetDataProvider(ConnectionDetails connectionDetails);
 
     ISettingsControl SettingsControl { get; }
 
