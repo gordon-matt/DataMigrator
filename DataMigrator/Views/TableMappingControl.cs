@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
@@ -115,8 +116,8 @@ public partial class TableMappingControl : UserControl
         SourceController = Controller.GetProvider(Program.Configuration.SourceConnection);
         DestinationController = Controller.GetProvider(Program.Configuration.DestinationConnection);
 
-        SourceController.TableNames.ForEach(x => cmbSourceTable.Items.Add(x));
-        DestinationController.TableNames.ForEach(x => cmbDestinationTable.Items.Add(x));
+        AsyncHelper.RunSync(SourceController.GetTableNamesAsync).ForEach(x => cmbSourceTable.Items.Add(x));
+        AsyncHelper.RunSync(DestinationController.GetTableNamesAsync).ForEach(x => cmbDestinationTable.Items.Add(x));
 
         SourceTable = Program.CurrentJob.SourceTable;
         DestinationTable = Program.CurrentJob.DestinationTable;
@@ -260,11 +261,11 @@ public partial class TableMappingControl : UserControl
         dgvDestination.Rows.Remove(destinationRow);
     }
 
-    private void btnCreateTable_Click(object sender, EventArgs e)
+    private async void btnCreateTable_Click(object sender, EventArgs e)
     {
-        Controller.CreateDestinationTable(SourceTable);
+        await Controller.CreateDestinationTableAsync(SourceTable);
         cmbDestinationTable.Items.Clear();
-        DestinationController.TableNames.ForEach(x => cmbDestinationTable.Items.Add(x));
+        (await DestinationController.GetTableNamesAsync()).ForEach(x => cmbDestinationTable.Items.Add(x));
         cmbDestinationTable.SelectedItem = SourceTable;
         Program.CurrentJob.DestinationTable = SourceTable;
     }
@@ -302,26 +303,26 @@ public partial class TableMappingControl : UserControl
 
     #region Combo Boxes
 
-    private void cmbSourceTable_SelectedIndexChanged(object sender, EventArgs e)
+    private async void cmbSourceTable_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbSourceTable.SelectedIndex != -1)
         {
             dgvSource.DataSource = null;
             string sourceSchema = SourceTable.Contains('.') ? SourceTable.LeftOf('.') : string.Empty;
             string sourceTable = SourceTable.Contains('.') ? SourceTable.RightOf('.') : SourceTable;
-            SourceFields = SourceController.GetFields(sourceTable, sourceSchema);
+            SourceFields = await SourceController.GetFieldsAsync(sourceTable, sourceSchema);
             dgvSource.DataSource = GetFieldsDataTable(SourceFields);
         }
     }
 
-    private void cmbDestinationTable_SelectedIndexChanged(object sender, EventArgs e)
+    private async void cmbDestinationTable_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbDestinationTable.SelectedIndex != -1)
         {
             dgvDestination.DataSource = null;
             string destinationSchema = DestinationTable.Contains('.') ? DestinationTable.LeftOf('.') : string.Empty;
             string destinationTable = DestinationTable.Contains('.') ? DestinationTable.RightOf('.') : DestinationTable;
-            DestinationFields = DestinationController.GetFields(destinationTable, destinationSchema);
+            DestinationFields = await DestinationController.GetFieldsAsync(destinationTable, destinationSchema);
             dgvDestination.DataSource = GetFieldsDataTable(DestinationFields);
         }
     }

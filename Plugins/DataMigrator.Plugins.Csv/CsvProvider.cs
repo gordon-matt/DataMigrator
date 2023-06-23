@@ -20,31 +20,31 @@ public class CsvProvider : BaseProvider
     {
     }
 
-    protected override bool CreateField(string tableName, string schemaName, Field field)
+    protected override Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
         var table = ReadCsv();
         table.Columns.Add(field.Name);
         table.ToCsv(ConnectionDetails.Database, true);
-        return true;
+        return Task.FromResult(true);
     }
 
-    protected override bool CreateTable(string tableName, string schemaName) => throw new NotSupportedException();
+    protected override Task<bool> CreateTableAsync(string tableName, string schemaName) => throw new NotSupportedException();
 
-    public override bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
+    public override Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var table = ReadCsv();
         fields.ForEach(field => table.Columns.Add(field.Name));
         table.ToCsv(ConnectionDetails.Database, true);
-        return true;
+        return Task.FromResult(true);
     }
 
-    protected override void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
+    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
         throw new NotSupportedException();
 
-    protected override IEnumerable<string> GetFieldNames(string tableName, string schemaName) =>
-        ReadCsv().Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+    protected override Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName) =>
+        Task.FromResult(ReadCsv().Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 
-    public override FieldCollection GetFields(string tableName, string schemaName)
+    public override Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
         var table = ReadCsv();
         var fields = new FieldCollection();
@@ -59,7 +59,7 @@ public class CsvProvider : BaseProvider
             Type = FieldType.String
         }));
 
-        return fields;
+        return Task.FromResult(fields);
     }
 
     public override int GetRecordCount(string tableName, string schemaName)
@@ -69,7 +69,7 @@ public class CsvProvider : BaseProvider
         return hasHeaderRow ? rowCount - 1 : rowCount;
     }
 
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
+    public override async IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var table = ReadCsv();
         foreach (DataRow row in table.Rows)
@@ -80,11 +80,11 @@ public class CsvProvider : BaseProvider
             {
                 record[f.Name].Value = row.Field<string>(f.Name);
             });
-            yield return record;
+            yield return await Task.FromResult(record);
         }
     }
 
-    public override void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
+    public override Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
     {
         var table = ReadCsv();
 
@@ -99,9 +99,11 @@ public class CsvProvider : BaseProvider
         });
 
         table.ToCsv(ConnectionDetails.Database, true);
+        return Task.CompletedTask;
     }
 
-    public override IEnumerable<string> TableNames => new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) };
+    public override Task<IEnumerable<string>> GetTableNamesAsync() =>
+        Task.FromResult(new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) }.AsEnumerable());
 
     protected override FieldType GetDataMigratorFieldType(string providerFieldType) => FieldType.String;
 

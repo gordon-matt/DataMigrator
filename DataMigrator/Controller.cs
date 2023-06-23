@@ -20,7 +20,7 @@ public static class Controller
         return Program.Plugins.SingleOrDefault(p => p.ProviderName == connection.ProviderName).GetDataProvider(connection);
     }
 
-    public static void RunJob(ref BackgroundWorker backgroundWorker, Job job)
+    public static async Task RunJobAsync(Job job, IProgress<int> progress, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(job.SourceTable))
         {
@@ -51,9 +51,9 @@ public static class Controller
 
         var buffer = new RecordCollection();
         int processedRecordCount = 0;
-        var recordsEnumerator = sourceProvider.GetRecordsEnumerator(sourceTable, sourceSchema, sourceFields);
+        var recordsEnumerator = sourceProvider.GetRecordsEnumeratorAsync(sourceTable, sourceSchema, sourceFields);
 
-        while (recordsEnumerator.MoveNext())
+        while (await recordsEnumerator.MoveNextAsync())
         {
             var record = recordsEnumerator.Current.Clone();
 
@@ -62,7 +62,7 @@ public static class Controller
 
             if (processedRecordCount.IsMultipleOf(Program.Configuration.BatchSize) || processedRecordCount == recordCount)
             {
-                if (backgroundWorker.CancellationPending)
+                if (cancellationToken.IsCancellationRequested)
                 { return; }
 
                 buffer.ReMapFields(job.FieldMappings);
@@ -74,21 +74,21 @@ public static class Controller
                 string destinationSchema = job.DestinationTable.Contains('.') ? job.DestinationTable.LeftOf('.') : string.Empty;
                 string destinationTable = job.DestinationTable.Contains('.') ? job.DestinationTable.RightOf('.') : job.DestinationTable;
 
-                destinationProvider.InsertRecords(destinationTable, destinationSchema, buffer);
+                await destinationProvider.InsertRecordsAsync(destinationTable, destinationSchema, buffer);
                 buffer = new RecordCollection();
 
                 double percent = processedRecordCount / (double)recordCount;
                 percent *= 100;
-                backgroundWorker.ReportProgress((int)percent);
+                progress.Report((int)percent);
                 TraceService.Instance.WriteFormat(TraceEvent.Information, "{0}/{1} Records Processed", processedRecordCount, recordCount);
 
-                if (backgroundWorker.CancellationPending)
+                if (cancellationToken.IsCancellationRequested)
                 { return; }
             }
         }
     }
 
-    public static bool CreateDestinationTable(string tableName)
+    public static async Task<bool> CreateDestinationTableAsync(string tableName)
     {
         var sourceProvider = GetProvider(Program.Configuration.SourceConnection);
         var destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
@@ -96,6 +96,9 @@ public static class Controller
         string schemaName = tableName.Contains('.') ? tableName.LeftOf('.') : string.Empty;
         string tableNameWithoutSchema = tableName.Contains('.') ? tableName.RightOf('.') : tableName;
 
-        return destinationProvider.CreateTable(tableNameWithoutSchema, schemaName, sourceProvider.GetFields(tableNameWithoutSchema, schemaName));
+        return await destinationProvider.CreateTableAsync(
+            tableNameWithoutSchema,
+            schemaName,
+            await sourceProvider.GetFieldsAsync(tableNameWithoutSchema, schemaName));
     }
 }

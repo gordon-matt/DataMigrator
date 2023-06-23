@@ -40,49 +40,46 @@ public abstract class BaseProvider : IProvider
 
     #region Table Methods
 
-    public virtual IEnumerable<string> TableNames
+    public virtual async Task<IEnumerable<string>> GetTableNamesAsync()
     {
-        get
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        string[] restrictions = new string[4];
+        restrictions[3] = "Base Table";
+
+        await connection.OpenAsync();
+        var schema = await connection.GetSchemaAsync("Tables", restrictions);
+        await connection.CloseAsync();
+
+        var tableNames = new List<string>();
+        foreach (DataRow row in schema.Rows)
         {
-            using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-            string[] restrictions = new string[4];
-            restrictions[3] = "Base Table";
+            string schemaName = row.Field<string>("TABLE_SCHEMA");
+            string tableName = row.Field<string>("TABLE_NAME");
 
-            connection.Open();
-            var schema = connection.GetSchema("Tables", restrictions);
-            connection.Close();
-
-            var tableNames = new List<string>();
-            foreach (DataRow row in schema.Rows)
-            {
-                string schemaName = row.Field<string>("TABLE_SCHEMA");
-                string tableName = row.Field<string>("TABLE_NAME");
-
-                tableNames.Add($"{schemaName}.{tableName}");
-            }
-            return tableNames;
+            tableNames.Add($"{schemaName}.{tableName}");
         }
+        return tableNames;
     }
 
-    public virtual bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
+    public virtual async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        bool ok = CreateTable(tableName, schemaName);
+        bool ok = await CreateTableAsync(tableName, schemaName);
 
         if (!ok)
         { return false; }
 
         foreach (var field in fields)
         {
-            CreateField(tableName, schemaName, field);
+            await CreateFieldAsync(tableName, schemaName, field);
         }
         return true;
     }
 
-    protected virtual bool CreateTable(string tableName, string schemaName)
+    protected virtual async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
         try
         {
-            CreateTable(tableName, schemaName, "Id", GetDataProviderFieldType(FieldType.Int32), true);
+            await CreateTableAsync(tableName, schemaName, "Id", GetDataProviderFieldType(FieldType.Int32), true);
         }
         catch (DbException x)
         {
@@ -102,7 +99,7 @@ public abstract class BaseProvider : IProvider
 
     #region Field Methods
 
-    public virtual FieldCollection GetFields(string tableName, string schemaName)
+    public virtual async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
@@ -116,10 +113,10 @@ public abstract class BaseProvider : IProvider
 
         var fields = new FieldCollection();
 
-        connection.Open();
-        using (var reader = command.ExecuteReader())
+        await connection.OpenAsync();
+        using (var reader = await command.ExecuteReaderAsync())
         {
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 var field = new Field
                 {
@@ -136,16 +133,16 @@ public abstract class BaseProvider : IProvider
                 fields.Add(field);
             }
         }
-        connection.Close();
+        await connection.CloseAsync();
 
         try
         {
             command.CommandText = string.Format(Constants.Data.CMD_IS_PRIMARY_KEY_FORMAT, tableName);
 
-            connection.Open();
-            using (var reader = command.ExecuteReader())
+            await connection.OpenAsync();
+            using (var reader = await command.ExecuteReaderAsync())
             {
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     string pkColumn = reader.GetString(0);
                     var match = fields.SingleOrDefault(f => f.Name == pkColumn);
@@ -156,23 +153,23 @@ public abstract class BaseProvider : IProvider
                 }
             }
 
-            connection.Close();
+            await connection.CloseAsync();
         }
         catch (Exception x)
         {
             TraceService.Instance.WriteConcat(TraceEvent.Error, "Error: Could not get primary key info - ", x.Message);
             if (connection.State != ConnectionState.Closed)
             {
-                connection.Close();
+                await connection.CloseAsync();
             }
         }
 
         return fields;
     }
 
-    protected virtual bool CreateField(string tableName, string schemaName, Field field)
+    protected virtual async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
-        var existingFieldNames = GetFieldNames(tableName, schemaName);
+        var existingFieldNames = await GetFieldNamesAsync(tableName, schemaName);
         if (existingFieldNames.Contains(field.Name))
         {
             TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
@@ -211,13 +208,13 @@ public abstract class BaseProvider : IProvider
                 fieldType,
                 maxLength,
                 isRequired));
-        connection.Open();
-        command.ExecuteNonQuery();
-        connection.Close();
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
         return true;
     }
 
-    protected virtual IEnumerable<string> GetFieldNames(string tableName, string schemaName)
+    protected virtual async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         using var command = connection.CreateCommand();
@@ -231,15 +228,15 @@ public abstract class BaseProvider : IProvider
 
         var columns = new List<string>();
 
-        connection.Open();
-        using (var reader = command.ExecuteReader())
+        await connection.OpenAsync();
+        using (var reader = await command.ExecuteReaderAsync())
         {
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 columns.Add(reader.GetString(0));
             }
         }
-        connection.Close();
+        await connection.CloseAsync();
         return columns;
     }
 
@@ -253,7 +250,7 @@ public abstract class BaseProvider : IProvider
         return connection.ExecuteScalar($"SELECT COUNT(*) FROM {GetFullTableName(tableName, schemaName)}");
     }
 
-    public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
+    public virtual async IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         //Query query = new Query();
         //fields.ForEach(f => { query.Select(f.Name); });
@@ -273,10 +270,10 @@ public abstract class BaseProvider : IProvider
         command.CommandType = CommandType.Text;
         command.CommandText = sb.ToString();
 
-        connection.Open();
-        using (var reader = command.ExecuteReader())
+        await connection.OpenAsync();
+        using (var reader = await command.ExecuteReaderAsync())
         {
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 var record = new Record();
                 record.Fields.AddRange(fields);
@@ -287,11 +284,11 @@ public abstract class BaseProvider : IProvider
                 yield return record;
             }
         }
-        connection.Close();
+        await connection.CloseAsync();
     }
 
     // TODO: See if can improve performance.
-    public virtual void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
+    public virtual async Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
     {
         const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
 
@@ -304,8 +301,8 @@ public abstract class BaseProvider : IProvider
             .Append(EscapeIdentifierEnd); // "]"
 
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        connection.Open();
-        using (var transaction = connection.BeginTransaction())
+        await connection.OpenAsync();
+        using (var transaction = await connection.BeginTransactionAsync())
         {
             using (var command = connection.CreateCommand())
             {
@@ -320,19 +317,19 @@ public abstract class BaseProvider : IProvider
                     command.Parameters.Add(parameter);
                 });
 
-                records.ForEach(record =>
+                records.ForEach(async record =>
                 {
                     record.Fields.ForEach(field =>
                     {
                         command.Parameters[parameterNames[field.Name]].Value = field.Value;
                     });
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                 });
             }
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
-        connection.Close();
+        await connection.CloseAsync();
     }
 
     protected static IDictionary<string, string> CreateParameterNames(IEnumerable<string> fieldNames)
@@ -382,7 +379,7 @@ public abstract class BaseProvider : IProvider
 
     #endregion Public Static Methods
 
-    protected virtual void CreateTable(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
+    protected virtual async Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
 
@@ -396,9 +393,9 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = commandText;
-        connection.Open();
-        command.ExecuteNonQuery();
-        connection.Close();
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
     }
 
     protected virtual string GetFullTableName(string tableName, string schemaName) =>
