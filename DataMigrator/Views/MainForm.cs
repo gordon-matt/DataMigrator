@@ -14,7 +14,7 @@ public partial class MainForm : KryptonForm
     [ImportMany(typeof(IMigrationPlugin))]
     private readonly ICollection<IMigrationPlugin> plugins = new List<IMigrationPlugin>();
 
-    private readonly TraceViewerControl traceViewer = new();
+    private Dictionary<Type, UserControl> userControls = new();
 
     #region Constructor
 
@@ -25,7 +25,8 @@ public partial class MainForm : KryptonForm
 
         if (!this.IsInWinDesignMode())
         {
-            ShowTraceViewer();//Initialize here or get an error: "Window Handle not yet created"
+            //Initialize here or get an error: "Window Handle not yet created"
+            LoadUserControl<TraceViewerControl>();
         }
 
         using var mainAssemblyCatalog = new AssemblyCatalog(typeof(Program).Assembly);
@@ -44,13 +45,8 @@ public partial class MainForm : KryptonForm
 
     public void HideTraceViewer()
     {
-        if (currentControl != traceViewer)
-        {
-            return;
-        }
-
         panelMain.Controls.Clear();
-        if (currentControl != null)
+        if (currentControl is not null and not TraceViewerControl)
         {
             panelMain.Controls.Add(currentControl);
             currentControl.Dock = DockStyle.Fill;
@@ -60,10 +56,25 @@ public partial class MainForm : KryptonForm
 
     public void ShowTraceViewer()
     {
+        if (currentControl is TraceViewerControl)
+        {
+            return;
+        }
+
         panelMain.Controls.Clear();
+        var traceViewer = userControls[typeof(TraceViewerControl)];
+        currentControl = traceViewer;
         panelMain.Controls.Add(traceViewer);
         traceViewer.Dock = DockStyle.Fill;
         mnuMainToolsShowTraceViewer.Checked = true;
+
+        bool isTraceViewerSelected = treeView.SelectedNode.Level == 0 && treeView.SelectedNode.Index == 0;
+        if (!isTraceViewerSelected)
+        {
+            treeView.AfterSelect -= new TreeViewEventHandler(treeView_AfterSelect);
+            treeView.SelectedNode = treeView.Nodes[0];
+            treeView.AfterSelect += new TreeViewEventHandler(treeView_AfterSelect);
+        }
     }
 
     private DialogResult CheckSaveChanges()
@@ -87,8 +98,17 @@ public partial class MainForm : KryptonForm
 
     private void LoadUserControl<T>() where T : UserControl
     {
-        //SaveCurrentControl();
-        var control = Activator.CreateInstance<T>();
+        UserControl control;
+        if (userControls.ContainsKey(typeof(T)))
+        {
+            control = userControls[typeof(T)];
+        }
+        else
+        {
+            control = Activator.CreateInstance<T>();
+            userControls.Add(typeof(T), control);
+        }
+
         panelMain.Controls.Clear();
         panelMain.Controls.Add(control);
         control.Dock = DockStyle.Fill;
@@ -98,13 +118,8 @@ public partial class MainForm : KryptonForm
             this.Height = this.Height - panelMain.Height + control.MinimumSize.Height;
         }
 
-        if (currentControl != traceViewer)
-        {
-            currentControl?.Dispose();
-        }
-
         currentControl = control;
-        mnuMainToolsShowTraceViewer.Checked = false;
+        mnuMainToolsShowTraceViewer.Checked = currentControl is TraceViewerControl;
     }
 
     private void NewFile()
@@ -136,38 +151,14 @@ public partial class MainForm : KryptonForm
 
     private void SaveCurrentControl()
     {
-        if (panelMain.Controls.Count < 1)
-        { return; }
-
-        //Control currentControl = panelMain.Controls[0];
-        if (currentControl != null)
+        if (panelMain.Controls.Count == 0)
         {
-            if (currentControl is ConnectionsControl)
-            {
-                var control = currentControl as ConnectionsControl;
+            return;
+        }
 
-                if (control.SourceConnection != null)
-                { Program.Configuration.SourceConnection = control.SourceConnection; }
-
-                if (control.DestinationConnection != null)
-                { Program.Configuration.DestinationConnection = control.DestinationConnection; }
-            }
-            else if (currentControl is TableMappingControl)
-            {
-                var control = currentControl as TableMappingControl;
-                Program.CurrentJob.SourceTable = control.SourceTable;
-                Program.CurrentJob.DestinationTable = control.DestinationTable;
-
-                Program.CurrentJob.FieldMappings.Clear();
-                Program.CurrentJob.FieldMappings.AddRange(control.FieldMappings);
-
-                var existingJob = Program.Configuration.Jobs[Program.CurrentJob.Name];
-
-                if (existingJob == null)
-                {
-                    Program.Configuration.Jobs.Add(Program.CurrentJob);
-                }
-            }
+        if (currentControl is not null && currentControl is IConfigControl)
+        {
+            (currentControl as IConfigControl).Save();
         }
     }
 

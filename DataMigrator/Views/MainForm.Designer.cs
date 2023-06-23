@@ -20,8 +20,11 @@ partial class MainForm
             components.Dispose();
         }
         base.Dispose(disposing);
-        currentControl?.Dispose();
-        traceViewer?.Dispose();
+        
+        foreach (var control in userControls)
+        {
+            control.Value?.Dispose();
+        }
     }
 
     #region Windows Form Designer generated code

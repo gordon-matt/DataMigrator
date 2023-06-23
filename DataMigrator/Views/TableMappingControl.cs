@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Windows.Forms;
 using DataMigrator.Common;
 using DataMigrator.Common.Configuration;
 using DataMigrator.Common.Data;
@@ -9,7 +10,7 @@ using Extenso.Data;
 
 namespace DataMigrator.Views;
 
-public partial class TableMappingControl : UserControl
+public partial class TableMappingControl : UserControl, IConfigControl
 {
     #region Public Properties
 
@@ -369,5 +370,20 @@ public partial class TableMappingControl : UserControl
 
         var field = DestinationFields[row.Cells["Field Name"].Value.ToString()];
         pGridDestination.SelectedObject = field;
+    }
+
+    public void Save()
+    {
+        Program.CurrentJob.SourceTable = SourceTable;
+        Program.CurrentJob.DestinationTable = DestinationTable;
+
+        Program.CurrentJob.FieldMappings.Clear();
+        Program.CurrentJob.FieldMappings.AddRange(FieldMappings);
+
+        var existingJob = Program.Configuration.Jobs[Program.CurrentJob.Name];
+        if (existingJob == null)
+        {
+            Program.Configuration.Jobs.Add(Program.CurrentJob);
+        }
     }
 }
