@@ -56,11 +56,6 @@ public partial class MainForm : KryptonForm
 
     public void ShowTraceViewer()
     {
-        if (currentControl is TraceViewerControl)
-        {
-            return;
-        }
-
         panelMain.Controls.Clear();
         var traceViewer = userControls[typeof(TraceViewerControl)];
         currentControl = traceViewer;
@@ -126,6 +121,7 @@ public partial class MainForm : KryptonForm
     {
         CheckSaveChanges();
         Program.Configuration = new DataMigrationConfigFile();
+        currentControl = null;
         panelMain.Controls.Clear();
         treeView.Reset();
         HideTraceViewer();
@@ -140,6 +136,7 @@ public partial class MainForm : KryptonForm
         if (dlgOpenFile.ShowDialog() == DialogResult.OK)
         {
             Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
+            currentControl = null;
             panelMain.Controls.Clear();
             treeView.Reset();
             foreach (var job in Program.Configuration.Jobs.OrderBy(j => j.Name))
@@ -165,6 +162,7 @@ public partial class MainForm : KryptonForm
     private void SaveFile()
     {
         SaveCurrentControl();
+        currentControl = null;
         panelMain.Controls.Clear();
         Program.Configuration.Save();
     }
