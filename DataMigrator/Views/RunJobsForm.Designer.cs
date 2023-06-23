@@ -69,7 +69,6 @@ partial class RunJobsForm
             // btnCancel
             // 
             this.btnCancel.CornerRoundingRadius = -1F;
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Enabled = false;
             this.btnCancel.Location = new System.Drawing.Point(597, 301);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
