@@ -4,7 +4,7 @@ using Extenso.Collections;
 
 namespace DataMigrator.Views;
 
-public partial class ConnectionsControl : UserControl
+public partial class ConnectionsControl : UserControl, IConfigControl
 {
     private IConnectionControl sourceConnectionControl = null;
     private IConnectionControl destinationConnectionControl = null;
@@ -36,22 +36,22 @@ public partial class ConnectionsControl : UserControl
         if (Program.Configuration.SourceConnection != null)
         {
             var plugin = Program.Plugins.SingleOrDefault(p => p.ProviderName == Program.Configuration.SourceConnection.ProviderName);
-            this.sourceConnectionControl = plugin.ConnectionControl;
+            sourceConnectionControl = plugin.ConnectionControl;
             sourceConnectionControl.ConnectionDetails = Program.Configuration.SourceConnection;
             LoadSourceConnectionControl();
-            cmbSourceConnectionType.SelectedIndexChanged -= new System.EventHandler(this.cmbSourceConnectionType_SelectedIndexChanged);
+            cmbSourceConnectionType.SelectedIndexChanged -= new EventHandler(cmbSourceConnectionType_SelectedIndexChanged);
             cmbSourceConnectionType.Text = plugin.ProviderName;
-            cmbSourceConnectionType.SelectedIndexChanged += new System.EventHandler(this.cmbSourceConnectionType_SelectedIndexChanged);
+            cmbSourceConnectionType.SelectedIndexChanged += new EventHandler(cmbSourceConnectionType_SelectedIndexChanged);
         }
         if (Program.Configuration.DestinationConnection != null)
         {
             var plugin = Program.Plugins.SingleOrDefault(p => p.ProviderName == Program.Configuration.DestinationConnection.ProviderName);
-            this.destinationConnectionControl = plugin.ConnectionControl;
+            destinationConnectionControl = plugin.ConnectionControl;
             destinationConnectionControl.ConnectionDetails = Program.Configuration.DestinationConnection;
             LoadDestinationConnectionControl();
-            cmbDestinationConnectionType.SelectedIndexChanged -= new System.EventHandler(this.cmbDestinationConnectionType_SelectedIndexChanged);
+            cmbDestinationConnectionType.SelectedIndexChanged -= new EventHandler(cmbDestinationConnectionType_SelectedIndexChanged);
             cmbDestinationConnectionType.Text = plugin.ProviderName;
-            cmbDestinationConnectionType.SelectedIndexChanged -= new System.EventHandler(this.cmbDestinationConnectionType_SelectedIndexChanged);
+            cmbDestinationConnectionType.SelectedIndexChanged -= new EventHandler(cmbDestinationConnectionType_SelectedIndexChanged);
         }
     }
 
@@ -77,19 +77,19 @@ public partial class ConnectionsControl : UserControl
         }
     }
 
-    private void cmbSourceConnectionType_SelectedIndexChanged(object sender, System.EventArgs e)
+    private void cmbSourceConnectionType_SelectedIndexChanged(object sender, EventArgs e)
     {
         sourceConnectionControl = Controller.GetConnectionControl(SourceConnectionType);
         LoadSourceConnectionControl();
     }
 
-    private void cmbDestinationConnectionType_SelectedIndexChanged(object sender, System.EventArgs e)
+    private void cmbDestinationConnectionType_SelectedIndexChanged(object sender, EventArgs e)
     {
         destinationConnectionControl = Controller.GetConnectionControl(DestinationConnectionType);
         LoadDestinationConnectionControl();
     }
 
-    private void btnValidateSourceConnection_Click(object sender, System.EventArgs e)
+    private void btnValidateSourceConnection_Click(object sender, EventArgs e)
     {
         if (sourceConnectionControl != null)
         {
@@ -112,7 +112,7 @@ public partial class ConnectionsControl : UserControl
         }
     }
 
-    private void btnValidateDestinationConnection_Click(object sender, System.EventArgs e)
+    private void btnValidateDestinationConnection_Click(object sender, EventArgs e)
     {
         if (destinationConnectionControl != null)
         {
@@ -132,6 +132,19 @@ public partial class ConnectionsControl : UserControl
         {
             MessageBox.Show("Destination Connection Not Specified", "No Destination Connection",
                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+    }
+
+    public void Save()
+    {
+        if (SourceConnection != null)
+        {
+            Program.Configuration.SourceConnection = SourceConnection;
+        }
+
+        if (DestinationConnection != null)
+        {
+            Program.Configuration.DestinationConnection = DestinationConnection;
         }
     }
 }
