@@ -15,7 +15,7 @@ public static class Controller
         return Program.Plugins.SingleOrDefault(p => p.ProviderName == providerName).ConnectionControl;
     }
 
-    public static BaseProvider GetProvider(ConnectionDetails connection)
+    public static IProvider GetProvider(ConnectionDetails connection)
     {
         return Program.Plugins.SingleOrDefault(p => p.ProviderName == connection.ProviderName).GetDataProvider(connection);
     }

@@ -56,7 +56,7 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override bool CreateTable(string tableName, string schemaName)
+    protected override bool CreateTable(string tableName, string schemaName)
     {
         return CreateTable(tableName, schemaName, null);
     }
@@ -96,7 +96,7 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override bool CreateField(string tableName, string schemaName, Field field)
+    protected override bool CreateField(string tableName, string schemaName, Field field)
     {
         string fullTableName = GetFullTableName(tableName, schemaName);
 
@@ -126,7 +126,7 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override IEnumerable<string> GetFieldNames(string tableName, string schemaName)
+    protected override IEnumerable<string> GetFieldNames(string tableName, string schemaName)
     {
         var spFieldNames = new List<string>();
         using (var context = GetClientContext(ConnectionDetails))
@@ -196,11 +196,6 @@ public class SharePointProvider : BaseProvider
         context.Load(listItems);
         context.ExecuteQuery();
         return listItems.Count;
-    }
-
-    public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName)
-    {
-        return GetRecordsEnumeratorInternal(tableName, schemaName, GetFields(tableName, schemaName));
     }
 
     public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
@@ -289,12 +284,12 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    public override FieldType GetDataMigratorFieldType(string providerFieldType)
+    protected override FieldType GetDataMigratorFieldType(string providerFieldType)
     {
         return typeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SP.FieldType>(providerFieldType, true));
     }
 
-    public override string GetDataProviderFieldType(FieldType fieldType)
+    protected override string GetDataProviderFieldType(FieldType fieldType)
     {
         return typeConverter.GetDataProviderFieldType(fieldType).ToString();
     }

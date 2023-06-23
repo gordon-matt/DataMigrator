@@ -10,7 +10,7 @@ using Extenso.Data.Common;
 
 namespace DataMigrator.Common.Data;
 
-public abstract class BaseProvider
+public abstract class BaseProvider : IProvider
 {
     #region Public Properties
 
@@ -27,10 +27,7 @@ public abstract class BaseProvider
 
     #endregion Public Properties
 
-    protected string EncloseIdentifier(string value)
-    {
-        return string.Concat(EscapeIdentifierStart, value, EscapeIdentifierEnd);
-    }
+    protected string EncloseIdentifier(string value) => $"{EscapeIdentifierStart}{value}{EscapeIdentifierEnd}";
 
     #region Constructor
 
@@ -67,7 +64,21 @@ public abstract class BaseProvider
         }
     }
 
-    public virtual bool CreateTable(string tableName, string schemaName)
+    public virtual bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
+    {
+        bool ok = CreateTable(tableName, schemaName);
+
+        if (!ok)
+        { return false; }
+
+        foreach (var field in fields)
+        {
+            CreateField(tableName, schemaName, field);
+        }
+        return true;
+    }
+
+    protected virtual bool CreateTable(string tableName, string schemaName)
     {
         try
         {
@@ -87,96 +98,9 @@ public abstract class BaseProvider
         return true;
     }
 
-    public virtual bool CreateTable(string tableName, string schemaName, IEnumerable<Field> fields)
-    {
-        bool ok = CreateTable(tableName, schemaName);
-
-        if (!ok)
-        { return false; }
-
-        foreach (var field in fields)
-        {
-            CreateField(tableName, schemaName, field);
-        }
-        return true;
-    }
-
     #endregion Table Methods
 
     #region Field Methods
-
-    public virtual bool CreateField(string tableName, string schemaName, Field field)
-    {
-        var existingFieldNames = GetFieldNames(tableName, schemaName);
-        if (existingFieldNames.Contains(field.Name))
-        {
-            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
-            //throw new ArgumentException("etc");
-            return false;
-        }
-
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        using var command = connection.CreateCommand();
-        string fieldType = GetDataProviderFieldType(field.Type);
-        string maxLength = string.Empty;
-        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
-        {
-            if (field.MaxLength is > 0 and <= 8000)
-            {
-                maxLength = string.Concat("(", field.MaxLength, ")");
-            }
-            else
-            {
-                if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
-                {
-                    maxLength = "(MAX)";
-                }
-            }
-        }
-        string isRequired = string.Empty;
-        if (field.IsRequired)
-        { isRequired = " NOT NULL"; }
-
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format(
-            Constants.Data.CMD_ADD_COLUMN,
-            GetFullTableName(tableName, schemaName),
-            string.Concat(
-                EncloseIdentifier(field.Name), " ",
-                fieldType,
-                maxLength,
-                isRequired));
-        connection.Open();
-        command.ExecuteNonQuery();
-        connection.Close();
-        return true;
-    }
-
-    public virtual IEnumerable<string> GetFieldNames(string tableName, string schemaName)
-    {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        using var command = connection.CreateCommand();
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
-
-        if (!string.IsNullOrEmpty(schemaName))
-        {
-            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
-        }
-
-        var columns = new List<string>();
-
-        connection.Open();
-        using (var reader = command.ExecuteReader())
-        {
-            while (reader.Read())
-            {
-                columns.Add(reader.GetString(0));
-            }
-        }
-        connection.Close();
-        return columns;
-    }
 
     public virtual FieldCollection GetFields(string tableName, string schemaName)
     {
@@ -246,6 +170,79 @@ public abstract class BaseProvider
         return fields;
     }
 
+    protected virtual bool CreateField(string tableName, string schemaName, Field field)
+    {
+        var existingFieldNames = GetFieldNames(tableName, schemaName);
+        if (existingFieldNames.Contains(field.Name))
+        {
+            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
+            //throw new ArgumentException("etc");
+            return false;
+        }
+
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        string fieldType = GetDataProviderFieldType(field.Type);
+        string maxLength = string.Empty;
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+        {
+            if (field.MaxLength is > 0 and <= 8000)
+            {
+                maxLength = $"({field.MaxLength})";
+            }
+            else
+            {
+                if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
+                {
+                    maxLength = "(MAX)";
+                }
+            }
+        }
+        string isRequired = string.Empty;
+        if (field.IsRequired)
+        { isRequired = " NOT NULL"; }
+
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(
+            Constants.Data.CMD_ADD_COLUMN,
+            GetFullTableName(tableName, schemaName),
+            string.Concat(
+                EncloseIdentifier(field.Name), " ",
+                fieldType,
+                maxLength,
+                isRequired));
+        connection.Open();
+        command.ExecuteNonQuery();
+        connection.Close();
+        return true;
+    }
+
+    protected virtual IEnumerable<string> GetFieldNames(string tableName, string schemaName)
+    {
+        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
+
+        if (!string.IsNullOrEmpty(schemaName))
+        {
+            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
+        }
+
+        var columns = new List<string>();
+
+        connection.Open();
+        using (var reader = command.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                columns.Add(reader.GetString(0));
+            }
+        }
+        connection.Close();
+        return columns;
+    }
+
     #endregion Field Methods
 
     #region Record Methods
@@ -254,11 +251,6 @@ public abstract class BaseProvider
     {
         using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         return connection.ExecuteScalar($"SELECT COUNT(*) FROM {GetFullTableName(tableName, schemaName)}");
-    }
-
-    public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName)
-    {
-        return GetRecordsEnumerator(tableName, schemaName, GetFields(tableName, schemaName));
     }
 
     public virtual IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
@@ -298,24 +290,10 @@ public abstract class BaseProvider
         connection.Close();
     }
 
-    protected IDictionary<string, string> CreateParameterNames(IEnumerable<string> fieldNames)
-    {
-        var parameterNames = new Dictionary<string, string>();
-        fieldNames.ForEach(f =>
-        {
-            string parameterName = f;
-            "¬`!\"£$%^&*()-=+{}[]:;@'~#|<>,.?/ ".ToCharArray().ForEach(c => { parameterName = parameterName.Replace(c, '_'); });
-            parameterNames.Add(f, parameterName.ToPascalCase().Prepend("@"));
-        });
-        return parameterNames;
-    }
-
     // TODO: See if can improve performance.
     public virtual void InsertRecords(string tableName, string schemaName, IEnumerable<Record> records)
     {
         const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
-        //string fieldNames = records.ElementAt(0).Fields.Select(f => f.Name).Join(",");
-        //string parameterNames = fieldNames.Replace(",", ",@").Prepend("@");
 
         var parameterNames = CreateParameterNames(records.ElementAt(0).Fields.Select(f => f.Name));
         string fieldNames = parameterNames.Keys.Join(",");
@@ -333,12 +311,10 @@ public abstract class BaseProvider
             {
                 command.Transaction = transaction;
                 command.CommandText = string.Format(INSERT_INTO_FORMAT, GetFullTableName(tableName, schemaName), fieldNames, parameterNames.Values.Join(","));
-                //command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, parameterNames);
 
                 records.ElementAt(0).Fields.ForEach(field =>
                 {
                     var parameter = command.CreateParameter();
-                    //parameter.ParameterName = string.Concat("@", field.Name);
                     parameter.ParameterName = parameterNames[field.Name];
                     parameter.DbType = AppContext.DbTypeConverter.GetDataProviderFieldType(field.Type);
                     command.Parameters.Add(parameter);
@@ -349,7 +325,6 @@ public abstract class BaseProvider
                     record.Fields.ForEach(field =>
                     {
                         command.Parameters[parameterNames[field.Name]].Value = field.Value;
-                        //command.Parameters[string.Concat("@", field.Name)].Value = field.Value.ToString();
                     });
 
                     command.ExecuteNonQuery();
@@ -358,6 +333,18 @@ public abstract class BaseProvider
             transaction.Commit();
         }
         connection.Close();
+    }
+
+    protected static IDictionary<string, string> CreateParameterNames(IEnumerable<string> fieldNames)
+    {
+        var parameterNames = new Dictionary<string, string>();
+        fieldNames.ForEach(f =>
+        {
+            string parameterName = f;
+            "¬`!\"£$%^&*()-=+{}[]:;@'~#|<>,.?/ ".ToCharArray().ForEach(c => { parameterName = parameterName.Replace(c, '_'); });
+            parameterNames.Add(f, parameterName.ToPascalCase().Prepend("@"));
+        });
+        return parameterNames;
     }
 
     #endregion Record Methods
@@ -421,9 +408,9 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
 
     #region Field Conversion Methods
 
-    public abstract FieldType GetDataMigratorFieldType(string providerFieldType);
+    protected abstract FieldType GetDataMigratorFieldType(string providerFieldType);
 
-    public abstract string GetDataProviderFieldType(FieldType fieldType);
+    protected abstract string GetDataProviderFieldType(FieldType fieldType);
 
     #endregion Field Conversion Methods
 }
