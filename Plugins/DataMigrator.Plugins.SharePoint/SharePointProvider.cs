@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Data.Common;
+using System.Net;
 using System.Text;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Diagnostics;
@@ -193,7 +194,7 @@ public class SharePointProvider : BaseProvider
         return listItems.Count;
     }
 
-    public override async Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
+    public override async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
         //ProcessBatchData not available in Client OM. Maybe can use custom solution similar to base class ADO.NET version
         //But first need to test - maybe this is already fast enough

@@ -13,8 +13,6 @@ public class NpgsqlProvider : BaseProvider
 {
     private readonly NpgsqlDbTypeConverter typeConverter = new();
 
-    public override string DbProviderName => "Npgsql";
-
     public NpgsqlProvider(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {
@@ -22,6 +20,7 @@ public class NpgsqlProvider : BaseProvider
         EscapeIdentifierEnd = "\"";
     }
 
+    public override string DbProviderName => "Npgsql";
     //public override IEnumerable<string> TableNames
     //{
     //    get
@@ -31,28 +30,13 @@ public class NpgsqlProvider : BaseProvider
     //    }
     //}
 
-    protected override DbConnection CreateDbConnection(string providerName, string connectionString) => new NpgsqlConnection(connectionString);
+    public override DbConnection CreateDbConnection() => new NpgsqlConnection(ConnectionDetails.ConnectionString);
 
-    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
+    public override int GetRecordCount(string tableName, string schemaName)
     {
         using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
-        using var command = connection.CreateCommand();
-
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format(
-            @"CREATE TABLE {0}.""{1}""()",
-            schemaName,
-            tableName);
-
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-        await connection.CloseAsync();
-
-        return true;
+        return connection.GetRowCount(schemaName, tableName);
     }
-
-    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
-        throw new NotSupportedException();
 
     protected override async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
@@ -96,11 +80,26 @@ public class NpgsqlProvider : BaseProvider
         return true;
     }
 
-    public override int GetRecordCount(string tableName, string schemaName)
+    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
         using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
-        return connection.GetRowCount(schemaName, tableName);
+        using var command = connection.CreateCommand();
+
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(
+            @"CREATE TABLE {0}.""{1}""()",
+            schemaName,
+            tableName);
+
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
+
+        return true;
     }
+
+    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
+        throw new NotSupportedException();
 
     //public override IEnumerator<Record> GetRecordsEnumerator(string tableName, string schemaName, IEnumerable<Field> fields)
     //{

@@ -1,7 +1,28 @@
-﻿- TODO: TEST, TEST, TEST!!!
-- Enable user change field type on UI (mapping)
-- Convert to WPF app and use ObservableCollection<T> for binding data on Table Mappings form
+﻿- when add new job, remove all mappings from table control..
+	- might be because we keep same control instead of creating new each time
+		- need a Reset() method maybe..
+		
+- add transform actions per column.. example: "Male/Female" can become 1/0 or true/false
+	... or replace underscores with spaces.. or whatever
+	
+- add option: Trim() strings to settings
 
-- ExtendedProperties IEnumerable<string> on Field?
-- Support other delimeters on Csv file?
+- Support other delimeters on Csv file
 - excel is too slow for inserting data. Is faster even possible with openxml?
+- Unit Tests!
+- Support setting primary keys (and remove default primary key from table creation)
+
+
+
+
+
+
+
+
+
+
+- Support foreign keys? would be complicated .. need to make sure jobs run in correct order or will get errors (missing table/missing data for foreign key)..
+
+- Enable user change field type on UI (mapping)?
+- Convert to WPF app and use ObservableCollection<T> for binding data on Table Mappings form?
+- ExtendedProperties IEnumerable<string> on Field?

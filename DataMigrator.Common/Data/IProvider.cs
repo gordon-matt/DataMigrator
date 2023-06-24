@@ -1,4 +1,6 @@
-﻿namespace DataMigrator.Common.Data
+﻿using System.Data.Common;
+
+namespace DataMigrator.Common.Data
 {
     public interface IProvider
     {
@@ -14,6 +16,8 @@
 
         IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields);
 
-        Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records);
+        Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records);
+
+        DbConnection CreateDbConnection();
     }
 }
