@@ -7,22 +7,20 @@ namespace DataMigrator.Common.Data;
 
 public abstract class BaseProvider : IProvider
 {
-    #region Public Properties
+    #region Properties
 
     public abstract string DbProviderName { get; }
 
     protected ConnectionDetails ConnectionDetails { get; set; }
+
+    protected virtual string EscapeIdentifierEnd { get; set; } = "]";
 
     /// <summary>
     /// Used in T-SQL queries for escaping spaces and reserved words
     /// </summary>
     protected virtual string EscapeIdentifierStart { get; set; } = "[";
 
-    protected virtual string EscapeIdentifierEnd { get; set; } = "]";
-
-    #endregion Public Properties
-
-    protected string EncloseIdentifier(string value) => $"{EscapeIdentifierStart}{value}{EscapeIdentifierEnd}";
+    #endregion Properties
 
     #region Constructor
 
@@ -35,9 +33,23 @@ public abstract class BaseProvider : IProvider
 
     #region Table Methods
 
+    public virtual async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    {
+        bool ok = await CreateTableAsync(tableName, schemaName);
+
+        if (!ok)
+        { return false; }
+
+        foreach (var field in fields)
+        {
+            await CreateFieldAsync(tableName, schemaName, field);
+        }
+        return true;
+    }
+
     public virtual async Task<IEnumerable<string>> GetTableNamesAsync()
     {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
         string[] restrictions = new string[4];
         restrictions[3] = "Base Table";
 
@@ -54,20 +66,6 @@ public abstract class BaseProvider : IProvider
             tableNames.Add($"{schemaName}.{tableName}");
         }
         return tableNames;
-    }
-
-    public virtual async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
-    {
-        bool ok = await CreateTableAsync(tableName, schemaName);
-
-        if (!ok)
-        { return false; }
-
-        foreach (var field in fields)
-        {
-            await CreateFieldAsync(tableName, schemaName, field);
-        }
-        return true;
     }
 
     protected virtual async Task<bool> CreateTableAsync(string tableName, string schemaName)
@@ -96,7 +94,7 @@ public abstract class BaseProvider : IProvider
 
     public virtual async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMNS, tableName);
@@ -172,7 +170,7 @@ public abstract class BaseProvider : IProvider
             return false;
         }
 
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
         using var command = connection.CreateCommand();
         string fieldType = GetDataProviderFieldType(field.Type);
         string maxLength = string.Empty;
@@ -211,7 +209,7 @@ public abstract class BaseProvider : IProvider
 
     protected virtual async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
     {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
@@ -241,7 +239,7 @@ public abstract class BaseProvider : IProvider
 
     public virtual int GetRecordCount(string tableName, string schemaName)
     {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
         return connection.ExecuteScalar($"SELECT COUNT(*) FROM {GetFullTableName(tableName, schemaName)}");
     }
 
@@ -260,7 +258,7 @@ public abstract class BaseProvider : IProvider
         sb.Append(" FROM ");
         sb.Append(GetFullTableName(tableName, schemaName));
 
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = sb.ToString();
@@ -283,7 +281,7 @@ public abstract class BaseProvider : IProvider
     }
 
     // TODO: See if can improve performance.
-    public virtual async Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
+    public virtual async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
         const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
 
@@ -295,7 +293,7 @@ public abstract class BaseProvider : IProvider
             .Prepend(EscapeIdentifierStart) // "["
             .Append(EscapeIdentifierEnd); // "]"
 
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        //using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         await connection.OpenAsync();
         using (var transaction = await connection.BeginTransactionAsync())
         {
@@ -341,22 +339,20 @@ public abstract class BaseProvider : IProvider
 
     #endregion Record Methods
 
-    #region Public Static Methods
-
-    protected virtual DbConnection CreateDbConnection(string providerName, string connectionString)
+    public virtual DbConnection CreateDbConnection()
     {
         // Assume failure.
         DbConnection connection = null;
 
         // Create the DbProviderFactory and DbConnection.
-        if (connectionString != null)
+        if (ConnectionDetails.ConnectionString != null)
         {
             try
             {
-                var factory = DbProviderFactories.GetFactory(providerName);
+                var factory = DbProviderFactories.GetFactory(DbProviderName);
 
                 connection = factory.CreateConnection();
-                connection.ConnectionString = connectionString;
+                connection.ConnectionString = ConnectionDetails.ConnectionString;
             }
             catch (Exception ex)
             {
@@ -372,11 +368,9 @@ public abstract class BaseProvider : IProvider
         return connection;
     }
 
-    #endregion Public Static Methods
-
     protected virtual async Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
     {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection();
 
         string commandText =
 $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
@@ -392,6 +386,8 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
         await command.ExecuteNonQueryAsync();
         await connection.CloseAsync();
     }
+
+    protected string EncloseIdentifier(string value) => $"{EscapeIdentifierStart}{value}{EscapeIdentifierEnd}";
 
     protected virtual string GetFullTableName(string tableName, string schemaName) =>
         !string.IsNullOrEmpty(schemaName)

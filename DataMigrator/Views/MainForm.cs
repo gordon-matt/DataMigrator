@@ -59,7 +59,7 @@ public partial class MainForm : KryptonForm
         traceViewer.Dock = DockStyle.Fill;
         mnuMainToolsShowTraceViewer.Checked = true;
 
-        bool isTraceViewerSelected = treeView.SelectedNode.Level == 0 && treeView.SelectedNode.Index == 0;
+        bool isTraceViewerSelected = treeView.SelectedNode is not null && treeView.SelectedNode.Level == 0 && treeView.SelectedNode.Index == 0;
         if (!isTraceViewerSelected)
         {
             treeView.AfterSelect -= new TreeViewEventHandler(treeView_AfterSelect);

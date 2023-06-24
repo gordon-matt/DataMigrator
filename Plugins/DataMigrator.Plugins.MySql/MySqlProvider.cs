@@ -13,8 +13,6 @@ public class MySqlProvider : BaseProvider
 {
     private readonly MySqlDbTypeConverter typeConverter = new();
 
-    public override string DbProviderName => "MySql.Data.MySqlClient";
-
     public MySqlProvider(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {
@@ -22,25 +20,9 @@ public class MySqlProvider : BaseProvider
         EscapeIdentifierEnd = "`";
     }
 
-    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
-    {
-        using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandType = CommandType.Text;
-            command.CommandText = string.Format(
-                "CREATE TABLE {0}(Id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(Id)) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci",
-                GetFullTableName(tableName, schemaName));
+    public override string DbProviderName => "MySql.Data.MySqlClient";
 
-            await connection.OpenAsync();
-            await command.ExecuteNonQueryAsync();
-            await connection.CloseAsync();
-        }
-        return true;
-    }
-
-    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
-        throw new NotSupportedException();
+    public override DbConnection CreateDbConnection() => new MySqlConnection(ConnectionDetails.ConnectionString);
 
     protected override async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
@@ -82,6 +64,26 @@ public class MySqlProvider : BaseProvider
         await connection.CloseAsync();
         return true;
     }
+
+    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
+    {
+        using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandText = string.Format(
+                "CREATE TABLE {0}(Id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(Id)) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci",
+                GetFullTableName(tableName, schemaName));
+
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+            await connection.CloseAsync();
+        }
+        return true;
+    }
+
+    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
+        throw new NotSupportedException();
 
     //public override void InsertRecords(string tableName, IEnumerable<Record> records)
     //{
@@ -145,6 +147,4 @@ public class MySqlProvider : BaseProvider
         var mySqlType = typeConverter.GetDataProviderFieldType(fieldType);
         return MySqlDbTypeConverter.GetMySqlDataTypeStringValue(mySqlType);
     }
-
-    protected override DbConnection CreateDbConnection(string providerName, string connectionString) => new MySqlConnection(connectionString);
 }

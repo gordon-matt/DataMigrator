@@ -51,12 +51,20 @@ public partial class RunJobsForm : KryptonForm
 
         var progressHandler = new Progress<int>(value =>
         {
-            progressBar.BeginInvoke(
-                (MethodInvoker)delegate ()
-                {
-                    progressBar.Value = value;
-                    progressBar.Refresh();
-                });
+            if (progressBar.InvokeRequired)
+            {
+                progressBar.BeginInvoke(
+                    (MethodInvoker)delegate ()
+                    {
+                        progressBar.Value = value;
+                        progressBar.Refresh();
+                    });
+            }
+            else
+            {
+                progressBar.Value = value;
+                progressBar.Refresh();
+            }
         });
 
         foreach (DataRow row in ((DataTable)dataGridView.DataSource).Rows)

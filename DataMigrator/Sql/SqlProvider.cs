@@ -25,9 +25,8 @@ public class SqlProvider : BaseProvider
     protected override string GetDataProviderFieldType(FieldType fieldType) =>
         AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
 
-    public override async Task InsertRecordsAsync(string tableName, string schemaName, IEnumerable<Record> records)
+    public override async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
-        using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         await connection.OpenAsync();
         var table = records.ToDataTable();
 

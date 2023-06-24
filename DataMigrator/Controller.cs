@@ -1,4 +1,7 @@
-﻿namespace DataMigrator;
+﻿using System.Linq.Expressions;
+using Newtonsoft.Json;
+
+namespace DataMigrator;
 
 public static class Controller
 {
@@ -40,37 +43,47 @@ public static class Controller
         int processedRecordCount = 0;
         var recordsEnumerator = sourceProvider.GetRecordsEnumeratorAsync(sourceTable, sourceSchema, sourceFields);
 
+        using var connection = destinationProvider.CreateDbConnection();
         while (await recordsEnumerator.MoveNextAsync())
         {
             var record = recordsEnumerator.Current.Clone();
 
-            buffer.Add(record);
-            processedRecordCount++;
-
-            if (processedRecordCount.IsMultipleOf(Program.Configuration.BatchSize) || processedRecordCount == recordCount)
+            try
             {
-                if (cancellationToken.IsCancellationRequested)
-                { return; }
+                buffer.Add(record);
+                processedRecordCount++;
 
-                buffer.ReMapFields(job.FieldMappings);
+                if (processedRecordCount.IsMultipleOf(Program.Configuration.BatchSize) || processedRecordCount == recordCount)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    { return; }
 
-                // TODO: Apply Transform Functions
-                //  Create an ITransformerPlugin and let users assign them to columns
-                //  Then run them here on each record in `buffer`.
+                    buffer.ReMapFields(job.FieldMappings);
 
-                string destinationSchema = job.DestinationTable.Contains('.') ? job.DestinationTable.LeftOf('.') : string.Empty;
-                string destinationTable = job.DestinationTable.Contains('.') ? job.DestinationTable.RightOf('.') : job.DestinationTable;
+                    // TODO: Apply Transform Functions
+                    //  Create an ITransformerPlugin and let users assign them to columns
+                    //  Then run them here on each record in `buffer`.
 
-                await destinationProvider.InsertRecordsAsync(destinationTable, destinationSchema, buffer);
-                buffer = new RecordCollection();
+                    string destinationSchema = job.DestinationTable.Contains('.') ? job.DestinationTable.LeftOf('.') : string.Empty;
+                    string destinationTable = job.DestinationTable.Contains('.') ? job.DestinationTable.RightOf('.') : job.DestinationTable;
 
-                double percent = processedRecordCount / (double)recordCount;
-                percent *= 100;
-                progress.Report((int)percent);
-                TraceService.Instance.WriteFormat(TraceEvent.Information, "{0}/{1} Records Processed", processedRecordCount, recordCount);
+                    await destinationProvider.InsertRecordsAsync(connection, destinationTable, destinationSchema, buffer);
+                    buffer = new RecordCollection();
 
-                if (cancellationToken.IsCancellationRequested)
-                { return; }
+                    double percent = processedRecordCount / (double)recordCount;
+                    percent *= 100;
+                    progress.Report((int)percent);
+                    TraceService.Instance.WriteFormat(TraceEvent.Information, "{0}/{1} Records Processed", processedRecordCount, recordCount);
+
+                    if (cancellationToken.IsCancellationRequested)
+                    { return; }
+                }
+            }
+            catch
+            {
+                string recordJson = record.JsonSerialize(new JsonSerializerSettings { Formatting = Formatting.Indented });
+                TraceService.Instance.WriteMessage(TraceEvent.Error, $"Error when attempting to process record #{processedRecordCount} with the following data:{Environment.NewLine}{recordJson}");
+                throw;
             }
         }
     }

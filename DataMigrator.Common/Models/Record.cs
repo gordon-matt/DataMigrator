@@ -33,7 +33,7 @@ public class Record : ICloneable
             var field = this[mapping.SourceField.Name];
             if (field != null)
             {
-                if (field.Value == null || field.Value == DBNull.Value)
+                if (field.Value == null || field.Value == DBNull.Value || (field.Value is string && string.IsNullOrEmpty(field.Value as string)))
                 { continue; }
 
                 var newType = AppContext.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
