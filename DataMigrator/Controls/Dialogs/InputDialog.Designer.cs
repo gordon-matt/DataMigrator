@@ -1,4 +1,4 @@
-﻿namespace DataMigrator.Windows.Forms;
+﻿namespace DataMigrator;
 
 partial class InputDialog
 {

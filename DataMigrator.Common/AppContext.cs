@@ -1,6 +1,4 @@
-﻿using DataMigrator.Common.Data;
-
-namespace DataMigrator.Common;
+﻿namespace DataMigrator.Common;
 
 public static class AppContext
 {

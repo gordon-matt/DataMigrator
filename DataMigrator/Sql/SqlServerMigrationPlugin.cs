@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using DataMigrator.Common;
-using DataMigrator.Common.Data;
-using DataMigrator.Common.Models;
 
 namespace DataMigrator.Sql
 {

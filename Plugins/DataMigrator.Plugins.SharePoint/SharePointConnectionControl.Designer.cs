@@ -47,7 +47,7 @@ partial class SharePointConnectionControl
             this.txtUrl.Location = new System.Drawing.Point(105, 12);
             this.txtUrl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUrl.Name = "txtUrl";
-            this.txtUrl.Size = new System.Drawing.Size(350, 23);
+            this.txtUrl.Size = new System.Drawing.Size(347, 23);
             this.txtUrl.TabIndex = 1;
             // 
             // lblUrl
@@ -67,7 +67,7 @@ partial class SharePointConnectionControl
             this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(350, 23);
+            this.txtPassword.Size = new System.Drawing.Size(347, 23);
             this.txtPassword.TabIndex = 13;
             // 
             // lblPassword
@@ -81,10 +81,12 @@ partial class SharePointConnectionControl
             // 
             // txtUserName
             // 
+            this.txtUserName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUserName.Location = new System.Drawing.Point(105, 41);
             this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(350, 23);
+            this.txtUserName.Size = new System.Drawing.Size(347, 23);
             this.txtUserName.TabIndex = 11;
             // 
             // lblUserName
@@ -98,10 +100,12 @@ partial class SharePointConnectionControl
             // 
             // txtDomain
             // 
+            this.txtDomain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDomain.Location = new System.Drawing.Point(105, 99);
             this.txtDomain.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtDomain.Name = "txtDomain";
-            this.txtDomain.Size = new System.Drawing.Size(350, 23);
+            this.txtDomain.Size = new System.Drawing.Size(347, 23);
             this.txtDomain.TabIndex = 15;
             // 
             // lblDomain

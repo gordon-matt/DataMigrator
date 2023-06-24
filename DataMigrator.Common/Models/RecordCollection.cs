@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace DataMigrator.Common.Models;
+﻿namespace DataMigrator.Common.Models;
 
 public class RecordCollection : List<Record>
 {

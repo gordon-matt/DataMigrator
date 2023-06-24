@@ -1,12 +1,11 @@
-﻿using System.Data;
-using System.Data.SqlTypes;
-using DataMigrator.Common.Models;
+﻿using System.Data.SqlTypes;
 
 namespace DataMigrator.Common.Data;
 
 public class SystemTypeConverter : IFieldTypeConverter<Type>
 {
     private static readonly List<(Type SystemType, FieldType FieldType)> netTypes = new();
+
     //private static readonly List<(DbType DbType, FieldType FieldType)> dbTypes = new();
     private static readonly List<(FieldType FieldType, Type SystemType)> fieldTypes = new();
 

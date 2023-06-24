@@ -1,11 +1,6 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Text;
-using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms.Diagnostics;
-using Extenso;
-using Extenso.Data;
-using Extenso.Collections;
+using DataMigrator.Common.Diagnostics;
 using Extenso.Data.Common;
 
 namespace DataMigrator.Common.Data;

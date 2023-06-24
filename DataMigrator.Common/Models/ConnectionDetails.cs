@@ -1,6 +1,4 @@
-﻿using System.Xml.Serialization;
-
-namespace DataMigrator.Common.Models;
+﻿namespace DataMigrator.Common.Models;
 
 public class ConnectionDetails
 {

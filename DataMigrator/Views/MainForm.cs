@@ -1,9 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using DataMigrator.Common;
-using DataMigrator.Common.Configuration;
-using Extenso.Windows.Forms;
-using Krypton.Toolkit;
 
 namespace DataMigrator.Views;
 

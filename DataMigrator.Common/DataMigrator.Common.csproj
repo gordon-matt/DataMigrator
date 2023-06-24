@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataMigrator.Windows.Forms\DataMigrator.Windows.Forms.csproj" />
+    <PackageReference Include="Extenso.Core" Version="7.0.1" />
+    <PackageReference Include="Extenso.Data" Version="7.1.0" />
+    <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

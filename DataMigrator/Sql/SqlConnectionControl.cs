@@ -1,10 +1,5 @@
-﻿using DataMigrator.Common;
-using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms.Diagnostics;
-using Extenso.Collections;
-using Extenso.Data.Common;
+﻿using Extenso.Data.Common;
 using Extenso.Data.SqlClient;
-using Extenso.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
 namespace DataMigrator.Sql;

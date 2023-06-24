@@ -1,9 +1,5 @@
 ﻿using System.Data;
 using System.Data.Common;
-using DataMigrator.Common.Data;
-using DataMigrator.Common.Models;
-using Extenso;
-using Extenso.Collections;
 using Microsoft.Data.SqlClient;
 using AppContext = DataMigrator.Common.AppContext;
 

@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator", "DataMigrato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Common", "DataMigrator.Common\DataMigrator.Common.csproj", "{BFFE01DF-6A32-4114-B39C-37829F28CEF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Windows.Forms", "DataMigrator.Windows.Forms\DataMigrator.Windows.Forms.csproj", "{A3651F6C-F48A-4B13-8E84-C503AE822CAF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{169C2457-B1D8-44E1-A126-798FC2889479}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{C66A2563-2A8A-43DD-B5AF-F992C17A2CD1}"
@@ -45,10 +43,6 @@ Global
 		{BFFE01DF-6A32-4114-B39C-37829F28CEF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFFE01DF-6A32-4114-B39C-37829F28CEF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFFE01DF-6A32-4114-B39C-37829F28CEF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3651F6C-F48A-4B13-8E84-C503AE822CAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3651F6C-F48A-4B13-8E84-C503AE822CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3651F6C-F48A-4B13-8E84-C503AE822CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3651F6C-F48A-4B13-8E84-C503AE822CAF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{454375C1-9FF3-444D-AD11-3E14D4F0CD6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{454375C1-9FF3-444D-AD11-3E14D4F0CD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{454375C1-9FF3-444D-AD11-3E14D4F0CD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU

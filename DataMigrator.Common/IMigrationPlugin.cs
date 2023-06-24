@@ -1,7 +1,4 @@
-﻿using DataMigrator.Common.Data;
-using DataMigrator.Common.Models;
-
-namespace DataMigrator.Common;
+﻿namespace DataMigrator.Common;
 
 public interface IMigrationPlugin
 {

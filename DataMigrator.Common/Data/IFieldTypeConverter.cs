@@ -1,6 +1,4 @@
-﻿using DataMigrator.Common.Models;
-
-namespace DataMigrator.Common.Data;
+﻿namespace DataMigrator.Common.Data;
 
 public interface IFieldTypeConverter<T>
 {

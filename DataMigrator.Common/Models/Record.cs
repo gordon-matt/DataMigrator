@@ -1,6 +1,4 @@
-﻿using Extenso;
-
-namespace DataMigrator.Common.Models;
+﻿namespace DataMigrator.Common.Models;
 
 public class Record : ICloneable
 {

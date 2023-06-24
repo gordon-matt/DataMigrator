@@ -1,6 +1,4 @@
-﻿using DataMigrator.Common;
-
-namespace DataMigrator.Views;
+﻿namespace DataMigrator.Views;
 
 public partial class DataMigratorSettingsControl : UserControl, ISettingsControl
 {

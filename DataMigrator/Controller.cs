@@ -1,24 +1,11 @@
-﻿using System.ComponentModel;
-using DataMigrator.Common;
-using DataMigrator.Common.Configuration;
-using DataMigrator.Common.Data;
-using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms.Diagnostics;
-using Extenso;
-
-namespace DataMigrator;
+﻿namespace DataMigrator;
 
 public static class Controller
 {
-    public static IConnectionControl GetConnectionControl(string providerName)
-    {
-        return Program.Plugins.SingleOrDefault(p => p.ProviderName == providerName).ConnectionControl;
-    }
+    public static IMigrationPlugin GetPlugin(string providerName) =>
+        Program.Plugins.SingleOrDefault(p => p.ProviderName == providerName);
 
-    public static IProvider GetProvider(ConnectionDetails connection)
-    {
-        return Program.Plugins.SingleOrDefault(p => p.ProviderName == connection.ProviderName).GetDataProvider(connection);
-    }
+    public static IProvider GetProvider(ConnectionDetails connection) => GetPlugin(connection.ProviderName).GetDataProvider(connection);
 
     public static async Task RunJobAsync(Job job, IProgress<int> progress, CancellationToken cancellationToken)
     {

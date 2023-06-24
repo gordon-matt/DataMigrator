@@ -1,7 +1,4 @@
-﻿using System.Data;
-using Extenso.Collections;
-
-namespace DataMigrator.Common.Models
+﻿namespace DataMigrator.Common.Models
 {
     public static class Extensions
     {

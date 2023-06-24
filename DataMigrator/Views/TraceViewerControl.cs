@@ -1,6 +1,4 @@
-﻿using DataMigrator.Windows.Forms.Diagnostics;
-
-namespace DataMigrator.Views;
+﻿namespace DataMigrator.Views;
 
 public partial class TraceViewerControl : UserControl
 {

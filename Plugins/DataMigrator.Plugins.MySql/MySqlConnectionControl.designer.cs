@@ -55,7 +55,7 @@ partial class MySqlConnectionControl
             this.grpLogOnServer.Controls.Add(this.lblUserName);
             this.grpLogOnServer.Controls.Add(this.txtPassword);
             this.grpLogOnServer.Controls.Add(this.txtUserName);
-            this.grpLogOnServer.Location = new System.Drawing.Point(19, 69);
+            this.grpLogOnServer.Location = new System.Drawing.Point(19, 124);
             this.grpLogOnServer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpLogOnServer.Name = "grpLogOnServer";
             this.grpLogOnServer.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -113,17 +113,15 @@ partial class MySqlConnectionControl
             // 
             // txtPort
             // 
-            this.txtPort.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPort.Location = new System.Drawing.Point(243, 40);
+            this.txtPort.Location = new System.Drawing.Point(19, 95);
             this.txtPort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(210, 23);
+            this.txtPort.Size = new System.Drawing.Size(135, 23);
             this.txtPort.TabIndex = 25;
             // 
             // lblPort
             // 
-            this.lblPort.Location = new System.Drawing.Point(243, 14);
+            this.lblPort.Location = new System.Drawing.Point(19, 69);
             this.lblPort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(36, 20);
@@ -136,7 +134,7 @@ partial class MySqlConnectionControl
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtServer.Location = new System.Drawing.Point(19, 40);
             this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(217, 23);
+            this.txtServer.Size = new System.Drawing.Size(434, 23);
             this.txtServer.TabIndex = 27;
             // 
             // lblServer
@@ -156,7 +154,7 @@ partial class MySqlConnectionControl
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpConnectDatabase.Controls.Add(this.lblDatabase);
             this.grpConnectDatabase.Controls.Add(this.cmbDatabase);
-            this.grpConnectDatabase.Location = new System.Drawing.Point(19, 170);
+            this.grpConnectDatabase.Location = new System.Drawing.Point(19, 225);
             this.grpConnectDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpConnectDatabase.Name = "grpConnectDatabase";
             this.grpConnectDatabase.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -204,7 +202,7 @@ partial class MySqlConnectionControl
             this.Controls.Add(this.grpConnectDatabase);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "MySqlConnectionControl";
-            this.Size = new System.Drawing.Size(472, 260);
+            this.Size = new System.Drawing.Size(472, 315);
             this.grpLogOnServer.ResumeLayout(false);
             this.grpLogOnServer.PerformLayout();
             this.grpConnectDatabase.ResumeLayout(false);
