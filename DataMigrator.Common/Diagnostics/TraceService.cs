@@ -1,4 +1,4 @@
-﻿namespace DataMigrator.Windows.Forms.Diagnostics;
+﻿namespace DataMigrator.Common.Diagnostics;
 
 public sealed class TraceService
 {

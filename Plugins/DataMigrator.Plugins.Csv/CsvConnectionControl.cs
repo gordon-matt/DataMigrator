@@ -1,6 +1,6 @@
 ﻿using DataMigrator.Common;
+using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms.Diagnostics;
 
 namespace DataMigrator.Csv;
 

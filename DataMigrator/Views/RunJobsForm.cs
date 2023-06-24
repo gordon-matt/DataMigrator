@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using DataMigrator.Windows.Forms.Diagnostics;
-using Krypton.Toolkit;
 
 namespace DataMigrator.Views;
 

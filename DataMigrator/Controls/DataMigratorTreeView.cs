@@ -1,7 +1,4 @@
-﻿using DataMigrator.Common.Configuration;
-using DataMigrator.Windows.Forms;
-
-namespace DataMigrator.Controls;
+﻿namespace DataMigrator.Controls;
 
 public class DataMigratorTreeView : TreeView
 {

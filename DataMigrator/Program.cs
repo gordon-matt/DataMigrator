@@ -1,5 +1,3 @@
-using DataMigrator.Common;
-using DataMigrator.Common.Configuration;
 using DataMigrator.Views;
 
 namespace DataMigrator;

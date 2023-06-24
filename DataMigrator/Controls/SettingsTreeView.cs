@@ -1,6 +1,4 @@
-﻿using DataMigrator.Common;
-
-namespace DataMigrator.Controls;
+﻿namespace DataMigrator.Controls;
 
 public class SettingsTreeView : TreeView
 {

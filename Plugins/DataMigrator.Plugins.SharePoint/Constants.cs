@@ -11,21 +11,21 @@ internal static class Constants
         get
         {
             systemFields ??= new string[]
-                {
-                    "Author",
-                    "ContentType",
-                    "Modified",
-                    "Created",
-                    "Editor",
-                    "_UIVersionString",
-                    "Attachments",
-                    "Edit",
-                    "LinkTitleNoMenu",
-                    "LinkTitle",
-                    "DocIcon",
-                    "ItemChildCount",
-                    "FolderChildCount"
-                };
+            {
+                "Author",
+                "ContentType",
+                "Modified",
+                "Created",
+                "Editor",
+                "_UIVersionString",
+                "Attachments",
+                "Edit",
+                "LinkTitleNoMenu",
+                "LinkTitle",
+                "DocIcon",
+                "ItemChildCount",
+                "FolderChildCount"
+            };
             return systemFields;
         }
     }

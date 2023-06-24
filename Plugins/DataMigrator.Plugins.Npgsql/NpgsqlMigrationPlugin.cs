@@ -14,10 +14,7 @@ public class NpgsqlMigrationPlugin : IMigrationPlugin
 
     public IConnectionControl ConnectionControl => new NpgsqlConnectionControl();
 
-    public IProvider GetDataProvider(ConnectionDetails connectionDetails)
-    {
-        return new NpgsqlProvider(connectionDetails);
-    }
+    public IProvider GetDataProvider(ConnectionDetails connectionDetails) => new NpgsqlProvider(connectionDetails);
 
     public ISettingsControl SettingsControl => null;
 

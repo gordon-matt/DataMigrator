@@ -1,7 +1,4 @@
-﻿using Extenso.Collections;
-using Krypton.Toolkit;
-
-namespace DataMigrator.Views;
+﻿namespace DataMigrator.Views;
 
 public partial class ToolsForm : KryptonForm
 {

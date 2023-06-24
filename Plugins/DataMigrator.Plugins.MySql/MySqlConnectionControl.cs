@@ -1,6 +1,6 @@
 ﻿using DataMigrator.Common;
+using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso.Collections;
 using Extenso.Data.Common;
 using Extenso.Data.MySql;

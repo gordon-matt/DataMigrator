@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Text;
 using DataMigrator.Common.Data;
+using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using DataMigrator.SharePoint.Extensions;
-using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso;
 using Extenso.Collections;
 using SP = Microsoft.SharePoint.Client;
@@ -53,10 +53,8 @@ public class SharePointProvider : BaseProvider
         return listNames;
     }
 
-    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
-    {
-        return await CreateTableAsync(tableName, schemaName, null);
-    }
+    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName) =>
+        await CreateTableAsync(tableName, schemaName, null);
 
     public override async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
@@ -276,15 +274,11 @@ public class SharePointProvider : BaseProvider
         }
     }
 
-    protected override FieldType GetDataMigratorFieldType(string providerFieldType)
-    {
-        return typeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SP.FieldType>(providerFieldType, true));
-    }
+    protected override FieldType GetDataMigratorFieldType(string providerFieldType) =>
+        typeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SP.FieldType>(providerFieldType, true));
 
-    protected override string GetDataProviderFieldType(FieldType fieldType)
-    {
-        return typeConverter.GetDataProviderFieldType(fieldType).ToString();
-    }
+    protected override string GetDataProviderFieldType(FieldType fieldType) =>
+        typeConverter.GetDataProviderFieldType(fieldType).ToString();
 
     protected override string GetFullTableName(string tableName, string schemaName) =>
         !string.IsNullOrEmpty(schemaName) ? $"{schemaName}_{tableName}" : tableName;

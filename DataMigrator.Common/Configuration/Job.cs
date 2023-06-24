@@ -1,7 +1,4 @@
-﻿using System.Xml.Serialization;
-using DataMigrator.Common.Models;
-
-namespace DataMigrator.Common.Configuration;
+﻿namespace DataMigrator.Common.Configuration;
 
 public class Job
 {

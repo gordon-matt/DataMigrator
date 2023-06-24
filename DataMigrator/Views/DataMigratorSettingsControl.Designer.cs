@@ -1,6 +1,4 @@
-﻿using Krypton.Toolkit;
-
-namespace DataMigrator.Views;
+﻿namespace DataMigrator.Views;
 
 partial class DataMigratorSettingsControl
 {

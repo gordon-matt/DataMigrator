@@ -1,6 +1,4 @@
-﻿using Krypton.Toolkit;
-
-namespace DataMigrator.Sql;
+﻿namespace DataMigrator.Sql;
 
 partial class SqlConnectionControl
 {

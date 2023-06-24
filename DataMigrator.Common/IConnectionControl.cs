@@ -1,8 +1,6 @@
-﻿using DataMigrator.Common.Models;
+﻿namespace DataMigrator.Common;
 
-namespace DataMigrator.Common;
-
-public interface IConnectionControl
+public interface IConnectionControl : IDisposable
 {
     ConnectionDetails ConnectionDetails { get; set; }
 

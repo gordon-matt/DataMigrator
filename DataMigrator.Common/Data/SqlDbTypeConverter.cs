@@ -1,7 +1,4 @@
-﻿using System.Data;
-using DataMigrator.Common.Models;
-
-namespace DataMigrator.Common.Data;
+﻿namespace DataMigrator.Common.Data;
 
 public class SqlDbTypeConverter : IFieldTypeConverter<SqlDbType>
 {

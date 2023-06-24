@@ -1,11 +1,4 @@
 ﻿using System.Data;
-using System.Windows.Forms;
-using DataMigrator.Common;
-using DataMigrator.Common.Configuration;
-using DataMigrator.Common.Data;
-using DataMigrator.Common.Models;
-using Extenso;
-using Extenso.Collections;
 using Extenso.Data;
 
 namespace DataMigrator.Views;

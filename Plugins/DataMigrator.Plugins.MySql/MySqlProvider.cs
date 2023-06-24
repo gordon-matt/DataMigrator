@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Data.Common;
 using DataMigrator.Common.Data;
+using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
-using DataMigrator.Windows.Forms.Diagnostics;
 using Extenso;
 using MySql.Data.MySqlClient;
 

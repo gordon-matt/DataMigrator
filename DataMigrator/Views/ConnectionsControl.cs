@@ -1,8 +1,4 @@
-﻿using DataMigrator.Common;
-using DataMigrator.Common.Models;
-using Extenso.Collections;
-
-namespace DataMigrator.Views;
+﻿namespace DataMigrator.Views;
 
 public partial class ConnectionsControl : UserControl, IConfigControl
 {
@@ -35,7 +31,7 @@ public partial class ConnectionsControl : UserControl, IConfigControl
 
         if (Program.Configuration.SourceConnection != null)
         {
-            var plugin = Program.Plugins.SingleOrDefault(p => p.ProviderName == Program.Configuration.SourceConnection.ProviderName);
+            var plugin = Controller.GetPlugin(Program.Configuration.SourceConnection.ProviderName);
             sourceConnectionControl = plugin.ConnectionControl;
             sourceConnectionControl.ConnectionDetails = Program.Configuration.SourceConnection;
             LoadSourceConnectionControl();
@@ -45,7 +41,7 @@ public partial class ConnectionsControl : UserControl, IConfigControl
         }
         if (Program.Configuration.DestinationConnection != null)
         {
-            var plugin = Program.Plugins.SingleOrDefault(p => p.ProviderName == Program.Configuration.DestinationConnection.ProviderName);
+            var plugin = Controller.GetPlugin(Program.Configuration.DestinationConnection.ProviderName);
             destinationConnectionControl = plugin.ConnectionControl;
             destinationConnectionControl.ConnectionDetails = Program.Configuration.DestinationConnection;
             LoadDestinationConnectionControl();
@@ -79,13 +75,13 @@ public partial class ConnectionsControl : UserControl, IConfigControl
 
     private void cmbSourceConnectionType_SelectedIndexChanged(object sender, EventArgs e)
     {
-        sourceConnectionControl = Controller.GetConnectionControl(SourceConnectionType);
+        sourceConnectionControl = Controller.GetPlugin(SourceConnectionType).ConnectionControl;
         LoadSourceConnectionControl();
     }
 
     private void cmbDestinationConnectionType_SelectedIndexChanged(object sender, EventArgs e)
     {
-        destinationConnectionControl = Controller.GetConnectionControl(DestinationConnectionType);
+        destinationConnectionControl = Controller.GetPlugin(DestinationConnectionType).ConnectionControl;
         LoadDestinationConnectionControl();
     }
 
