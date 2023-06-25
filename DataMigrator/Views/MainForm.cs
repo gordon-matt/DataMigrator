@@ -41,18 +41,19 @@ public partial class MainForm : KryptonForm
 
     public void HideTraceViewer()
     {
-        panelMain.Controls.Clear();
-        if (currentControl is not null and not TraceViewerControl)
-        {
-            panelMain.Controls.Add(currentControl);
-            currentControl.Dock = DockStyle.Fill;
-        }
+        ClearControls();
+        //panelMain.Controls.Clear();
+        //if (currentControl is not null and not TraceViewerControl)
+        //{
+        panelMain.Controls.Add(currentControl);
+        currentControl.Dock = DockStyle.Fill;
+        //}
         mnuMainToolsShowTraceViewer.Checked = false;
     }
 
     public void ShowTraceViewer()
     {
-        panelMain.Controls.Clear();
+        ClearControls();
         var traceViewer = userControls[typeof(TraceViewerControl)];
         currentControl = traceViewer;
         panelMain.Controls.Add(traceViewer);
@@ -87,20 +88,33 @@ public partial class MainForm : KryptonForm
         return dialogResult;
     }
 
+    private void ClearControls()
+    {
+        panelMain.Controls.Clear();
+        currentControl = null;
+    }
+
     private void LoadUserControl<T>() where T : UserControl
     {
         UserControl control;
-        if (userControls.ContainsKey(typeof(T)))
+        if (!typeof(T).GetInterfaces().Contains(typeof(ITransientControl)))
         {
-            control = userControls[typeof(T)];
+            if (userControls.ContainsKey(typeof(T)))
+            {
+                control = userControls[typeof(T)];
+            }
+            else
+            {
+                control = Activator.CreateInstance<T>();
+                userControls.Add(typeof(T), control);
+            }
         }
         else
         {
             control = Activator.CreateInstance<T>();
-            userControls.Add(typeof(T), control);
         }
 
-        panelMain.Controls.Clear();
+        ClearControls();
         panelMain.Controls.Add(control);
         control.Dock = DockStyle.Fill;
         if (control.MinimumSize != new Size(0, 0))
@@ -117,8 +131,7 @@ public partial class MainForm : KryptonForm
     {
         CheckSaveChanges();
         Program.Configuration = new DataMigrationConfigFile();
-        currentControl = null;
-        panelMain.Controls.Clear();
+        ClearControls();
         treeView.Reset();
         HideTraceViewer();
     }
@@ -132,8 +145,7 @@ public partial class MainForm : KryptonForm
         if (dlgOpenFile.ShowDialog() == DialogResult.OK)
         {
             Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
-            currentControl = null;
-            panelMain.Controls.Clear();
+            ClearControls();
             treeView.Reset();
             foreach (var job in Program.Configuration.Jobs.OrderBy(j => j.Name))
             {
@@ -158,8 +170,7 @@ public partial class MainForm : KryptonForm
     private void SaveFile()
     {
         SaveCurrentControl();
-        currentControl = null;
-        panelMain.Controls.Clear();
+        ClearControls();
         Program.Configuration.Save();
     }
 
@@ -224,7 +235,7 @@ public partial class MainForm : KryptonForm
         if (dlgSaveFile.ShowDialog() == DialogResult.OK)
         {
             SaveCurrentControl();
-            panelMain.Controls.Clear();
+            ClearControls();
             Program.Configuration.SaveAs(dlgSaveFile.FileName);
         }
     }

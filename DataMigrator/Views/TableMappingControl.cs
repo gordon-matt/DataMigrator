@@ -3,7 +3,7 @@ using Extenso.Data;
 
 namespace DataMigrator.Views;
 
-public partial class TableMappingControl : UserControl, IConfigControl
+public partial class TableMappingControl : UserControl, IConfigControl, ITransientControl
 {
     #region Public Properties
 
@@ -13,37 +13,11 @@ public partial class TableMappingControl : UserControl, IConfigControl
         set => cmbSourceTable.SelectedItem = value;
     }
 
-    //public string SourceSchema
-    //{
-    //    get
-    //    {
-    //        string sourceTable = SourceTable;
-    //        if (sourceTable.Contains('.'))
-    //        {
-    //            return sourceTable.LeftOf('.');
-    //        }
-    //        return string.Empty;
-    //    }
-    //}
-
     public string DestinationTable
     {
         get => cmbDestinationTable.SelectedIndex != -1 ? cmbDestinationTable.SelectedItem.ToString() : string.Empty;
         set => cmbDestinationTable.SelectedItem = value;
     }
-
-    //public string DestinationSchema
-    //{
-    //    get
-    //    {
-    //        string destinationTable = DestinationTable;
-    //        if (destinationTable.Contains('.'))
-    //        {
-    //            return destinationTable.LeftOf('.');
-    //        }
-    //        return string.Empty;
-    //    }
-    //}
 
     public IEnumerable<FieldMapping> FieldMappings
     {
@@ -56,7 +30,7 @@ public partial class TableMappingControl : UserControl, IConfigControl
                 return mappings;
             }
 
-            MappingsTable?.Rows.Cast<DataRow>().ForEach(row =>
+            MappingsTable?.Rows.OfType<DataRow>().ForEach(row =>
             {
                 mappings.Add(new FieldMapping
                 {
@@ -89,7 +63,10 @@ public partial class TableMappingControl : UserControl, IConfigControl
     public TableMappingControl()
     {
         InitializeComponent();
+    }
 
+    private void TableMappingControl_Load(object sender, EventArgs e)
+    {
         if (Program.Configuration.SourceConnection == null)
         {
             MessageBox.Show("Please set the source connection before trying to map fields",
@@ -126,7 +103,7 @@ public partial class TableMappingControl : UserControl, IConfigControl
             row["Destination"] = mapping.DestinationField.Name;
             MappingsTable.Rows.Add(row);
 
-            using var sourceRow = dgvSource.Rows.Cast<DataGridViewRow>()
+            using var sourceRow = dgvSource.Rows.OfType<DataGridViewRow>()
                 .Where(x => x.Index != dgvSource.NewRowIndex)
                 .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.SourceField.Name);
 
@@ -135,7 +112,7 @@ public partial class TableMappingControl : UserControl, IConfigControl
                 dgvSource.Rows.Remove(sourceRow);
             }
 
-            using var destinationRow = dgvDestination.Rows.Cast<DataGridViewRow>()
+            using var destinationRow = dgvDestination.Rows.OfType<DataGridViewRow>()
                 .Where(x => x.Index != dgvDestination.NewRowIndex)
                 .SingleOrDefault(x => x.Cells[0].Value.ToString() == mapping.DestinationField.Name);
 
@@ -278,11 +255,11 @@ public partial class TableMappingControl : UserControl, IConfigControl
         var mappedRow = dgvMappings.SelectedRows[0];
         dgvMappings.Rows.Remove(mappedRow);
 
-        var sourceMappedFields = dgvMappings.Rows.Cast<DataGridViewRow>()
+        var sourceMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
             .Where(x => x.Index != dgvMappings.NewRowIndex)
             .Select(r => r.Cells["Source"].Value.ToString());
 
-        var destinationMappedFields = dgvMappings.Rows.Cast<DataGridViewRow>()
+        var destinationMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
             .Where(x => x.Index != dgvMappings.NewRowIndex)
             .Select(r => r.Cells["Destination"].Value.ToString());
 
@@ -305,7 +282,12 @@ public partial class TableMappingControl : UserControl, IConfigControl
             string sourceSchema = SourceTable.Contains('.') ? SourceTable.LeftOf('.') : string.Empty;
             string sourceTable = SourceTable.Contains('.') ? SourceTable.RightOf('.') : SourceTable;
             SourceFields = await SourceController.GetFieldsAsync(sourceTable, sourceSchema);
-            dgvSource.DataSource = GetFieldsDataTable(SourceFields);
+
+            var sourceMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
+                .Where(x => x.Index != dgvMappings.NewRowIndex)
+                .Select(r => r.Cells["Source"].Value.ToString());
+
+            dgvSource.DataSource = GetFieldsDataTable(SourceFields.Where(x => !x.Name.In(sourceMappedFields)));
         }
     }
 
@@ -317,7 +299,12 @@ public partial class TableMappingControl : UserControl, IConfigControl
             string destinationSchema = DestinationTable.Contains('.') ? DestinationTable.LeftOf('.') : string.Empty;
             string destinationTable = DestinationTable.Contains('.') ? DestinationTable.RightOf('.') : DestinationTable;
             DestinationFields = await DestinationController.GetFieldsAsync(destinationTable, destinationSchema);
-            dgvDestination.DataSource = GetFieldsDataTable(DestinationFields);
+
+            var destinationMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
+                .Where(x => x.Index != dgvMappings.NewRowIndex)
+                .Select(r => r.Cells["Destination"].Value.ToString());
+
+            dgvDestination.DataSource = GetFieldsDataTable(DestinationFields.Where(x => !x.Name.In(destinationMappedFields)));
         }
     }
 
