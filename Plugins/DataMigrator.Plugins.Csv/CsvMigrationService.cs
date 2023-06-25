@@ -53,7 +53,7 @@ public class CsvMigrationService : BaseMigrationService
         }
 
         // Preferred, for smaller files
-        return new FieldCollection(ReadCsv().Columns.Cast<DataColumn>().Select(x => new Field
+        return new FieldCollection(ReadCsv().Columns.OfType<DataColumn>().Select(x => new Field
         {
             Name = x.ColumnName,
             DisplayName = x.ColumnName,
