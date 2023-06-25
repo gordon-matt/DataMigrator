@@ -2,9 +2,11 @@
 
 namespace DataMigrator.Common.Data
 {
-    public interface IProvider
+    public interface IMigrationService
     {
         string DbProviderName { get; }
+
+        DbConnection CreateDbConnection();
 
         Task<IEnumerable<string>> GetTableNamesAsync();
 
@@ -12,12 +14,10 @@ namespace DataMigrator.Common.Data
 
         Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName);
 
-        int GetRecordCount(string tableName, string schemaName);
+        int CountRecords(string tableName, string schemaName);
 
-        IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields);
+        IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields);
 
         Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records);
-
-        DbConnection CreateDbConnection();
     }
 }

@@ -64,7 +64,7 @@ public partial class SharePointConnectionControl : UserControl, IConnectionContr
     {
         try
         {
-            using var context = SharePointProvider.GetClientContext(ConnectionDetails);
+            using var context = SharePointMigrationService.GetClientContext(ConnectionDetails);
             var site = context.Web;
             var lists = context.LoadQuery(site.Lists);
             context.ExecuteQuery(); //If can run this line, then credentials OK

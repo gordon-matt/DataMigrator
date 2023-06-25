@@ -1,6 +1,8 @@
 ﻿using DataMigrator.Common;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
+using DataMigrator.Plugins.Csv;
+using Extenso;
 
 namespace DataMigrator.Csv;
 
@@ -16,6 +18,19 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
     {
         get => cbHasHeaderRow.Checked;
         set => cbHasHeaderRow.Checked = value;
+    }
+
+    public FileDelimiter Delimiter
+    {
+        get
+        {
+            if (cmbDelimiter.SelectedIndex != -1)
+            {
+                return (FileDelimiter)cmbDelimiter.SelectedItem;
+            }
+            return FileDelimiter.Comma;
+        }
+        set => cmbDelimiter.SelectedItem = value;
     }
 
     public string ConnectionString
@@ -39,6 +54,7 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
     public CsvConnectionControl()
     {
         InitializeComponent();
+        cmbDelimiter.DataSource = EnumExtensions.GetValues<FileDelimiter>().ToList();
     }
 
     #region IConnectionControl Members
@@ -57,19 +73,18 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
             };
 
             connectionDetails.ExtendedProperties.Add("HasHeaderRow", HasHeaderRow);
+            connectionDetails.ExtendedProperties.Add("Delimiter", Delimiter);
             return connectionDetails;
         }
         set
         {
             FilePath = value.Database;
             HasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
+            Delimiter = ConnectionDetails.ExtendedProperties["Delimiter"].GetValue<FileDelimiter>();
         }
     }
 
-    public bool ValidateConnection()
-    {
-        return File.Exists(FilePath);
-    }
+    public bool ValidateConnection() => File.Exists(FilePath);
 
     #endregion IConnectionControl Members
 
@@ -79,5 +94,10 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
         {
             FilePath = dlgOpenFile.FileName;
         }
+    }
+
+    private void cmbDelimiter_Format(object sender, ListControlConvertEventArgs e)
+    {
+        e.Value = EnumExtensions.GetDisplayName((FileDelimiter)e.Value);
     }
 }

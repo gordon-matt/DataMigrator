@@ -5,25 +5,21 @@ using AppContext = DataMigrator.Common.AppContext;
 
 namespace DataMigrator.Sql;
 
-public class SqlProvider : BaseProvider
+public class SqlMigrationService : BaseMigrationService
 {
-    public override string DbProviderName => "Microsoft.Data.SqlClient";
-
-    public SqlProvider(ConnectionDetails connectionDetails)
+    public SqlMigrationService(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {
     }
 
-    static SqlProvider()
+    static SqlMigrationService()
     {
         DbProviderFactories.RegisterFactory("Microsoft.Data.SqlClient", SqlClientFactory.Instance);
     }
 
-    protected override FieldType GetDataMigratorFieldType(string providerFieldType) =>
-        AppContext.SqlDbTypeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SqlDbType>(providerFieldType, true));
+    #region IMigrationService Members
 
-    protected override string GetDataProviderFieldType(FieldType fieldType) =>
-        AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
+    public override string DbProviderName => "Microsoft.Data.SqlClient";
 
     public override async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
@@ -41,4 +37,16 @@ public class SqlProvider : BaseProvider
         await bulkCopy.WriteToServerAsync(table);
         await connection.CloseAsync();
     }
+
+    #endregion IMigrationService Members
+
+    #region Field Conversion
+
+    protected override FieldType GetDataMigratorFieldType(string providerFieldType) =>
+        AppContext.SqlDbTypeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SqlDbType>(providerFieldType, true));
+
+    protected override string GetDataProviderFieldType(FieldType fieldType) =>
+        AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
+
+    #endregion Field Conversion
 }

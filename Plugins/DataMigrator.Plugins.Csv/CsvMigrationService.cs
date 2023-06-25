@@ -3,28 +3,36 @@ using System.Data.Common;
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Extensions;
 using DataMigrator.Common.Models;
+using DataMigrator.Plugins.Csv;
 using Extenso.Collections;
 using Extenso.Data;
+using Extenso.IO;
 
 namespace DataMigrator.Csv;
 
-public class CsvProvider : BaseProvider
+public class CsvMigrationService : BaseMigrationService
 {
-    public CsvProvider(ConnectionDetails connectionDetails)
+    public CsvMigrationService(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {
     }
+
+    #region IMigrationService Members
 
     public override string DbProviderName => throw new NotSupportedException();
 
     public override DbConnection CreateDbConnection() => null;
 
+    public override Task<IEnumerable<string>> GetTableNamesAsync() =>
+        Task.FromResult(new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) }.AsEnumerable());
+
     public override Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        var table = ReadCsv();
+        var table = new DataTable();
         fields.ForEach(field => table.Columns.Add(field.Name));
         table.ToCsv(ConnectionDetails.Database, true);
         return Task.FromResult(true);
@@ -32,46 +40,48 @@ public class CsvProvider : BaseProvider
 
     public override async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
-        var fieldNames = await GetFieldNamesAsync(tableName, schemaName);
-        return new FieldCollection(fieldNames.Select((x, i) => new Field
+        if (IsLargeFile)
         {
-            Name = x,
-            Ordinal = i,
+            // Fast, but don't get the max column lengths..
+            var fieldNames = await GetFieldNamesAsync(tableName, schemaName);
+            return new FieldCollection(fieldNames.Select((x, i) => new Field
+            {
+                Name = x,
+                Ordinal = i,
+                Type = FieldType.String
+            }));
+        }
+
+        // Preferred, for smaller files
+        return new FieldCollection(ReadCsv().Columns.Cast<DataColumn>().Select(x => new Field
+        {
+            Name = x.ColumnName,
+            DisplayName = x.ColumnName,
+            IsRequired = !x.AllowDBNull,
+            MaxLength = x.ColumnLength(),
+            Ordinal = x.Ordinal,
             Type = FieldType.String
         }));
-
-        //var table = ReadCsv();
-
-        //table.Columns.Cast<DataColumn>().ForEach(c => fields.Add(new Field
-        //{
-        //    Name = c.ColumnName,
-        //    DisplayName = c.ColumnName,
-        //    IsRequired = !c.AllowDBNull,
-        //    MaxLength = c.ColumnLength(),
-        //    Ordinal = c.Ordinal,
-        //    Type = FieldType.String
-        //}));
     }
 
-    public override int GetRecordCount(string tableName, string schemaName)
+    public override int CountRecords(string tableName, string schemaName)
     {
         //int rowCount = new FileInfo(ConnectionDetails.ConnectionString).ReadAllText().ToLines().Count(); //Very inefficient!
 
         using var fileStream = new FileStream(ConnectionDetails.ConnectionString, FileMode.Open, FileAccess.Read);
         int rowCount = fileStream.CountLines();
-        bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
-        return hasHeaderRow ? rowCount - 1 : rowCount;
+        return HasHeaderRow ? rowCount - 1 : rowCount;
     }
 
-    public override async IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public override async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
         using var fileSteam = File.OpenRead(ConnectionDetails.Database);
         using var streamReader = new StreamReader(fileSteam);
         using var csvReader = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             TrimOptions = TrimOptions.Trim,
-            HasHeaderRecord = hasHeaderRow
+            HasHeaderRecord = HasHeaderRow,
+            Delimiter = Delimiter
         });
 
         csvReader.Read();
@@ -84,7 +94,7 @@ public class CsvProvider : BaseProvider
             {
                 var field = fields.ElementAt(i);
 
-                string value = hasHeaderRow
+                string value = HasHeaderRow
                     ? csvReader.GetField(field.Name)
                     : csvReader.GetField(i);
 
@@ -95,13 +105,20 @@ public class CsvProvider : BaseProvider
         }
     }
 
-    public override Task<IEnumerable<string>> GetTableNamesAsync() =>
-        Task.FromResult(new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) }.AsEnumerable());
-
     public override Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
-        var table = ReadCsv();
+        if (IsLargeFile)
+        {
+            using var fileStream = new FileStream(ConnectionDetails.Database, FileMode.Append, FileAccess.Write);
+            using var streamWriter = new StreamWriter(fileStream);
+            foreach (var record in records)
+            {
+                string line = string.Join($"\"{Delimiter}\"", record.Fields.OrderBy(x => x.Ordinal).Select(x => x.Value));
+                streamWriter.WriteLine($"\"{line}\"");
+            }
+        }
 
+        var table = ReadCsv();
         records.ForEach(record =>
         {
             var row = table.NewRow();
@@ -116,22 +133,20 @@ public class CsvProvider : BaseProvider
         return Task.CompletedTask;
     }
 
-    protected override Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
-    {
-        var table = ReadCsv();
-        table.Columns.Add(field.Name);
-        table.ToCsv(ConnectionDetails.Database, true);
-        return Task.FromResult(true);
-    }
+    #endregion IMigrationService Members
+
+    #region Field Conversion
+
+    protected override FieldType GetDataMigratorFieldType(string providerFieldType) => FieldType.String;
+
+    protected override string GetDataProviderFieldType(FieldType fieldType) => typeof(string).ToString();
+
+    #endregion Field Conversion
 
     protected override Task<bool> CreateTableAsync(string tableName, string schemaName) => throw new NotSupportedException();
 
     protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
         throw new NotSupportedException();
-
-    protected override FieldType GetDataMigratorFieldType(string providerFieldType) => FieldType.String;
-
-    protected override string GetDataProviderFieldType(FieldType fieldType) => typeof(string).ToString();
 
     protected override async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
     {
@@ -144,26 +159,38 @@ public class CsvProvider : BaseProvider
         var fields = new Queue<string>(); // Use queue to make 100% sure the order stays the same.
         string[] items = line1.Split(',');
 
-        bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
         for (int i = 0; i < items.Length; i++)
         {
-            fields.Enqueue(hasHeaderRow ? items[i] : $"Column_{i + 1}");
+            fields.Enqueue(HasHeaderRow ? items[i] : $"Column_{i + 1}");
         }
 
         return fields;
+    }
+
+    protected override Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
+    {
+        if (IsLargeFile)
+        {
+            throw new MigrationException("File is too large to add a new column.");
+        }
+
+        var table = ReadCsv();
+        table.Columns.Add(field.Name);
+        table.ToCsv(ConnectionDetails.Database, true);
+        return Task.FromResult(true);
     }
 
     protected override string GetFullTableName(string tableName, string schemaName) => ConnectionDetails.Database;
 
     private DataTable ReadCsv()
     {
-        bool hasHeaderRow = ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
         using var fileStream = File.OpenRead(ConnectionDetails.Database);
         using var streamReader = new StreamReader(fileStream);
         using var csvReader = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             TrimOptions = TrimOptions.Trim,
-            HasHeaderRecord = hasHeaderRow
+            HasHeaderRecord = HasHeaderRow,
+            Delimiter = Delimiter
         });
         csvReader.Context.TypeConverterOptionsCache.GetOptions<string>().NullValues.Add(string.Empty);
         using var csvDataReader = new CsvDataReader(csvReader);
@@ -172,4 +199,16 @@ public class CsvProvider : BaseProvider
         table.Load(csvDataReader);
         return table;
     }
+
+    private string Delimiter => ConnectionDetails.ExtendedProperties["Delimiter"].GetValue<FileDelimiter>() switch
+    {
+        FileDelimiter.Tab => "\t",
+        FileDelimiter.VerticalBar => "|",
+        FileDelimiter.Semicolon => ";",
+        _ => ",",
+    };
+
+    private bool HasHeaderRow => ConnectionDetails.ExtendedProperties["HasHeaderRow"].GetValue<bool>();
+
+    private bool IsLargeFile => new FileInfo(ConnectionDetails.Database).FileSizeInMegaBytes() >= 100;
 }
