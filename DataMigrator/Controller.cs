@@ -8,7 +8,7 @@ public static class Controller
     public static IMigrationPlugin GetPlugin(string providerName) =>
         Program.Plugins.SingleOrDefault(p => p.ProviderName == providerName);
 
-    public static IProvider GetProvider(ConnectionDetails connection) => GetPlugin(connection.ProviderName).GetDataProvider(connection);
+    public static IMigrationService GetProvider(ConnectionDetails connection) => GetPlugin(connection.ProviderName).GetDataProvider(connection);
 
     public static async Task RunJobAsync(Job job, IProgress<int> progress, CancellationToken cancellationToken)
     {
@@ -37,20 +37,20 @@ public static class Controller
         string sourceSchema = job.SourceTable.Contains('.') ? job.SourceTable.LeftOf('.') : string.Empty;
         string sourceTable = job.SourceTable.Contains('.') ? job.SourceTable.RightOf('.') : job.SourceTable;
 
-        int recordCount = sourceProvider.GetRecordCount(sourceTable, sourceSchema);
+        int recordCount = sourceProvider.CountRecords(sourceTable, sourceSchema);
 
         var buffer = new RecordCollection();
         int processedRecordCount = 0;
-        var recordsEnumerator = sourceProvider.GetRecordsEnumeratorAsync(sourceTable, sourceSchema, sourceFields);
+        var records = sourceProvider.GetRecordsAsync(sourceTable, sourceSchema, sourceFields);
 
         using var connection = destinationProvider.CreateDbConnection();
-        while (await recordsEnumerator.MoveNextAsync())
+        await foreach (var record in records)
         {
-            var record = recordsEnumerator.Current.Clone();
+            var clone = record.Clone();
 
             try
             {
-                buffer.Add(record);
+                buffer.Add(clone);
                 processedRecordCount++;
 
                 if (processedRecordCount.IsMultipleOf(Program.Configuration.BatchSize) || processedRecordCount == recordCount)
@@ -81,7 +81,7 @@ public static class Controller
             }
             catch
             {
-                string recordJson = record.JsonSerialize(new JsonSerializerSettings { Formatting = Formatting.Indented });
+                string recordJson = clone.JsonSerialize(new JsonSerializerSettings { Formatting = Formatting.Indented });
                 TraceService.Instance.WriteMessage(TraceEvent.Error, $"Error when attempting to process record #{processedRecordCount} with the following data:{Environment.NewLine}{recordJson}");
                 throw;
             }

@@ -5,46 +5,50 @@ using Extenso.Data.Common;
 
 namespace DataMigrator.Common.Data;
 
-public abstract class BaseProvider : IProvider
+public abstract class BaseMigrationService : IMigrationService
 {
-    #region Properties
-
-    public abstract string DbProviderName { get; }
+    public BaseMigrationService(ConnectionDetails connectionDetails)
+    {
+        ConnectionDetails = connectionDetails;
+    }
 
     protected ConnectionDetails ConnectionDetails { get; set; }
 
     protected virtual string EscapeIdentifierEnd { get; set; } = "]";
 
-    /// <summary>
-    /// Used in T-SQL queries for escaping spaces and reserved words
-    /// </summary>
     protected virtual string EscapeIdentifierStart { get; set; } = "[";
 
-    #endregion Properties
+    #region IMigrationService Members
 
-    #region Constructor
+    public abstract string DbProviderName { get; }
 
-    public BaseProvider(ConnectionDetails connectionDetails)
+    public virtual DbConnection CreateDbConnection()
     {
-        ConnectionDetails = connectionDetails;
-    }
+        // Assume failure.
+        DbConnection connection = null;
 
-    #endregion Constructor
-
-    #region Table Methods
-
-    public virtual async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
-    {
-        bool ok = await CreateTableAsync(tableName, schemaName);
-
-        if (!ok)
-        { return false; }
-
-        foreach (var field in fields)
+        // Create the DbProviderFactory and DbConnection.
+        if (ConnectionDetails.ConnectionString != null)
         {
-            await CreateFieldAsync(tableName, schemaName, field);
+            try
+            {
+                var factory = DbProviderFactories.GetFactory(DbProviderName);
+
+                connection = factory.CreateConnection();
+                connection.ConnectionString = ConnectionDetails.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                // Set the connection to null if it was created.
+                if (connection != null)
+                {
+                    connection = null;
+                }
+                Console.WriteLine(ex.Message);
+            }
         }
-        return true;
+        // Return the connection.
+        return connection;
     }
 
     public virtual async Task<IEnumerable<string>> GetTableNamesAsync()
@@ -68,29 +72,19 @@ public abstract class BaseProvider : IProvider
         return tableNames;
     }
 
-    protected virtual async Task<bool> CreateTableAsync(string tableName, string schemaName)
+    public virtual async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        try
-        {
-            await CreateTableAsync(tableName, schemaName, "Id", GetDataProviderFieldType(FieldType.Int32), true);
-        }
-        catch (DbException x)
-        {
-            TraceService.Instance.WriteException(x);
-            return false;
-        }
-        catch (Exception x)
-        {
-            TraceService.Instance.WriteException(x);
-            return false;
-        }
+        bool ok = await CreateTableAsync(tableName, schemaName);
 
+        if (!ok)
+        { return false; }
+
+        foreach (var field in fields)
+        {
+            await CreateFieldAsync(tableName, schemaName, field);
+        }
         return true;
     }
-
-    #endregion Table Methods
-
-    #region Field Methods
 
     public virtual async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
@@ -160,90 +154,13 @@ public abstract class BaseProvider : IProvider
         return fields;
     }
 
-    protected virtual async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
-    {
-        var existingFieldNames = await GetFieldNamesAsync(tableName, schemaName);
-        if (existingFieldNames.Contains(field.Name))
-        {
-            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
-            //throw new ArgumentException("etc");
-            return false;
-        }
-
-        using var connection = CreateDbConnection();
-        using var command = connection.CreateCommand();
-        string fieldType = GetDataProviderFieldType(field.Type);
-        string maxLength = string.Empty;
-        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
-        {
-            if (field.MaxLength is > 0 and <= 8000)
-            {
-                maxLength = $"({field.MaxLength})";
-            }
-            else
-            {
-                if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
-                {
-                    maxLength = "(MAX)";
-                }
-            }
-        }
-        string isRequired = string.Empty;
-        if (field.IsRequired)
-        { isRequired = " NOT NULL"; }
-
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format(
-            Constants.Data.CMD_ADD_COLUMN,
-            GetFullTableName(tableName, schemaName),
-            string.Concat(
-                EncloseIdentifier(field.Name), " ",
-                fieldType,
-                maxLength,
-                isRequired));
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-        await connection.CloseAsync();
-        return true;
-    }
-
-    protected virtual async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
-    {
-        using var connection = CreateDbConnection();
-        using var command = connection.CreateCommand();
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
-
-        if (!string.IsNullOrEmpty(schemaName))
-        {
-            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
-        }
-
-        var columns = new List<string>();
-
-        await connection.OpenAsync();
-        using (var reader = await command.ExecuteReaderAsync())
-        {
-            while (await reader.ReadAsync())
-            {
-                columns.Add(reader.GetString(0));
-            }
-        }
-        await connection.CloseAsync();
-        return columns;
-    }
-
-    #endregion Field Methods
-
-    #region Record Methods
-
-    public virtual int GetRecordCount(string tableName, string schemaName)
+    public virtual int CountRecords(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection();
         return connection.ExecuteScalar($"SELECT COUNT(*) FROM {GetFullTableName(tableName, schemaName)}");
     }
 
-    public virtual async IAsyncEnumerator<Record> GetRecordsEnumeratorAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public virtual async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         //Query query = new Query();
         //fields.ForEach(f => { query.Select(f.Name); });
@@ -325,6 +242,16 @@ public abstract class BaseProvider : IProvider
         await connection.CloseAsync();
     }
 
+    #endregion IMigrationService Members
+
+    #region Field Conversion
+
+    protected abstract FieldType GetDataMigratorFieldType(string providerFieldType);
+
+    protected abstract string GetDataProviderFieldType(FieldType fieldType);
+
+    #endregion Field Conversion
+
     protected static IDictionary<string, string> CreateParameterNames(IEnumerable<string> fieldNames)
     {
         var parameterNames = new Dictionary<string, string>();
@@ -337,35 +264,24 @@ public abstract class BaseProvider : IProvider
         return parameterNames;
     }
 
-    #endregion Record Methods
-
-    public virtual DbConnection CreateDbConnection()
+    protected virtual async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
-        // Assume failure.
-        DbConnection connection = null;
-
-        // Create the DbProviderFactory and DbConnection.
-        if (ConnectionDetails.ConnectionString != null)
+        try
         {
-            try
-            {
-                var factory = DbProviderFactories.GetFactory(DbProviderName);
-
-                connection = factory.CreateConnection();
-                connection.ConnectionString = ConnectionDetails.ConnectionString;
-            }
-            catch (Exception ex)
-            {
-                // Set the connection to null if it was created.
-                if (connection != null)
-                {
-                    connection = null;
-                }
-                Console.WriteLine(ex.Message);
-            }
+            await CreateTableAsync(tableName, schemaName, "Id", GetDataProviderFieldType(FieldType.Int32), true);
         }
-        // Return the connection.
-        return connection;
+        catch (DbException x)
+        {
+            TraceService.Instance.WriteException(x);
+            return false;
+        }
+        catch (Exception x)
+        {
+            TraceService.Instance.WriteException(x);
+            return false;
+        }
+
+        return true;
     }
 
     protected virtual async Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity)
@@ -387,6 +303,53 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
         await connection.CloseAsync();
     }
 
+    protected virtual async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
+    {
+        var existingFieldNames = await GetFieldNamesAsync(tableName, schemaName);
+        if (existingFieldNames.Contains(field.Name))
+        {
+            TraceService.Instance.WriteFormat(TraceEvent.Error, "The field, '{0}', already exists in the table, {1}", field.Name, GetFullTableName(tableName, schemaName));
+            //throw new ArgumentException("etc");
+            return false;
+        }
+
+        using var connection = CreateDbConnection();
+        using var command = connection.CreateCommand();
+        string fieldType = GetDataProviderFieldType(field.Type);
+        string maxLength = string.Empty;
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+        {
+            if (field.MaxLength is > 0 and <= 8000)
+            {
+                maxLength = $"({field.MaxLength})";
+            }
+            else
+            {
+                if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
+                {
+                    maxLength = "(MAX)";
+                }
+            }
+        }
+        string isRequired = string.Empty;
+        if (field.IsRequired)
+        { isRequired = " NOT NULL"; }
+
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(
+            Constants.Data.CMD_ADD_COLUMN,
+            GetFullTableName(tableName, schemaName),
+            string.Concat(
+                EncloseIdentifier(field.Name), " ",
+                fieldType,
+                maxLength,
+                isRequired));
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
+        return true;
+    }
+
     protected string EncloseIdentifier(string value) => $"{EscapeIdentifierStart}{value}{EscapeIdentifierEnd}";
 
     protected virtual string GetFullTableName(string tableName, string schemaName) =>
@@ -394,11 +357,29 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
             ? $"{EncloseIdentifier(schemaName)}.{EncloseIdentifier(tableName)}"
             : EncloseIdentifier(tableName);
 
-    #region Field Conversion Methods
+    protected virtual async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
+    {
+        using var connection = CreateDbConnection();
+        using var command = connection.CreateCommand();
+        command.CommandType = CommandType.Text;
+        command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMN_NAMES, tableName);
 
-    protected abstract FieldType GetDataMigratorFieldType(string providerFieldType);
+        if (!string.IsNullOrEmpty(schemaName))
+        {
+            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
+        }
 
-    protected abstract string GetDataProviderFieldType(FieldType fieldType);
+        var columns = new List<string>();
 
-    #endregion Field Conversion Methods
+        await connection.OpenAsync();
+        using (var reader = await command.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                columns.Add(reader.GetString(0));
+            }
+        }
+        await connection.CloseAsync();
+        return columns;
+    }
 }

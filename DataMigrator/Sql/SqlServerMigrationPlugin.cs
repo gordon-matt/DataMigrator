@@ -11,9 +11,9 @@ namespace DataMigrator.Sql
 
         public IConnectionControl ConnectionControl => new SqlConnectionControl();
 
-        public IProvider GetDataProvider(ConnectionDetails connectionDetails)
+        public IMigrationService GetDataProvider(ConnectionDetails connectionDetails)
         {
-            return new SqlProvider(connectionDetails);
+            return new SqlMigrationService(connectionDetails);
         }
 
         public ISettingsControl SettingsControl => null;

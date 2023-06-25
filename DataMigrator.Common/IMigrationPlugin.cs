@@ -6,7 +6,7 @@ public interface IMigrationPlugin
 
     IConnectionControl ConnectionControl { get; }
 
-    IProvider GetDataProvider(ConnectionDetails connectionDetails);
+    IMigrationService GetDataProvider(ConnectionDetails connectionDetails);
 
     ISettingsControl SettingsControl { get; }
 

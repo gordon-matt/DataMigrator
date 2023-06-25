@@ -72,9 +72,9 @@ public partial class TableMappingControl : UserControl, IConfigControl
 
     #region Private Properties
 
-    private IProvider SourceController { get; set; }
+    private IMigrationService SourceController { get; set; }
 
-    private IProvider DestinationController { get; set; }
+    private IMigrationService DestinationController { get; set; }
 
     private DataTable MappingsTable { get; set; }
 

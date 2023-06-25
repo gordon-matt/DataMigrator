@@ -14,7 +14,7 @@ public class MySqlMigrationPlugin : IMigrationPlugin
 
     public IConnectionControl ConnectionControl => new MySqlConnectionControl();
 
-    public IProvider GetDataProvider(ConnectionDetails connectionDetails) => new MySqlProvider(connectionDetails);
+    public IMigrationService GetDataProvider(ConnectionDetails connectionDetails) => new MySqlMigrationService(connectionDetails);
 
     public ISettingsControl SettingsControl => null;
 
