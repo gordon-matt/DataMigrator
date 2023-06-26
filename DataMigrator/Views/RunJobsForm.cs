@@ -18,7 +18,7 @@ public partial class RunJobsForm : KryptonForm
         table.Columns.Add(COLUMN_RUN, typeof(bool));
         table.Columns.Add(COLUMN_NAME);
         table.Columns.Add(COLUMN_STATUS);
-        foreach (var job in Program.Configuration.Jobs)
+        foreach (var job in AppState.ConfigFile.Jobs)
         {
             var row = table.NewRow();
             row[COLUMN_RUN] = false;
@@ -72,7 +72,7 @@ public partial class RunJobsForm : KryptonForm
             if (bool.Parse(row[COLUMN_RUN].ToString()))
             {
                 string jobName = row[COLUMN_NAME].ToString();
-                var job = Program.Configuration.Jobs[jobName];
+                var job = AppState.ConfigFile.Jobs[jobName];
 
                 if (job == null)
                 {

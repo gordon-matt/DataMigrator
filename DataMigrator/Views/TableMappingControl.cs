@@ -67,7 +67,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     private void TableMappingControl_Load(object sender, EventArgs e)
     {
-        if (Program.Configuration.SourceConnection == null)
+        if (AppState.ConfigFile.SourceConnection == null)
         {
             MessageBox.Show("Please set the source connection before trying to map fields",
                 "Source Connection Not Set",
@@ -75,7 +75,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
                 MessageBoxIcon.Exclamation);
             return;
         }
-        if (Program.Configuration.DestinationConnection == null)
+        if (AppState.ConfigFile.DestinationConnection == null)
         {
             MessageBox.Show("Please set the destination connection before trying to map fields",
                 "Destination Connection Not Set",
@@ -84,19 +84,19 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
             return;
         }
 
-        SourceController = Controller.GetProvider(Program.Configuration.SourceConnection);
-        DestinationController = Controller.GetProvider(Program.Configuration.DestinationConnection);
+        SourceController = Controller.GetProvider(AppState.ConfigFile.SourceConnection);
+        DestinationController = Controller.GetProvider(AppState.ConfigFile.DestinationConnection);
 
         AsyncHelper.RunSync(SourceController.GetTableNamesAsync).ForEach(x => cmbSourceTable.Items.Add(x));
         AsyncHelper.RunSync(DestinationController.GetTableNamesAsync).ForEach(x => cmbDestinationTable.Items.Add(x));
 
-        SourceTable = Program.CurrentJob.SourceTable;
-        DestinationTable = Program.CurrentJob.DestinationTable;
+        SourceTable = AppState.CurrentJob.SourceTable;
+        DestinationTable = AppState.CurrentJob.DestinationTable;
 
         MappingsTable = new DataTable();
         MappingsTable.Columns.AddRange("Source", "Destination");
 
-        foreach (var mapping in Program.CurrentJob.FieldMappings)
+        foreach (var mapping in AppState.CurrentJob.FieldMappings)
         {
             var row = MappingsTable.NewRow();
             row["Source"] = mapping.SourceField.Name;
@@ -238,7 +238,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         cmbDestinationTable.Items.Clear();
         (await DestinationController.GetTableNamesAsync()).ForEach(x => cmbDestinationTable.Items.Add(x));
         cmbDestinationTable.SelectedItem = SourceTable;
-        Program.CurrentJob.DestinationTable = SourceTable;
+        AppState.CurrentJob.DestinationTable = SourceTable;
     }
 
     private void btnRemove_Click(object sender, EventArgs e)
@@ -354,16 +354,16 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     public void Save()
     {
-        Program.CurrentJob.SourceTable = SourceTable;
-        Program.CurrentJob.DestinationTable = DestinationTable;
+        AppState.CurrentJob.SourceTable = SourceTable;
+        AppState.CurrentJob.DestinationTable = DestinationTable;
 
-        Program.CurrentJob.FieldMappings.Clear();
-        Program.CurrentJob.FieldMappings.AddRange(FieldMappings);
+        AppState.CurrentJob.FieldMappings.Clear();
+        AppState.CurrentJob.FieldMappings.AddRange(FieldMappings);
 
-        var existingJob = Program.Configuration.Jobs[Program.CurrentJob.Name];
+        var existingJob = AppState.ConfigFile.Jobs[AppState.CurrentJob.Name];
         if (existingJob == null)
         {
-            Program.Configuration.Jobs.Add(Program.CurrentJob);
+            AppState.ConfigFile.Jobs.Add(AppState.CurrentJob);
         }
     }
 }

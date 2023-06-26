@@ -4,15 +4,14 @@ public partial class SettingsForm : KryptonForm
 {
     private DataMigratorSettingsControl dataMigratorSettingsControl;
 
-    public SettingsForm()
+    public SettingsForm(DataMigratorSettingsControl dataMigratorSettingsControl)
     {
         InitializeComponent();
+        this.dataMigratorSettingsControl = dataMigratorSettingsControl;
     }
 
     private void SettingsForm_Load(object sender, EventArgs e)
     {
-        dataMigratorSettingsControl = new DataMigratorSettingsControl();
-
         settingsTreeView.AddSettingsNode("General", dataMigratorSettingsControl);
 
         Program.Plugins.OrderBy(p => p.ProviderName).ForEach(plugin =>

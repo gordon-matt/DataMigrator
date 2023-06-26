@@ -8,17 +8,28 @@ public partial class DataMigratorSettingsControl : UserControl, ISettingsControl
         set => nudBatchSize.Value = value;
     }
 
+    public bool TrimStrings
+    {
+        get => cbTrimStrings.Checked;
+        set => cbTrimStrings.Checked = value;
+    }
+
     public DataMigratorSettingsControl()
     {
         InitializeComponent();
-        BatchSize = Program.Configuration.BatchSize;
+        BatchSize = AppState.ConfigFile.BatchSize;
+        TrimStrings = AppState.ConfigFile.TrimStrings;
     }
 
     #region ISettingsControl Members
 
     public UserControl ControlContent => this;
 
-    public void Save() => Program.Configuration.BatchSize = this.BatchSize;
+    public void Save()
+    {
+        AppState.ConfigFile.BatchSize = BatchSize;
+        AppState.ConfigFile.TrimStrings = TrimStrings;
+    }
 
     #endregion ISettingsControl Members
 }

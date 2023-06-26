@@ -29,21 +29,21 @@ public partial class ConnectionsControl : UserControl, IConfigControl
         providerNames.ForEach(x => cmbSourceConnectionType.Items.Add(x));
         providerNames.ForEach(x => cmbDestinationConnectionType.Items.Add(x));
 
-        if (Program.Configuration.SourceConnection != null)
+        if (AppState.ConfigFile.SourceConnection != null)
         {
-            var plugin = Controller.GetPlugin(Program.Configuration.SourceConnection.ProviderName);
+            var plugin = Controller.GetPlugin(AppState.ConfigFile.SourceConnection.ProviderName);
             sourceConnectionControl = plugin.ConnectionControl;
-            sourceConnectionControl.ConnectionDetails = Program.Configuration.SourceConnection;
+            sourceConnectionControl.ConnectionDetails = AppState.ConfigFile.SourceConnection;
             LoadSourceConnectionControl();
             cmbSourceConnectionType.SelectedIndexChanged -= new EventHandler(cmbSourceConnectionType_SelectedIndexChanged);
             cmbSourceConnectionType.Text = plugin.ProviderName;
             cmbSourceConnectionType.SelectedIndexChanged += new EventHandler(cmbSourceConnectionType_SelectedIndexChanged);
         }
-        if (Program.Configuration.DestinationConnection != null)
+        if (AppState.ConfigFile.DestinationConnection != null)
         {
-            var plugin = Controller.GetPlugin(Program.Configuration.DestinationConnection.ProviderName);
+            var plugin = Controller.GetPlugin(AppState.ConfigFile.DestinationConnection.ProviderName);
             destinationConnectionControl = plugin.ConnectionControl;
-            destinationConnectionControl.ConnectionDetails = Program.Configuration.DestinationConnection;
+            destinationConnectionControl.ConnectionDetails = AppState.ConfigFile.DestinationConnection;
             LoadDestinationConnectionControl();
             cmbDestinationConnectionType.SelectedIndexChanged -= new EventHandler(cmbDestinationConnectionType_SelectedIndexChanged);
             cmbDestinationConnectionType.Text = plugin.ProviderName;
@@ -135,12 +135,12 @@ public partial class ConnectionsControl : UserControl, IConfigControl
     {
         if (SourceConnection != null)
         {
-            Program.Configuration.SourceConnection = SourceConnection;
+            AppState.ConfigFile.SourceConnection = SourceConnection;
         }
 
         if (DestinationConnection != null)
         {
-            Program.Configuration.DestinationConnection = DestinationConnection;
+            AppState.ConfigFile.DestinationConnection = DestinationConnection;
         }
     }
 }

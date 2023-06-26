@@ -30,12 +30,12 @@ public class DataMigratorTreeView : TreeView
         };
 
         mnuContextJobsNewJob = new ToolStripMenuItem("New Job") { Name = "mnuContextJobsNewJob" };
-        mnuContextJobsNewJob.Click += new System.EventHandler(mnuContextJobsNewJob_Click);
+        mnuContextJobsNewJob.Click += new EventHandler(mnuContextJobsNewJob_Click);
         mnuContextJobs.Items.Add(mnuContextJobsNewJob);
 
         mnuContextJobsJob = new ContextMenuStrip { Name = "mnuContextJobsJob" };
         mnuContextJobsJobRename = new ToolStripMenuItem("Rename") { Name = "mnuContextJobsJobRename" };
-        mnuContextJobsJobRename.Click += new System.EventHandler(mnuContextJobsJobRename_Click);
+        mnuContextJobsJobRename.Click += new EventHandler(mnuContextJobsJobRename_Click);
         mnuContextJobsJob.Items.Add(mnuContextJobsJobRename);
     }
 
@@ -103,17 +103,17 @@ public class DataMigratorTreeView : TreeView
             string newJobName = dlgInput.UserInput;
 
             string currentJobName = this.SelectedNode.Text;
-            if (Program.CurrentJob.Name == currentJobName)
+            if (AppState.CurrentJob.Name == currentJobName)
             {
-                Program.CurrentJob.Name = newJobName;
+                AppState.CurrentJob.Name = newJobName;
             }
-            else { Program.Configuration.Jobs[currentJobName].Name = newJobName; }
+            else { AppState.ConfigFile.Jobs[currentJobName].Name = newJobName; }
 
             this.SelectedNode.Text = newJobName;
         }
     }
 
-    private void mnuContextJobsNewJob_Click(object sender, System.EventArgs e)
+    private void mnuContextJobsNewJob_Click(object sender, EventArgs e)
     {
         using var dlgInput = new InputDialog
         {
@@ -123,7 +123,7 @@ public class DataMigratorTreeView : TreeView
         if (dlgInput.ShowDialog() == DialogResult.OK)
         {
             string jobName = dlgInput.UserInput;
-            Program.CurrentJob = AddJob(jobName).Tag as Job;
+            AppState.CurrentJob = AddJob(jobName).Tag as Job;
         }
     }
 

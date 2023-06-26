@@ -223,7 +223,7 @@ public abstract class BaseMigrationService : IMigrationService
                 {
                     var parameter = command.CreateParameter();
                     parameter.ParameterName = parameterNames[field.Name];
-                    parameter.DbType = AppContext.DbTypeConverter.GetDataProviderFieldType(field.Type);
+                    parameter.DbType = TypeConvert.DbTypeConverter.GetDataProviderFieldType(field.Type);
                     command.Parameters.Add(parameter);
                 });
 
