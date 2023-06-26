@@ -3,9 +3,6 @@
 - add transform actions per column.. example: "Male/Female" can become 1/0 or true/false
 	... or replace underscores with spaces.. or whatever
 	
-- add option: Trim() strings to settings
-
-- excel is too slow for inserting data. Is faster even possible with openxml?
 - Unit Tests!
 - Support setting primary keys (and remove default primary key from table creation)
 

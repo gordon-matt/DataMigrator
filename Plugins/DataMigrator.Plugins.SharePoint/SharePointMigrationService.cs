@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using System.Net;
 using System.Text;
+using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
@@ -164,7 +165,25 @@ public class SharePointMigrationService : BaseMigrationService
                 var spField = spFields.SingleOrDefault(f => f.InternalName == field.Name);
                 if (spField != null)
                 {
-                    field.Value = item[spField.InternalName];
+                    if (spField.FieldTypeKind == SP.FieldType.Text)
+                    {
+                        string value = item[spField.InternalName].ToString();
+                        if (AppState.ConfigFile.TrimStrings)
+                        {
+                            value = value.Trim();
+                        }
+
+                        if (string.IsNullOrEmpty(value))
+                        {
+                            value = null;
+                        }
+
+                        field.Value = value;
+                    }
+                    else
+                    {
+                        field.Value = item[spField.InternalName];
+                    }
                 }
             }
 
