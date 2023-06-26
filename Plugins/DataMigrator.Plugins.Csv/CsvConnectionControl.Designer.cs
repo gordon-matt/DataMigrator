@@ -32,10 +32,10 @@ partial class CsvConnectionControl
     {
             this.btnBrowse = new Krypton.Toolkit.KryptonButton();
             this.txtFile = new Krypton.Toolkit.KryptonTextBox();
-            this.lblFile = new Krypton.Toolkit.KryptonLabel();
+            this.lblFile = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.cbHasHeaderRow = new Krypton.Toolkit.KryptonCheckBox();
-            this.lblDelimiter = new Krypton.Toolkit.KryptonLabel();
+            this.lblDelimiter = new System.Windows.Forms.Label();
             this.cmbDelimiter = new Krypton.Toolkit.KryptonComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.cmbDelimiter)).BeginInit();
             this.SuspendLayout();
@@ -69,7 +69,7 @@ partial class CsvConnectionControl
             this.lblFile.Name = "lblFile";
             this.lblFile.Size = new System.Drawing.Size(32, 20);
             this.lblFile.TabIndex = 17;
-            this.lblFile.Values.Text = "File:";
+            this.lblFile.Text = "File:";
             // 
             // dlgOpenFile
             // 
@@ -92,7 +92,7 @@ partial class CsvConnectionControl
             this.lblDelimiter.Name = "lblDelimiter";
             this.lblDelimiter.Size = new System.Drawing.Size(60, 20);
             this.lblDelimiter.TabIndex = 26;
-            this.lblDelimiter.Values.Text = "Delimiter";
+            this.lblDelimiter.Text = "Delimiter";
             // 
             // cmbDelimiter
             // 
@@ -131,9 +131,9 @@ partial class CsvConnectionControl
 
     private KryptonButton btnBrowse;
     private KryptonTextBox txtFile;
-    private KryptonLabel lblFile;
+    private Label lblFile;
     private System.Windows.Forms.OpenFileDialog dlgOpenFile;
     private KryptonCheckBox cbHasHeaderRow;
-    private KryptonLabel lblDelimiter;
+    private Label lblDelimiter;
     private KryptonComboBox cmbDelimiter;
 }

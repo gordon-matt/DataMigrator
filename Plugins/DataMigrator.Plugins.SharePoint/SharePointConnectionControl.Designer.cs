@@ -31,13 +31,13 @@ partial class SharePointConnectionControl
     private void InitializeComponent()
     {
             this.txtUrl = new Krypton.Toolkit.KryptonTextBox();
-            this.lblUrl = new Krypton.Toolkit.KryptonLabel();
+            this.lblUrl = new System.Windows.Forms.Label();
             this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
-            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.lblPassword = new System.Windows.Forms.Label();
             this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
-            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
+            this.lblUserName = new System.Windows.Forms.Label();
             this.txtDomain = new Krypton.Toolkit.KryptonTextBox();
-            this.lblDomain = new Krypton.Toolkit.KryptonLabel();
+            this.lblDomain = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtUrl
@@ -57,7 +57,7 @@ partial class SharePointConnectionControl
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(29, 20);
             this.lblUrl.TabIndex = 2;
-            this.lblUrl.Values.Text = "Url:";
+            this.lblUrl.Text = "Url:";
             // 
             // txtPassword
             // 
@@ -77,7 +77,7 @@ partial class SharePointConnectionControl
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
             this.lblPassword.TabIndex = 12;
-            this.lblPassword.Values.Text = "Password";
+            this.lblPassword.Text = "Password";
             // 
             // txtUserName
             // 
@@ -96,7 +96,7 @@ partial class SharePointConnectionControl
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(74, 20);
             this.lblUserName.TabIndex = 10;
-            this.lblUserName.Values.Text = "User Name:";
+            this.lblUserName.Text = "User Name:";
             // 
             // txtDomain
             // 
@@ -115,7 +115,7 @@ partial class SharePointConnectionControl
             this.lblDomain.Name = "lblDomain";
             this.lblDomain.Size = new System.Drawing.Size(56, 20);
             this.lblDomain.TabIndex = 14;
-            this.lblDomain.Values.Text = "Domain:";
+            this.lblDomain.Text = "Domain:";
             // 
             // SharePointConnectionControl
             // 
@@ -141,12 +141,12 @@ partial class SharePointConnectionControl
     #endregion
 
     private KryptonTextBox txtUrl;
-    private KryptonLabel lblUrl;
+    private Label lblUrl;
     private KryptonTextBox txtPassword;
-    private KryptonLabel lblPassword;
+    private Label lblPassword;
     private KryptonTextBox txtUserName;
-    private KryptonLabel lblUserName;
+    private Label lblUserName;
     private KryptonTextBox txtDomain;
-    private KryptonLabel lblDomain;
+    private Label lblDomain;
 
 }

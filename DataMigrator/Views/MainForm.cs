@@ -13,35 +13,27 @@ public partial class MainForm : KryptonForm
 
     private Dictionary<Type, UserControl> userControls = new();
 
-    //private readonly IonIcons fonts = new IonIcons(true);
-
     #region Constructor
 
     public MainForm()
     {
         InitializeComponent();
-
         treeView.LoadDefaultNodes();
 
         if (!this.IsInWinDesignMode())
         {
+            using var mainAssemblyCatalog = new AssemblyCatalog(typeof(Program).Assembly);
+            using var pluginsDirectoryCatalog = new DirectoryCatalog(Path.Combine(Application.StartupPath, "Plugins"));
+            using var aggregateCatalog = new AggregateCatalog(mainAssemblyCatalog, pluginsDirectoryCatalog);
+            using var container = new CompositionContainer(aggregateCatalog);
+            container.ComposeParts(this);
+
+            Program.Plugins = this.plugins;
+            this.plugins = null;
+
             //Initialize here or get an error: "Window Handle not yet created"
             LoadUserControl<TraceViewerControl>();
         }
-
-        using var mainAssemblyCatalog = new AssemblyCatalog(typeof(Program).Assembly);
-        using var pluginsDirectoryCatalog = new DirectoryCatalog(Path.Combine(Application.StartupPath, "Plugins"));
-        using var aggregateCatalog = new AggregateCatalog(mainAssemblyCatalog, pluginsDirectoryCatalog);
-        using var container = new CompositionContainer(aggregateCatalog);
-        container.ComposeParts(this);
-
-        Program.Plugins = this.plugins;
-        this.plugins = null;
-
-        //btnNew.SetImage(fonts, (int)IonIcons.IconType.md_add, 24);
-        //btnOpen.SetImage(fonts, (int)IonIcons.IconType.md_folder_open, 24);
-        //btnRun.SetImage(fonts, (int)IonIcons.IconType.md_play, 24);
-        //btnSave.SetImage(fonts, (int)IonIcons.IconType.md_save, 24);
     }
 
     #endregion Constructor
