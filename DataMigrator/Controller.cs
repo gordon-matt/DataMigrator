@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using Autofac;
 using Newtonsoft.Json;
 
 namespace DataMigrator;
@@ -28,8 +28,8 @@ public static class Controller
             throw new ArgumentException("You must have at least one Field Mapped!");
         }
 
-        var sourceProvider = GetProvider(Program.Configuration.SourceConnection);
-        var destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
+        var sourceProvider = GetProvider(AppState.ConfigFile.SourceConnection);
+        var destinationProvider = GetProvider(AppState.ConfigFile.DestinationConnection);
 
         var sourceFields = job.FieldMappings.Select(f => f.SourceField);
         var destinationFields = job.FieldMappings.Select(f => f.DestinationField);
@@ -53,7 +53,7 @@ public static class Controller
                 buffer.Add(clone);
                 processedRecordCount++;
 
-                if (processedRecordCount.IsMultipleOf(Program.Configuration.BatchSize) || processedRecordCount == recordCount)
+                if (processedRecordCount.IsMultipleOf(AppState.ConfigFile.BatchSize) || processedRecordCount == recordCount)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     { return; }
@@ -90,8 +90,8 @@ public static class Controller
 
     public static async Task<bool> CreateDestinationTableAsync(string tableName)
     {
-        var sourceProvider = GetProvider(Program.Configuration.SourceConnection);
-        var destinationProvider = GetProvider(Program.Configuration.DestinationConnection);
+        var sourceProvider = GetProvider(AppState.ConfigFile.SourceConnection);
+        var destinationProvider = GetProvider(AppState.ConfigFile.DestinationConnection);
 
         string schemaName = tableName.Contains('.') ? tableName.LeftOf('.') : string.Empty;
         string tableNameWithoutSchema = tableName.Contains('.') ? tableName.RightOf('.') : tableName;

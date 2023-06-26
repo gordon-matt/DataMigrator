@@ -36,7 +36,7 @@ public class Record : ICloneable
                 if (field.Value == null || field.Value == DBNull.Value || (field.Value is string && string.IsNullOrEmpty(field.Value as string)))
                 { continue; }
 
-                var newType = AppContext.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
+                var newType = TypeConvert.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
                 field.Value = field.Value.ConvertTo(newType);
                 field.Type = mapping.DestinationField.Type;
             }

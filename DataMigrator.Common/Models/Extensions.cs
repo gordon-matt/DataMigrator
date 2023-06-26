@@ -16,7 +16,7 @@
             {
                 table.Columns.Add(
                     field.Name,
-                    AppContext.SystemTypeConverter.GetDataProviderFieldType(field.Type));
+                    TypeConvert.SystemTypeConverter.GetDataProviderFieldType(field.Type));
             });
 
             records.ForEach(record =>

@@ -18,11 +18,8 @@ partial class MainForm
             components.Dispose();
         }
         base.Dispose(disposing);
-        
-        foreach (var control in userControls)
-        {
-            control.Value?.Dispose();
-        }
+
+        ClearControls(fullReset: true);
     }
 
     #region Windows Form Designer generated code

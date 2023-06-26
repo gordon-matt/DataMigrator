@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
-using AppContext = DataMigrator.Common.AppContext;
 
 namespace DataMigrator.Sql;
 
@@ -43,10 +42,10 @@ public class SqlMigrationService : BaseMigrationService
     #region Field Conversion
 
     protected override FieldType GetDataMigratorFieldType(string providerFieldType) =>
-        AppContext.SqlDbTypeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SqlDbType>(providerFieldType, true));
+        TypeConvert.SqlDbTypeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SqlDbType>(providerFieldType, true));
 
     protected override string GetDataProviderFieldType(FieldType fieldType) =>
-        AppContext.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
+        TypeConvert.SqlDbTypeConverter.GetDataProviderFieldType(fieldType).ToString();
 
     #endregion Field Conversion
 }

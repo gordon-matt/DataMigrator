@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Windows.Forms;
+using Autofac;
 
 namespace DataMigrator.Views;
 
@@ -17,6 +19,7 @@ public partial class MainForm : KryptonForm
     public MainForm()
     {
         InitializeComponent();
+
         treeView.LoadDefaultNodes();
 
         if (!this.IsInWinDesignMode())
@@ -42,12 +45,6 @@ public partial class MainForm : KryptonForm
     public void HideTraceViewer()
     {
         ClearControls();
-        //panelMain.Controls.Clear();
-        //if (currentControl is not null and not TraceViewerControl)
-        //{
-        panelMain.Controls.Add(currentControl);
-        currentControl.Dock = DockStyle.Fill;
-        //}
         mnuMainToolsShowTraceViewer.Checked = false;
     }
 
@@ -81,17 +78,27 @@ public partial class MainForm : KryptonForm
         {
             if (dlgSaveFile.ShowDialog() == DialogResult.OK)
             {
-                Program.Configuration.SaveAs(dlgSaveFile.FileName);
+                AppState.ConfigFile.SaveAs(dlgSaveFile.FileName);
             }
         }
 
         return dialogResult;
     }
 
-    private void ClearControls()
+    internal void ClearControls(bool fullReset = false)
     {
         panelMain.Controls.Clear();
         currentControl = null;
+
+        if (fullReset)
+        {
+            foreach (var control in userControls)
+            {
+                control.Value?.Dispose();
+            }
+            userControls = new Dictionary<Type, UserControl>();
+            LoadUserControl<TraceViewerControl>(); // Won't loop, because LoadUserControl() does not use "fullReset"
+        }
     }
 
     private void LoadUserControl<T>() where T : UserControl
@@ -105,13 +112,13 @@ public partial class MainForm : KryptonForm
             }
             else
             {
-                control = Activator.CreateInstance<T>();
+                control = GetControl<T>();
                 userControls.Add(typeof(T), control);
             }
         }
         else
         {
-            control = Activator.CreateInstance<T>();
+            control = GetControl<T>();
         }
 
         ClearControls();
@@ -127,11 +134,22 @@ public partial class MainForm : KryptonForm
         mnuMainToolsShowTraceViewer.Checked = currentControl is TraceViewerControl;
     }
 
+    private T GetControl<T>() where T : UserControl
+    {
+        T control;
+        if (Program.Container.TryResolve(out control))
+        {
+            return control;
+        }
+
+        return Activator.CreateInstance<T>();
+    }
+
     private void NewFile()
     {
         CheckSaveChanges();
-        Program.Configuration = new DataMigrationConfigFile();
-        ClearControls();
+        AppState.ConfigFile = new DataMigrationConfigFile();
+        ClearControls(fullReset: true);
         treeView.Reset();
         HideTraceViewer();
     }
@@ -144,10 +162,10 @@ public partial class MainForm : KryptonForm
 
         if (dlgOpenFile.ShowDialog() == DialogResult.OK)
         {
-            Program.Configuration = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
-            ClearControls();
+            AppState.ConfigFile = DataMigrationConfigFile.Load(dlgOpenFile.FileName);
+            ClearControls(fullReset: true);
             treeView.Reset();
-            foreach (var job in Program.Configuration.Jobs.OrderBy(j => j.Name))
+            foreach (var job in AppState.ConfigFile.Jobs.OrderBy(j => j.Name))
             {
                 treeView.AddJob(job);
             }
@@ -171,7 +189,7 @@ public partial class MainForm : KryptonForm
     {
         SaveCurrentControl();
         ClearControls();
-        Program.Configuration.Save();
+        AppState.ConfigFile.Save();
     }
 
     #endregion Private Methods
@@ -186,7 +204,7 @@ public partial class MainForm : KryptonForm
     {
         ShowTraceViewer();
 
-        using var form = new RunJobsForm();
+        using var form = Program.Container.Resolve<RunJobsForm>();
         form.ShowDialog();
     }
 
@@ -198,7 +216,7 @@ public partial class MainForm : KryptonForm
 
         if (e.Node.Level == 2) // Job Node
         {
-            Program.CurrentJob = e.Node.Tag as Job;
+            AppState.CurrentJob = e.Node.Tag as Job;
             LoadUserControl<TableMappingControl>();
         }
         else
@@ -209,7 +227,7 @@ public partial class MainForm : KryptonForm
                 case Constants.TreeView.CONNECTIONS_NODE_TEXT: LoadUserControl<ConnectionsControl>(); break;
                 case Constants.TreeView.SETTINGS_NODE_TEXT:
                     {
-                        using var form = new SettingsForm();
+                        using var form = Program.Container.Resolve<SettingsForm>();
                         form.ShowDialog();
                         treeView.SelectedNode = treeView.Nodes[0];
                     }
@@ -236,25 +254,25 @@ public partial class MainForm : KryptonForm
         {
             SaveCurrentControl();
             ClearControls();
-            Program.Configuration.SaveAs(dlgSaveFile.FileName);
+            AppState.ConfigFile.SaveAs(dlgSaveFile.FileName);
         }
     }
 
     private void mnuMainHelpAbout_Click(object sender, EventArgs e)
     {
-        using var form = new AboutForm();
+        using var form = Program.Container.Resolve<AboutForm>();
         form.ShowDialog();
     }
 
     private void mnuMainToolsOptions_Click(object sender, EventArgs e)
     {
-        using var form = new SettingsForm();
+        using var form = Program.Container.Resolve<SettingsForm>();
         form.ShowDialog();
     }
 
     private void mnuMainToolsPluginTools_Click(object sender, EventArgs e)
     {
-        using var form = new ToolsForm();
+        using var form = Program.Container.Resolve<ToolsForm>();
         form.ShowDialog();
     }
 

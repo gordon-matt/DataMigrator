@@ -7,6 +7,9 @@ public class DataMigrationConfigFile
     [XmlAttribute]
     public int BatchSize { get; set; } = 10000;
 
+    [XmlAttribute]
+    public bool TrimStrings { get; set; } = true;
+
     public ConnectionDetails SourceConnection { get; set; }
 
     public ConnectionDetails DestinationConnection { get; set; }

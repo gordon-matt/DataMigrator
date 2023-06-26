@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.0.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
     <PackageReference Include="Krypton.Docking" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Navigator" Version="70.22.11.312" />
@@ -15,6 +17,9 @@
     <PackageReference Include="Krypton.Toolkit" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Workspace" Version="70.22.11.312" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
 
