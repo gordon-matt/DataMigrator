@@ -1,4 +1,7 @@
-﻿
+﻿- Icons:
+https://icons8.com/icons/stickers
+
+
 		
 - add transform actions per column.. example: "Male/Female" can become 1/0 or true/false
 	... or replace underscores with spaces.. or whatever
