@@ -82,7 +82,7 @@ partial class MainForm
         this.panelMain.Location = new System.Drawing.Point(0, 0);
         this.panelMain.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
         this.panelMain.Name = "panelMain";
-        this.panelMain.Size = new System.Drawing.Size(926, 615);
+        this.panelMain.Size = new System.Drawing.Size(927, 662);
         this.panelMain.TabIndex = 0;
         // 
         // splitContainer
@@ -100,7 +100,7 @@ partial class MainForm
         // splitContainer.Panel2
         // 
         this.splitContainer.Panel2.Controls.Add(this.panelMain);
-        this.splitContainer.Size = new System.Drawing.Size(1135, 615);
+        this.splitContainer.Size = new System.Drawing.Size(1136, 662);
         this.splitContainer.SplitterDistance = 204;
         this.splitContainer.SplitterWidth = 5;
         this.splitContainer.TabIndex = 2;
@@ -113,7 +113,7 @@ partial class MainForm
         this.treeView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
         this.treeView.Name = "treeView";
         this.treeView.SelectedImageIndex = 0;
-        this.treeView.Size = new System.Drawing.Size(204, 615);
+        this.treeView.Size = new System.Drawing.Size(204, 662);
         this.treeView.TabIndex = 0;
         this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
         // 
@@ -182,7 +182,7 @@ partial class MainForm
         this.btnRun});
         this.toolStrip.Location = new System.Drawing.Point(0, 24);
         this.toolStrip.Name = "toolStrip";
-        this.toolStrip.Size = new System.Drawing.Size(1135, 39);
+        this.toolStrip.Size = new System.Drawing.Size(1136, 39);
         this.toolStrip.TabIndex = 1;
         this.toolStrip.Text = "toolStrip1";
         // 
@@ -196,7 +196,7 @@ partial class MainForm
         this.mnuMain.Location = new System.Drawing.Point(0, 0);
         this.mnuMain.Name = "mnuMain";
         this.mnuMain.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-        this.mnuMain.Size = new System.Drawing.Size(1135, 24);
+        this.mnuMain.Size = new System.Drawing.Size(1136, 24);
         this.mnuMain.TabIndex = 0;
         this.mnuMain.Text = "menuStrip1";
         // 
@@ -328,7 +328,7 @@ partial class MainForm
         // 
         this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(1135, 678);
+        this.ClientSize = new System.Drawing.Size(1136, 725);
         this.Controls.Add(this.splitContainer);
         this.Controls.Add(this.toolStrip);
         this.Controls.Add(this.mnuMain);
@@ -350,6 +350,7 @@ partial class MainForm
         this.mnuMain.PerformLayout();
         this.ResumeLayout(false);
         this.PerformLayout();
+
     }
 
     #endregion
