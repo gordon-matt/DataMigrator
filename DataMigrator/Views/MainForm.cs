@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Windows.Forms;
 using Autofac;
 
 namespace DataMigrator.Views;
@@ -13,6 +12,8 @@ public partial class MainForm : KryptonForm
     private readonly ICollection<IMigrationPlugin> plugins = new List<IMigrationPlugin>();
 
     private Dictionary<Type, UserControl> userControls = new();
+
+    //private readonly IonIcons fonts = new IonIcons(true);
 
     #region Constructor
 
@@ -36,6 +37,11 @@ public partial class MainForm : KryptonForm
 
         Program.Plugins = this.plugins;
         this.plugins = null;
+
+        //btnNew.SetImage(fonts, (int)IonIcons.IconType.md_add, 24);
+        //btnOpen.SetImage(fonts, (int)IonIcons.IconType.md_folder_open, 24);
+        //btnRun.SetImage(fonts, (int)IonIcons.IconType.md_play, 24);
+        //btnSave.SetImage(fonts, (int)IonIcons.IconType.md_save, 24);
     }
 
     #endregion Constructor

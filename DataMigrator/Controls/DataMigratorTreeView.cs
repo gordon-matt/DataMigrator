@@ -16,10 +16,10 @@ public class DataMigratorTreeView : TreeView
     public DataMigratorTreeView()
     {
         imageList = new ImageList();
-        imageList.Images.Add(Resources.Migrate);
-        imageList.Images.Add(Resources.Connection);
-        imageList.Images.Add(Resources.Mapping32x32);
-        imageList.Images.Add(Resources.Options32x32);
+        imageList.Images.Add(Resources.Transfer);
+        imageList.Images.Add(Resources.DatabaseConfig);
+        imageList.Images.Add(Resources.List);
+        imageList.Images.Add(Resources.Settings);
         imageList.Images.Add(Resources.Table);
         imageList.ImageSize = new Size(24, 24);
         this.ImageList = imageList;
