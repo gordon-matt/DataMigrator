@@ -50,13 +50,16 @@ partial class TableMappingControl
             // 
             this.dgvSource.AllowUserToAddRows = false;
             this.dgvSource.AllowUserToDeleteRows = false;
+            this.dgvSource.AllowUserToResizeRows = false;
             this.dgvSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgvSource.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvSource.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSource.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvSource.Location = new System.Drawing.Point(15, 46);
             this.dgvSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dgvSource.Name = "dgvSource";
+            this.dgvSource.RowHeadersVisible = false;
             this.dgvSource.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSource.Size = new System.Drawing.Size(280, 405);
             this.dgvSource.TabIndex = 1;
@@ -67,14 +70,17 @@ partial class TableMappingControl
             // 
             this.dgvMappings.AllowUserToAddRows = false;
             this.dgvMappings.AllowUserToDeleteRows = false;
+            this.dgvMappings.AllowUserToResizeRows = false;
             this.dgvMappings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvMappings.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvMappings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvMappings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvMappings.Location = new System.Drawing.Point(302, 53);
             this.dgvMappings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dgvMappings.Name = "dgvMappings";
+            this.dgvMappings.RowHeadersVisible = false;
             this.dgvMappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvMappings.Size = new System.Drawing.Size(465, 485);
             this.dgvMappings.TabIndex = 2;
@@ -83,13 +89,16 @@ partial class TableMappingControl
             // 
             this.dgvDestination.AllowUserToAddRows = false;
             this.dgvDestination.AllowUserToDeleteRows = false;
+            this.dgvDestination.AllowUserToResizeRows = false;
             this.dgvDestination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvDestination.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvDestination.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDestination.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvDestination.Location = new System.Drawing.Point(775, 46);
             this.dgvDestination.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dgvDestination.Name = "dgvDestination";
+            this.dgvDestination.RowHeadersVisible = false;
             this.dgvDestination.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDestination.Size = new System.Drawing.Size(280, 405);
             this.dgvDestination.TabIndex = 4;
