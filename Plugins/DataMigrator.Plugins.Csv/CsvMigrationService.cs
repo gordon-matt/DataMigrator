@@ -79,7 +79,7 @@ public class CsvMigrationService : BaseMigrationService
         using var streamReader = new StreamReader(fileSteam);
         using var csvReader = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            TrimOptions = TrimOptions.Trim,
+            TrimOptions = AppState.ConfigFile.TrimStrings ? TrimOptions.Trim : TrimOptions.None,
             HasHeaderRecord = HasHeaderRow,
             Delimiter = Delimiter
         });
@@ -188,7 +188,7 @@ public class CsvMigrationService : BaseMigrationService
         using var streamReader = new StreamReader(fileStream);
         using var csvReader = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            TrimOptions = TrimOptions.Trim,
+            TrimOptions = AppState.ConfigFile.TrimStrings ? TrimOptions.Trim : TrimOptions.None,
             HasHeaderRecord = HasHeaderRow,
             Delimiter = Delimiter
         });

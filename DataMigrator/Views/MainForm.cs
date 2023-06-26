@@ -96,7 +96,7 @@ public partial class MainForm : KryptonForm
             {
                 control.Value?.Dispose();
             }
-            userControls = new Dictionary<Type, UserControl>();
+            userControls.Clear();
             LoadUserControl<TraceViewerControl>(); // Won't loop, because LoadUserControl() does not use "fullReset"
         }
     }
@@ -136,11 +136,11 @@ public partial class MainForm : KryptonForm
 
     private T GetControl<T>() where T : UserControl
     {
-        T control;
-        if (Program.Container.TryResolve(out control))
-        {
-            return control;
-        }
+        //T control;
+        //if (Program.Container.TryResolve(out control))
+        //{
+        //    return control;
+        //}
 
         return Activator.CreateInstance<T>();
     }

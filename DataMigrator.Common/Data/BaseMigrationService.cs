@@ -189,7 +189,25 @@ public abstract class BaseMigrationService : IMigrationService
                 record.Fields.AddRange(fields);
                 fields.ForEach(f =>
                 {
-                    record[f.Name].Value = reader[f.Name];
+                    if (f.Type == FieldType.String)
+                    {
+                        string value = reader.GetString(f.Name);
+                        if (AppState.ConfigFile.TrimStrings)
+                        {
+                            value = value.Trim();
+                        }
+
+                        if (string.IsNullOrEmpty(value))
+                        {
+                            value = null;
+                        }
+
+                        record[f.Name].Value = value;
+                    }
+                    else
+                    {
+                        record[f.Name].Value = reader[f.Name];
+                    }
                 });
                 yield return record;
             }

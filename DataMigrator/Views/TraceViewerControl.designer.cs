@@ -18,6 +18,7 @@ partial class TraceViewerControl
             components.Dispose();
         }
         base.Dispose(disposing);
+        TraceService.Trace -= Instance_Trace;
     }
 
     #region Component Designer generated code

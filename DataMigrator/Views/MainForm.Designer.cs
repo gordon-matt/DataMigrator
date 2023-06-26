@@ -19,7 +19,14 @@ partial class MainForm
         }
         base.Dispose(disposing);
 
-        ClearControls(fullReset: true);
+        if (userControls is not null)
+        {
+            foreach (var control in userControls)
+            {
+                control.Value?.Dispose();
+            }
+            userControls = null;
+        }
     }
 
     #region Windows Form Designer generated code

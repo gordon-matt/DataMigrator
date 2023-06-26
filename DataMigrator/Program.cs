@@ -56,7 +56,7 @@ internal static class Program
                 builder.RegisterType<ConnectionsControl>();
                 builder.RegisterType<DataMigratorSettingsControl>();
                 builder.RegisterType<TableMappingControl>();
-                builder.RegisterType<TraceViewerControl>();
+                //builder.RegisterType<TraceViewerControl>();
 
                 Container = builder.Build();
             });
