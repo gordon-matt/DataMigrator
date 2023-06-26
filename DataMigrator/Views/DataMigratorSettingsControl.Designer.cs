@@ -28,7 +28,7 @@ partial class DataMigratorSettingsControl
     /// </summary>
     private void InitializeComponent()
     {
-            this.lblBatchSize = new Krypton.Toolkit.KryptonLabel();
+            this.lblBatchSize = new System.Windows.Forms.Label();
             this.nudBatchSize = new Krypton.Toolkit.KryptonNumericUpDown();
             this.cbTrimStrings = new Krypton.Toolkit.KryptonCheckBox();
             this.SuspendLayout();
@@ -40,7 +40,7 @@ partial class DataMigratorSettingsControl
             this.lblBatchSize.Name = "lblBatchSize";
             this.lblBatchSize.Size = new System.Drawing.Size(68, 20);
             this.lblBatchSize.TabIndex = 0;
-            this.lblBatchSize.Values.Text = "Batch Size:";
+            this.lblBatchSize.Text = "Batch Size:";
             // 
             // nudBatchSize
             // 
@@ -99,7 +99,7 @@ partial class DataMigratorSettingsControl
 
     #endregion
 
-    private KryptonLabel lblBatchSize;
+    private Label lblBatchSize;
     private KryptonNumericUpDown nudBatchSize;
     private KryptonCheckBox cbTrimStrings;
 }

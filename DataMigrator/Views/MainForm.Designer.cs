@@ -83,7 +83,7 @@ partial class MainForm
             this.panelMain.Location = new System.Drawing.Point(0, 0);
             this.panelMain.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(927, 662);
+            this.panelMain.Size = new System.Drawing.Size(871, 662);
             this.panelMain.TabIndex = 0;
             // 
             // splitContainer
@@ -102,7 +102,7 @@ partial class MainForm
             // 
             this.splitContainer.Panel2.Controls.Add(this.panelMain);
             this.splitContainer.Size = new System.Drawing.Size(1136, 662);
-            this.splitContainer.SplitterDistance = 204;
+            this.splitContainer.SplitterDistance = 260;
             this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 2;
             // 
@@ -114,7 +114,7 @@ partial class MainForm
             this.treeView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(204, 662);
+            this.treeView.Size = new System.Drawing.Size(260, 662);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             // 

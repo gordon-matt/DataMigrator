@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace DataMigrator.Views;
 
@@ -8,11 +10,11 @@ internal partial class AboutForm : KryptonForm
     {
         InitializeComponent();
         this.Text = string.Format("About {0}", AssemblyTitle);
-        this.labelProductName.Text = AssemblyProduct;
-        this.labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
-        this.labelCopyright.Text = AssemblyCopyright;
-        this.labelCompanyName.Text = AssemblyCompany;
-        this.textBoxDescription.Text = AssemblyDescription;
+        this.lblProductName.Text = AssemblyProduct;
+        this.lblVersion.Text = string.Format("Version {0}", AssemblyVersion);
+        this.lblCopyright.Text = AssemblyCopyright;
+        this.lblCompanyName.Text = AssemblyCompany;
+        this.rtbDescription.Text = AssemblyDescription;
     }
 
     #region Assembly Attribute Accessors
@@ -73,4 +75,42 @@ internal partial class AboutForm : KryptonForm
     }
 
     #endregion Assembly Attribute Accessors
+
+    private void rtbDescription_LinkClicked(object sender, LinkClickedEventArgs e)
+    {
+        LaunchBrowser(e.LinkText);
+    }
+
+    /// <summary>
+    /// https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
+    /// </summary>
+    /// <param name="url"></param>
+    public static void LaunchBrowser(string url)
+    {
+        try
+        {
+            using var process = Process.Start(url);
+        }
+        catch
+        {
+            // hack because of this: https://github.com/dotnet/corefx/issues/10361
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                url = url.Replace("&", "^&");
+                using var process = Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                using var process = Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                using var process = Process.Start("open", url);
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
 }

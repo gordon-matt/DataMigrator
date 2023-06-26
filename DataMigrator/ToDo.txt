@@ -1,11 +1,9 @@
-﻿- Icons:
-https://icons8.com/icons/stickers
-
-
-		
-- add transform actions per column.. example: "Male/Female" can become 1/0 or true/false
+﻿- add transform actions per column.. example: "Male/Female" can become 1/0 or true/false
 	... or replace underscores with spaces.. or whatever
 	
+
+- settings: add theme dropdown for krypton
+
 - Unit Tests!
 - Support setting primary keys (and remove default primary key from table creation)
 
@@ -21,5 +19,4 @@ https://icons8.com/icons/stickers
 - Support foreign keys? would be complicated .. need to make sure jobs run in correct order or will get errors (missing table/missing data for foreign key)..
 
 - Enable user change field type on UI (mapping)?
-- Convert to WPF app and use ObservableCollection<T> for binding data on Table Mappings form?
 - ExtendedProperties IEnumerable<string> on Field?

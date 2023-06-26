@@ -5,6 +5,16 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Description>Data Migrator is designed to transfer data between various data sources via plugins.
+
+Icons used can be found at: https://icons8.com</Description>
+    <Title>Data Migrator</Title>
+    <Authors>Matt Gordon</Authors>
+    <Company>Heroicsoft</Company>
+    <Product>Data Migrator</Product>
+    <Copyright>Copyright © 2023</Copyright>
+    <PackageIcon>Migrate.png</PackageIcon>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,6 +53,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Images\Migrate.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
