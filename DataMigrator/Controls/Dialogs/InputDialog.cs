@@ -1,4 +1,4 @@
-﻿namespace DataMigrator;
+﻿namespace DataMigrator.Controls.Dialogs;
 
 public partial class InputDialog : Form
 {

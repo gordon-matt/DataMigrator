@@ -21,6 +21,7 @@ Icons used can be found at: https://icons8.com</Description>
     <PackageReference Include="Autofac" Version="7.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
+    <PackageReference Include="FastColoredTextBox.Net6" Version="1.0.0" />
     <PackageReference Include="Krypton.Docking" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Navigator" Version="70.22.11.312" />
     <PackageReference Include="Krypton.Ribbon" Version="70.22.11.312" />

@@ -2,35 +2,24 @@
 
 public class ConnectionDetails
 {
-    [XmlAttribute]
     public string Server { get; set; }
 
-    [XmlAttribute]
     public int Port { get; set; }
 
-    [XmlAttribute]
     public string Database { get; set; }
 
-    [XmlAttribute]
     public string Domain { get; set; }
 
-    [XmlAttribute]
     public string UserName { get; set; }
 
-    [XmlAttribute]
     public string Password { get; set; }
 
-    [XmlAttribute]
     public bool IntegratedSecurity { get; set; }
 
-    [XmlAttribute]
     public string ProviderName { get; set; }
 
-    [XmlAttribute]
     public string ConnectionString { get; set; }
 
-    [XmlArray("ExtendedProperties")]
-    [XmlArrayItem("Property")]
     public ExtendedPropertyCollection ExtendedProperties { get; set; } = new ExtendedPropertyCollection();
 }
 
@@ -42,7 +31,7 @@ public class ExtendedProperty
 
     public TValue GetValue<TValue>()
     {
-        return Value != null ? (TValue)Value : default;
+        return Value != null ? Value.ConvertTo<TValue>() : default;
     }
 }
 
