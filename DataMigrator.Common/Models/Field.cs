@@ -4,36 +4,31 @@ namespace DataMigrator.Common.Models;
 
 public class Field : ICloneable
 {
-    [XmlAttribute]
     public string Name { get; set; }
 
-    [XmlAttribute]
     [DisplayName("Display Name")]
     public string DisplayName { get; set; }
 
-    [XmlAttribute]
     [DisplayName("Is Primary Key")]
     public bool IsPrimaryKey { get; set; }
 
-    [XmlAttribute]
     [DisplayName("Is Required")]
     public bool IsRequired { get; set; }
 
-    [XmlAttribute]
     [DisplayName("Max Length")]
     public int MaxLength { get; set; }
 
-    [XmlAttribute]
     public int Ordinal { get; set; }
 
-    [XmlAttribute]
     public FieldType Type { get; set; } = FieldType.String;
 
-    [XmlIgnore]
+    [Newtonsoft.Json.JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     [Browsable(false)]
     public object Value { get; set; }
 
-    [XmlIgnore]
+    [Newtonsoft.Json.JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     [Browsable(false)]
     public bool IsNumeric =>
         Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,

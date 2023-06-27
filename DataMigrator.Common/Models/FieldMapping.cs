@@ -5,4 +5,6 @@ public class FieldMapping
     public Field SourceField { get; set; }
 
     public Field DestinationField { get; set; }
+
+    public string TransformScript { get; set; }
 }

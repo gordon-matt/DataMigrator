@@ -7,11 +7,12 @@
 - Unit Tests!
 - Support setting primary keys (and remove default primary key from table creation)
 
+- dmf file to json instead of xml..?
 
+- order the jobs...
 
-
-
-
+- new job still shows previous job mappings
+-dont navigate away from table mappings when saving
 
 
 

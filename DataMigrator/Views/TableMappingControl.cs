@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using DataMigrator.Controls.Dialogs;
 using Extenso.Data;
 
 namespace DataMigrator.Views;
@@ -32,15 +33,21 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
             MappingsTable?.Rows.OfType<DataRow>().ForEach(row =>
             {
+                string sourceValue = row["Source"].ToString();
+                string destinationValue = row["Destination"].ToString();
+
                 mappings.Add(new FieldMapping
                 {
-                    SourceField = SourceFields[row["Source"].ToString()],
-                    DestinationField = DestinationFields[row["Destination"].ToString()]
+                    SourceField = SourceFields[sourceValue],
+                    DestinationField = DestinationFields[destinationValue],
+                    TransformScript = scripts.TryGetValue($"{sourceValue}|{destinationValue}", out string value) ? value : null,
                 });
             });
             return mappings;
         }
     }
+
+    private Dictionary<string, string> scripts = new();
 
     #endregion Public Properties
 
@@ -84,6 +91,8 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
             return;
         }
 
+        dgvMappings_Script.DefaultCellStyle.NullValue = null;
+
         SourceController = Controller.GetProvider(AppState.ConfigFile.SourceConnection);
         DestinationController = Controller.GetProvider(AppState.ConfigFile.DestinationConnection);
 
@@ -95,12 +104,23 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
         MappingsTable = new DataTable();
         MappingsTable.Columns.AddRange("Source", "Destination");
+        MappingsTable.Columns.Add("Script", typeof(byte[]));
 
         foreach (var mapping in AppState.CurrentJob.FieldMappings)
         {
             var row = MappingsTable.NewRow();
             row["Source"] = mapping.SourceField.Name;
             row["Destination"] = mapping.DestinationField.Name;
+            row["Script"] = !string.IsNullOrEmpty(mapping.TransformScript) ? Constants.ImageBytes.ScriptSmall : null;
+
+            scripts.Add($"{mapping.SourceField.Name}|{mapping.DestinationField.Name}", mapping.TransformScript);
+
+            //if (mapping.DestinationField.Type != mapping.SourceField.Type)
+            //{
+            //    //TODO: Show icon for data type change
+            //    //row["Transforms"] =
+            //}
+
             MappingsTable.Rows.Add(row);
 
             using var sourceRow = dgvSource.Rows.OfType<DataGridViewRow>()
@@ -122,6 +142,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
             }
         }
 
+        dgvMappings.AutoGenerateColumns = false;
         dgvMappings.DataSource = MappingsTable;
     }
 
@@ -174,6 +195,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
                     var mappedRow = MappingsTable.NewRow();
                     mappedRow["Source"] = sourceRowValue;
                     mappedRow["Destination"] = sourceRowValue;
+                    mappedRow["Script"] = null;
                     MappingsTable.Rows.Add(mappedRow);
 
                     sourceRowsToRemove.Add(sourceRow);
@@ -183,8 +205,8 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
             }
         }
 
-        sourceRowsToRemove.ForEach(row => { dgvSource.Rows.Remove(row); });
-        destinationRowsToRemove.ForEach(row => { dgvDestination.Rows.Remove(row); });
+        sourceRowsToRemove.ForEach(dgvSource.Rows.Remove);
+        destinationRowsToRemove.ForEach(dgvDestination.Rows.Remove);
     }
 
     private void btnAdd_Click(object sender, EventArgs e)
@@ -226,10 +248,54 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         var row = MappingsTable.NewRow();
         row["Source"] = sourceRow.Cells[0].Value.ToString();
         row["Destination"] = destinationRow.Cells[0].Value.ToString();
+        row["Script"] = null;
         MappingsTable.Rows.Add(row);
 
         dgvSource.Rows.Remove(sourceRow);
         dgvDestination.Rows.Remove(destinationRow);
+    }
+
+    private void btnAddEditScript_Click(object sender, EventArgs e)
+    {
+        if (dgvMappings.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select a mapped field",
+                "Details Required",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Exclamation);
+            return;
+        }
+
+        var mappedRow = dgvMappings.SelectedRows[0];
+
+        using var dialog = new ScriptDialog();
+
+        string source = mappedRow.Cells[dgvMappings_Source.Index].Value.ToString();
+        string destination = mappedRow.Cells[dgvMappings_Destination.Index].Value.ToString();
+        string key = $"{source}|{destination}";
+
+        if (scripts.ContainsKey(key))
+        {
+            dialog.Script = scripts[key];
+        }
+
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            if (scripts.ContainsKey(key))
+            {
+                scripts[key] = dialog.Script;
+            }
+            else
+            {
+                scripts.Add(key, dialog.Script);
+            }
+
+            var row = MappingsTable.Rows.OfType<DataRow>().FirstOrDefault(x =>
+                x["Source"].ToString() == source &&
+                x["Destination"].ToString() == destination);
+
+            row["Script"] = Constants.ImageBytes.ScriptSmall;
+        }
     }
 
     private async void btnCreateTable_Click(object sender, EventArgs e)
@@ -257,11 +323,11 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
         var sourceMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
             .Where(x => x.Index != dgvMappings.NewRowIndex)
-            .Select(r => r.Cells["Source"].Value.ToString());
+            .Select(r => r.Cells[dgvMappings_Source.Index].Value.ToString());
 
         var destinationMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
             .Where(x => x.Index != dgvMappings.NewRowIndex)
-            .Select(r => r.Cells["Destination"].Value.ToString());
+            .Select(r => r.Cells[dgvMappings_Destination.Index].Value.ToString());
 
         var sourceFields = SourceFields.Where(x => !x.Name.In(sourceMappedFields));
         var destinationFields = DestinationFields.Where(x => !x.Name.In(destinationMappedFields));
@@ -285,7 +351,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
             var sourceMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
                 .Where(x => x.Index != dgvMappings.NewRowIndex)
-                .Select(r => r.Cells["Source"].Value.ToString());
+                .Select(r => r.Cells[dgvMappings_Source.Index].Value.ToString());
 
             dgvSource.DataSource = GetFieldsDataTable(SourceFields.Where(x => !x.Name.In(sourceMappedFields)));
         }
@@ -302,7 +368,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
             var destinationMappedFields = dgvMappings.Rows.OfType<DataGridViewRow>()
                 .Where(x => x.Index != dgvMappings.NewRowIndex)
-                .Select(r => r.Cells["Destination"].Value.ToString());
+                .Select(r => r.Cells[dgvMappings_Destination.Index].Value.ToString());
 
             dgvDestination.DataSource = GetFieldsDataTable(DestinationFields.Where(x => !x.Name.In(destinationMappedFields)));
         }

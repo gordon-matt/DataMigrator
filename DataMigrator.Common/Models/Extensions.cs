@@ -24,7 +24,7 @@
                 var row = table.NewRow();
                 record.Fields.ForEach(field =>
                 {
-                    row[field.Name] = field.Value;
+                    row[field.Name] = field.Value ?? DBNull.Value;
                 });
                 table.Rows.Add(row);
             });

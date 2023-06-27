@@ -200,7 +200,7 @@ public class CsvMigrationService : BaseMigrationService
         return table;
     }
 
-    private string Delimiter => ConnectionDetails.ExtendedProperties["Delimiter"].GetValue<FileDelimiter>() switch
+    private string Delimiter => (FileDelimiter)ConnectionDetails.ExtendedProperties["Delimiter"].GetValue<byte>() switch
     {
         FileDelimiter.Tab => "\t",
         FileDelimiter.VerticalBar => "|",

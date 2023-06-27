@@ -1,4 +1,6 @@
-﻿namespace DataMigrator.Controls;
+﻿using DataMigrator.Controls.Dialogs;
+
+namespace DataMigrator.Controls;
 
 public class DataMigratorTreeView : TreeView
 {

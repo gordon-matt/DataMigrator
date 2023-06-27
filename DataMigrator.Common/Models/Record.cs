@@ -14,14 +14,14 @@ public class Record : ICloneable
 
     #endregion ICloneable Members
 
-    public void ReMapFields(IEnumerable<FieldMapping> mappings)
+    public void RunScripts(List<(string SourceFieldName, ITransform Script)> scripts)
     {
-        foreach (var mapping in mappings)
+        foreach (var entry in scripts)
         {
-            var field = this[mapping.SourceField.Name];
-            if (field != null)
+            var field = this[entry.SourceFieldName];
+            if (field is not null && field.Value is not null)
             {
-                field.Name = mapping.DestinationField.Name;
+                field.Value = entry.Script.Transform(field.Value);
             }
         }
     }
@@ -30,15 +30,34 @@ public class Record : ICloneable
     {
         foreach (var mapping in mappings)
         {
+            try
+            {
+                var field = this[mapping.SourceField.Name];
+                if (field != null)
+                {
+                    if (field.Value == null || field.Value == DBNull.Value || (field.Value is string && string.IsNullOrEmpty(field.Value as string)))
+                    { continue; }
+
+                    var newType = TypeConvert.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
+                    field.Value = field.Value.ConvertTo(newType);
+                    field.Type = mapping.DestinationField.Type;
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+    }
+
+    public void ReMapFields(IEnumerable<FieldMapping> mappings)
+    {
+        foreach (var mapping in mappings)
+        {
             var field = this[mapping.SourceField.Name];
             if (field != null)
             {
-                if (field.Value == null || field.Value == DBNull.Value || (field.Value is string && string.IsNullOrEmpty(field.Value as string)))
-                { continue; }
-
-                var newType = TypeConvert.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
-                field.Value = field.Value.ConvertTo(newType);
-                field.Type = mapping.DestinationField.Type;
+                field.Name = mapping.DestinationField.Name;
             }
         }
     }

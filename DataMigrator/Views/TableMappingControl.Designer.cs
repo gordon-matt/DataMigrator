@@ -28,8 +28,12 @@ partial class TableMappingControl
     /// </summary>
     private void InitializeComponent()
     {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSource = new Krypton.Toolkit.KryptonDataGridView();
             this.dgvMappings = new Krypton.Toolkit.KryptonDataGridView();
+            this.dgvMappings_Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvMappings_Destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvMappings_Script = new System.Windows.Forms.DataGridViewImageColumn();
             this.dgvDestination = new Krypton.Toolkit.KryptonDataGridView();
             this.btnAutoMap = new Krypton.Toolkit.KryptonButton();
             this.btnAdd = new Krypton.Toolkit.KryptonButton();
@@ -47,11 +51,13 @@ partial class TableMappingControl
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel2_2 = new System.Windows.Forms.Panel();
             this.panel2_3 = new System.Windows.Forms.Panel();
+            this.btnAddEditScript = new Krypton.Toolkit.KryptonButton();
             this.panel2_1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel3_2 = new System.Windows.Forms.Panel();
             this.panel3_3 = new System.Windows.Forms.Panel();
             this.panel3_1 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMappings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDestination)).BeginInit();
@@ -70,6 +76,7 @@ partial class TableMappingControl
             this.panel3_2.SuspendLayout();
             this.panel3_3.SuspendLayout();
             this.panel3_1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvSource
@@ -85,6 +92,7 @@ partial class TableMappingControl
             this.dgvSource.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvSource.Location = new System.Drawing.Point(0, 0);
             this.dgvSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.dgvSource.MultiSelect = false;
             this.dgvSource.Name = "dgvSource";
             this.dgvSource.RowHeadersVisible = false;
             this.dgvSource.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -103,14 +111,43 @@ partial class TableMappingControl
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvMappings.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvMappings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvMappings.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvMappings_Source,
+            this.dgvMappings_Destination,
+            this.dgvMappings_Script});
             this.dgvMappings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvMappings.Location = new System.Drawing.Point(0, 0);
             this.dgvMappings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.dgvMappings.MultiSelect = false;
             this.dgvMappings.Name = "dgvMappings";
             this.dgvMappings.RowHeadersVisible = false;
             this.dgvMappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvMappings.Size = new System.Drawing.Size(529, 549);
+            this.dgvMappings.Size = new System.Drawing.Size(529, 555);
             this.dgvMappings.TabIndex = 2;
+            // 
+            // dgvMappings_Source
+            // 
+            this.dgvMappings_Source.DataPropertyName = "Source";
+            this.dgvMappings_Source.HeaderText = "Source";
+            this.dgvMappings_Source.Name = "dgvMappings_Source";
+            this.dgvMappings_Source.Width = 72;
+            // 
+            // dgvMappings_Destination
+            // 
+            this.dgvMappings_Destination.DataPropertyName = "Destination";
+            this.dgvMappings_Destination.HeaderText = "Destination";
+            this.dgvMappings_Destination.Name = "dgvMappings_Destination";
+            this.dgvMappings_Destination.Width = 96;
+            // 
+            // dgvMappings_Script
+            // 
+            this.dgvMappings_Script.DataPropertyName = "Script";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = null;
+            this.dgvMappings_Script.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvMappings_Script.HeaderText = "Script";
+            this.dgvMappings_Script.Name = "dgvMappings_Script";
+            this.dgvMappings_Script.Width = 47;
             // 
             // dgvDestination
             // 
@@ -125,6 +162,7 @@ partial class TableMappingControl
             this.dgvDestination.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvDestination.Location = new System.Drawing.Point(0, 0);
             this.dgvDestination.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.dgvDestination.MultiSelect = false;
             this.dgvDestination.Name = "dgvDestination";
             this.dgvDestination.RowHeadersVisible = false;
             this.dgvDestination.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -135,39 +173,36 @@ partial class TableMappingControl
             // 
             // btnAutoMap
             // 
-            this.btnAutoMap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAutoMap.CornerRoundingRadius = -1F;
-            this.btnAutoMap.Location = new System.Drawing.Point(0, 0);
+            this.btnAutoMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAutoMap.Location = new System.Drawing.Point(4, 49);
             this.btnAutoMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnAutoMap.Name = "btnAutoMap";
-            this.btnAutoMap.Size = new System.Drawing.Size(529, 33);
+            this.btnAutoMap.Size = new System.Drawing.Size(256, 41);
             this.btnAutoMap.TabIndex = 5;
             this.btnAutoMap.Values.Text = "Auto Map";
             this.btnAutoMap.Click += new System.EventHandler(this.btnAutoMap_Click);
             // 
             // btnAdd
             // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAdd.CornerRoundingRadius = -1F;
-            this.btnAdd.Location = new System.Drawing.Point(0, 33);
+            this.btnAdd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAdd.Location = new System.Drawing.Point(4, 3);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(529, 33);
+            this.btnAdd.Size = new System.Drawing.Size(256, 40);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Values.Text = "Add";
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnRemove
             // 
-            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemove.CornerRoundingRadius = -1F;
-            this.btnRemove.Location = new System.Drawing.Point(0, 66);
+            this.btnRemove.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnRemove.Location = new System.Drawing.Point(268, 3);
             this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(529, 33);
+            this.btnRemove.Size = new System.Drawing.Size(257, 40);
             this.btnRemove.TabIndex = 7;
             this.btnRemove.Values.Text = "Remove";
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
@@ -313,19 +348,29 @@ partial class TableMappingControl
             this.panel2_2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2_2.Location = new System.Drawing.Point(0, 33);
             this.panel2_2.Name = "panel2_2";
-            this.panel2_2.Size = new System.Drawing.Size(529, 549);
+            this.panel2_2.Size = new System.Drawing.Size(529, 555);
             this.panel2_2.TabIndex = 11;
             // 
             // panel2_3
             // 
-            this.panel2_3.Controls.Add(this.btnAutoMap);
-            this.panel2_3.Controls.Add(this.btnAdd);
-            this.panel2_3.Controls.Add(this.btnRemove);
+            this.panel2_3.Controls.Add(this.tableLayoutPanel1);
             this.panel2_3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2_3.Location = new System.Drawing.Point(0, 582);
+            this.panel2_3.Location = new System.Drawing.Point(0, 588);
             this.panel2_3.Name = "panel2_3";
-            this.panel2_3.Size = new System.Drawing.Size(529, 99);
+            this.panel2_3.Size = new System.Drawing.Size(529, 93);
             this.panel2_3.TabIndex = 10;
+            // 
+            // btnAddEditScript
+            // 
+            this.btnAddEditScript.CornerRoundingRadius = -1F;
+            this.btnAddEditScript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAddEditScript.Location = new System.Drawing.Point(268, 49);
+            this.btnAddEditScript.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnAddEditScript.Name = "btnAddEditScript";
+            this.btnAddEditScript.Size = new System.Drawing.Size(257, 41);
+            this.btnAddEditScript.TabIndex = 8;
+            this.btnAddEditScript.Values.Text = "Add/Edit Script";
+            this.btnAddEditScript.Click += new System.EventHandler(this.btnAddEditScript_Click);
             // 
             // panel2_1
             // 
@@ -374,6 +419,24 @@ partial class TableMappingControl
             this.panel3_1.Size = new System.Drawing.Size(263, 33);
             this.panel3_1.TabIndex = 11;
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.btnAdd, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnAddEditScript, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.btnRemove, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnAutoMap, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(529, 93);
+            this.tableLayoutPanel1.TabIndex = 9;
+            // 
             // TableMappingControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -402,6 +465,7 @@ partial class TableMappingControl
             this.panel3_2.ResumeLayout(false);
             this.panel3_3.ResumeLayout(false);
             this.panel3_1.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
     }
@@ -432,4 +496,9 @@ partial class TableMappingControl
     private Panel panel3_2;
     private Panel panel3_3;
     private Panel panel3_1;
+    private DataGridViewTextBoxColumn dgvMappings_Source;
+    private DataGridViewTextBoxColumn dgvMappings_Destination;
+    private DataGridViewImageColumn dgvMappings_Script;
+    private KryptonButton btnAddEditScript;
+    private TableLayoutPanel tableLayoutPanel1;
 }
