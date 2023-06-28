@@ -9,11 +9,16 @@ public class DataMigratorTreeView : TreeView
     private readonly ToolStripMenuItem mnuContextJobsNewJob;
     private readonly ContextMenuStrip mnuContextJobsJob = null;
     private readonly ToolStripMenuItem mnuContextJobsJobRename;
+    private readonly ToolStripMenuItem mnuContextJobsJobDelete;
 
     private TreeNode RootNode { get; set; }
     private TreeNode ConnectionsNode { get; set; }
     private TreeNode JobsNode { get; set; }
     private TreeNode SettingsNode { get; set; }
+
+    public delegate void TreeViewChangedHandler();
+
+    public event TreeViewChangedHandler TreeViewChanged;
 
     public DataMigratorTreeView()
     {
@@ -23,7 +28,7 @@ public class DataMigratorTreeView : TreeView
         imageList.Images.Add(Resources.List);
         imageList.Images.Add(Resources.Settings);
         imageList.Images.Add(Resources.Table);
-        imageList.ImageSize = new Size(24, 24);
+        imageList.ImageSize = new Size(32, 32);
         this.ImageList = imageList;
 
         mnuContextJobs = new ContextMenuStrip
@@ -39,6 +44,10 @@ public class DataMigratorTreeView : TreeView
         mnuContextJobsJobRename = new ToolStripMenuItem("Rename") { Name = "mnuContextJobsJobRename" };
         mnuContextJobsJobRename.Click += new EventHandler(mnuContextJobsJobRename_Click);
         mnuContextJobsJob.Items.Add(mnuContextJobsJobRename);
+
+        mnuContextJobsJobDelete = new ToolStripMenuItem("Delete") { Name = "mnuContextJobsJobDelete" };
+        mnuContextJobsJobDelete.Click += new EventHandler(mnuContextJobsJobDelete_Click);
+        mnuContextJobsJob.Items.Add(mnuContextJobsJobDelete);
     }
 
     public void LoadDefaultNodes()
@@ -93,7 +102,7 @@ public class DataMigratorTreeView : TreeView
         LoadDefaultNodes();
     }
 
-    private void mnuContextJobsJobRename_Click(object sender, System.EventArgs e)
+    private void mnuContextJobsJobRename_Click(object sender, EventArgs e)
     {
         using var dlgInput = new InputDialog
         {
@@ -113,6 +122,20 @@ public class DataMigratorTreeView : TreeView
 
             this.SelectedNode.Text = newJobName;
         }
+    }
+
+    private void mnuContextJobsJobDelete_Click(object sender, EventArgs e)
+    {
+        string jobName = this.SelectedNode.Text;
+        var selectedJob = AppState.ConfigFile.Jobs[jobName];
+        AppState.ConfigFile.Jobs.Remove(selectedJob);
+
+        JobsNode.Nodes.Clear();
+        foreach (var job in AppState.ConfigFile.Jobs.OrderBy(j => j.Name))
+        {
+            AddJob(job);
+        }
+        TreeViewChanged?.Invoke();
     }
 
     private void mnuContextJobsNewJob_Click(object sender, EventArgs e)

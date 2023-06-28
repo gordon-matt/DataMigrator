@@ -1,20 +1,18 @@
-﻿- add transform actions per column.. example: "Male/Female" can become 1/0 or true/false
-	... or replace underscores with spaces.. or whatever
-	
+﻿- settings: add theme dropdown for krypton
 
-- settings: add theme dropdown for krypton
 
-- Unit Tests!
-- Support setting primary keys (and remove default primary key from table creation)
-
-- dmf file to json instead of xml..?
 
 - order the jobs...
 
 - new job still shows previous job mappings
 -dont navigate away from table mappings when saving
 
+- cant delete jobs..
 
+-licensing
+
+- Unit Tests!
+- Support setting primary keys (and remove default primary key from table creation)
 
 
 - Support foreign keys? would be complicated .. need to make sure jobs run in correct order or will get errors (missing table/missing data for foreign key)..

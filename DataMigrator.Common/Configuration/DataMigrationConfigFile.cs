@@ -19,6 +19,10 @@ public class DataMigrationConfigFile
 
     public JobCollection Jobs { get; set; } = new JobCollection();
 
+    [Newtonsoft.Json.JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsNew => !Jobs.Any() || (SourceConnection == null && DestinationConnection == null);
+
     public static DataMigrationConfigFile Load(string fileName)
     {
         var configFile = new FileInfo(fileName).ReadAllText().JsonDeserialize<DataMigrationConfigFile>();

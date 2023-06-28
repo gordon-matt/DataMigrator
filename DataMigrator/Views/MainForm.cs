@@ -19,6 +19,7 @@ public partial class MainForm : KryptonForm
     {
         InitializeComponent();
         treeView.LoadDefaultNodes();
+        treeView.TreeViewChanged += TreeView_TreeViewChanged;
 
         if (!this.IsInWinDesignMode())
         {
@@ -66,6 +67,11 @@ public partial class MainForm : KryptonForm
 
     private DialogResult CheckSaveChanges()
     {
+        if (AppState.ConfigFile.IsNew)
+        {
+            return DialogResult.OK;
+        }
+
         var dialogResult = MessageBox.Show(
             "Do you want to save the current file?",
             "Save Changes?",
@@ -154,9 +160,7 @@ public partial class MainForm : KryptonForm
 
     private void OpenFile()
     {
-        var dialogResult = CheckSaveChanges();
-        if (dialogResult == DialogResult.Cancel)
-        { return; }
+        if (CheckSaveChanges() == DialogResult.Cancel) { return; }
 
         if (dlgOpenFile.ShowDialog() == DialogResult.OK)
         {
@@ -289,4 +293,9 @@ public partial class MainForm : KryptonForm
     #endregion Main Menu
 
     #endregion Control Event Handlers
+
+    private void TreeView_TreeViewChanged()
+    {
+        ShowTraceViewer();
+    }
 }

@@ -41,7 +41,6 @@ partial class ScriptDialog
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.CornerRoundingRadius = -1F;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Enabled = false;
             this.btnCancel.Location = new System.Drawing.Point(362, 504);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCancel.Name = "btnCancel";
@@ -88,6 +87,7 @@ partial class ScriptDialog
             this.fctScript.CharWidth = 8;
             this.fctScript.DefaultMarkerSize = 8;
             this.fctScript.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.fctScript.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fctScript.IsReplaceMode = false;
             this.fctScript.Language = FastColoredTextBoxNS.Language.CSharp;
             this.fctScript.LeftBracket = '(';
