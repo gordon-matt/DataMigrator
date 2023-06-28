@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace DataMigrator.Views;
+﻿namespace DataMigrator.Views;
 
 public partial class RunJobsForm : KryptonForm
 {
@@ -14,19 +12,10 @@ public partial class RunJobsForm : KryptonForm
     {
         InitializeComponent();
 
-        var table = new DataTable("Jobs");
-        table.Columns.Add(COLUMN_RUN, typeof(bool));
-        table.Columns.Add(COLUMN_NAME);
-        table.Columns.Add(COLUMN_STATUS);
-        foreach (var job in AppState.ConfigFile.Jobs)
+        foreach (var job in AppState.ConfigFile.Jobs.OrderBy(x => x.Order))
         {
-            var row = table.NewRow();
-            row[COLUMN_RUN] = false;
-            row[COLUMN_NAME] = job.Name;
-            row[COLUMN_STATUS] = "Pending";
-            table.Rows.Add(row);
+            dataGridView.Rows.Add(false, job.Name, "Pending");
         }
-        dataGridView.DataSource = table;
     }
 
     private async void btnRun_Click(object sender, EventArgs e)
@@ -67,11 +56,14 @@ public partial class RunJobsForm : KryptonForm
             }
         });
 
-        foreach (DataRow row in ((DataTable)dataGridView.DataSource).Rows)
+        AppState.ConfigFile.Save(); // Ensure any reordering is persisted..
+
+        //foreach (DataGridViewRow row in dataGridView.Rows.OfType<DataGridViewRow>().OrderBy(x => x.Index)) // Shouldn't be necessary to manually order
+        foreach (DataGridViewRow row in dataGridView.Rows)
         {
-            if (bool.Parse(row[COLUMN_RUN].ToString()))
+            if (bool.Parse(row.Cells[COLUMN_RUN].Value.ToString()))
             {
-                string jobName = row[COLUMN_NAME].ToString();
+                string jobName = row.Cells[COLUMN_NAME].Value.ToString();
                 var job = AppState.ConfigFile.Jobs[jobName];
 
                 if (job == null)
@@ -82,24 +74,24 @@ public partial class RunJobsForm : KryptonForm
 
                 try
                 {
-                    row[COLUMN_STATUS] = "Running";
+                    row.Cells[COLUMN_STATUS].Value = "Running";
 
                     await Controller.RunJobAsync(job, progressHandler, cancellationTokenSource.Token);
 
                     if (cancellationTokenSource.IsCancellationRequested)
                     {
-                        row[COLUMN_STATUS] = "Cancelled";
+                        row.Cells[COLUMN_STATUS].Value = "Cancelled";
                         TraceService.Instance.WriteConcat(TraceEvent.Information, "User cancelled job");
                         return;
                     }
                     else
                     {
-                        row[COLUMN_STATUS] = "Completed";
+                        row.Cells[COLUMN_STATUS].Value = "Completed";
                     }
                 }
                 catch (Exception x)
                 {
-                    row[COLUMN_STATUS] = "Error";
+                    row.Cells[COLUMN_STATUS].Value = "Error";
                     TraceService.Instance.WriteException(x, string.Concat("Job Name: ", jobName));
                 }
             }
@@ -107,4 +99,91 @@ public partial class RunJobsForm : KryptonForm
     }
 
     private void btnCancel_Click(object sender, EventArgs e) => cancellationTokenSource.Cancel();
+
+    private void dataGridView_DragDrop(object sender, DragEventArgs e)
+    {
+        foreach (DataGridViewRow row in dataGridView.Rows)
+        {
+            string jobName = row.Cells[NameColumn.Index].Value.ToString();
+            var job = AppState.ConfigFile.Jobs[jobName];
+            job.Order = row.Index;
+        }
+    }
+
+    //#region Drag-Drop
+
+    //// Based on: https://stackoverflow.com/questions/1620947/how-could-i-drag-and-drop-datagridview-rows-under-each-other
+
+    //private Rectangle mouseDownDragBox;
+    //private int sourceRowIndex;
+    //private int destinationRowIndex;
+
+    //private int lastDragOverIndex;
+
+    //private void dataGridView_DragOver(object sender, DragEventArgs e)
+    //{
+    //    e.Effect = DragDropEffects.Move;
+    //}
+
+    //private void dataGridView_DragDrop(object sender, DragEventArgs e)
+    //{
+    //    // The mouse locations are relative to the screen, so they must be
+    //    // converted to client coordinates.
+    //    var clientPoint = dataGridView.PointToClient(new Point(e.X, e.Y));
+
+    //    // Get the row index of the item the mouse is below.
+    //    destinationRowIndex = dataGridView.HitTest(clientPoint.X, clientPoint.Y).RowIndex;
+
+    //    // If the drag operation was a move then remove and insert the row.
+    //    if (e.Effect == DragDropEffects.Move)
+    //    {
+    //        if (destinationRowIndex < 0) { return; }
+
+    //        var rowToMove = e.Data.GetData(typeof(DataGridViewRow)) as DataGridViewRow;
+    //        rowToMove.DefaultCellStyle.BackColor = Color.Empty;
+
+    //        dataGridView.Rows.RemoveAt(sourceRowIndex);
+    //        dataGridView.Rows.Insert(destinationRowIndex, rowToMove);
+    //    }
+    //}
+
+    //private void dataGridView_MouseMove(object sender, MouseEventArgs e)
+    //{
+    //    if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+    //    {
+    //        // If the mouse moves outside the rectangle, start the drag.
+    //        if (mouseDownDragBox != Rectangle.Empty && !mouseDownDragBox.Contains(e.X, e.Y))
+    //        {
+    //            // Proceed with the drag and drop, passing in the list item.
+    //            dataGridView.Rows[sourceRowIndex].DefaultCellStyle.BackColor = Color.LightYellow;
+    //            dataGridView.DoDragDrop(dataGridView.Rows[sourceRowIndex], DragDropEffects.Move);
+    //        }
+    //    }
+    //    dataGridView.Invalidate();
+    //}
+
+    //private void dataGridView_MouseDown(object sender, MouseEventArgs e)
+    //{
+    //    // Get the index of the item the mouse is below.
+    //    sourceRowIndex = dataGridView.HitTest(e.X, e.Y).RowIndex;
+    //    if (sourceRowIndex != -1)
+    //    {
+    //        // Remember the point where the mouse down occurred.
+    //        // The DragSize indicates the size that the mouse can move
+    //        // before a drag event should be started.
+    //        var dragSize = SystemInformation.DragSize;
+
+    //        // Create a rectangle using the DragSize, with the mouse position being
+    //        // at the center of the rectangle.
+    //        mouseDownDragBox = new Rectangle(
+    //            new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
+    //    }
+    //    else
+    //    {
+    //        // Reset the rectangle if the mouse is not over an item in the ListBox.
+    //        mouseDownDragBox = Rectangle.Empty;
+    //    }
+    //}
+
+    //#endregion Drag-Drop
 }

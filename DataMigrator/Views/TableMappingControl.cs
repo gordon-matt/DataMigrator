@@ -70,8 +70,6 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
     public TableMappingControl()
     {
         InitializeComponent();
-
-        
     }
 
     private void TableMappingControl_Load(object sender, EventArgs e)

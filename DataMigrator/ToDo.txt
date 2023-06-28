@@ -1,9 +1,7 @@
 ﻿- settings: add theme dropdown for krypton
 
 
-
-- order the jobs...
-
+- ensure jobs have unique names
 
 
 -licensing
