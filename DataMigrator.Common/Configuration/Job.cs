@@ -8,5 +8,7 @@ public class Job
 
     public string DestinationTable { get; set; }
 
+    public int Order { get; set; }
+
     public List<FieldMapping> FieldMappings { get; set; } = new List<FieldMapping>();
 }
