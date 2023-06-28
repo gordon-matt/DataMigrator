@@ -148,6 +148,17 @@ public class DataMigratorTreeView : TreeView
         if (dlgInput.ShowDialog() == DialogResult.OK)
         {
             string jobName = dlgInput.UserInput;
+
+            if (AppState.ConfigFile.Jobs.Any(x => x.Name == jobName))
+            {
+                MessageBox.Show(
+                    "There's already a job with that name. Try again.",
+                    "Duplicate Job Name",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                return;
+            }
+
             AppState.CurrentJob = AddJob(jobName).Tag as Job;
             TreeViewChanged?.Invoke();
         }

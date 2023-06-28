@@ -1,9 +1,5 @@
 ﻿- settings: add theme dropdown for krypton
 
-
-- ensure jobs have unique names
-
-
 -licensing
 
 - Unit Tests!
