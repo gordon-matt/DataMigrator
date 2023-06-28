@@ -4,11 +4,7 @@
 
 - order the jobs...
 
-- new job still shows previous job mappings
--dont navigate away from table mappings when saving
 
-
-- table mappings: when dropdown changed, should clear mappings.. or maybe make combox readonly once mapping started..
 
 -licensing
 
