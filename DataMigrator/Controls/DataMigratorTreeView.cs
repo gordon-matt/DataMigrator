@@ -149,6 +149,7 @@ public class DataMigratorTreeView : TreeView
         {
             string jobName = dlgInput.UserInput;
             AppState.CurrentJob = AddJob(jobName).Tag as Job;
+            TreeViewChanged?.Invoke();
         }
     }
 
