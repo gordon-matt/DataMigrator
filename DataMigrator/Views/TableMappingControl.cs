@@ -70,6 +70,8 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
     public TableMappingControl()
     {
         InitializeComponent();
+
+        
     }
 
     private void TableMappingControl_Load(object sender, EventArgs e)
@@ -111,7 +113,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
             var row = MappingsTable.NewRow();
             row["Source"] = mapping.SourceField.Name;
             row["Destination"] = mapping.DestinationField.Name;
-            row["Script"] = !string.IsNullOrEmpty(mapping.TransformScript) ? Constants.ImageBytes.ScriptSmall : null;
+            row["Script"] = !string.IsNullOrEmpty(mapping.TransformScript) ? Constants.ImageBytes.Script_24x24 : null;
 
             scripts.Add($"{mapping.SourceField.Name}|{mapping.DestinationField.Name}", mapping.TransformScript);
 
@@ -144,6 +146,12 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
         dgvMappings.AutoGenerateColumns = false;
         dgvMappings.DataSource = MappingsTable;
+
+        if (dgvMappings.Rows.Count > 0)
+        {
+            cmbSourceTable.Enabled = false;
+            cmbDestinationTable.Enabled = false;
+        }
     }
 
     #endregion Constructor
@@ -207,6 +215,12 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
         sourceRowsToRemove.ForEach(dgvSource.Rows.Remove);
         destinationRowsToRemove.ForEach(dgvDestination.Rows.Remove);
+
+        if (dgvMappings.Rows.Count > 0)
+        {
+            cmbSourceTable.Enabled = false;
+            cmbDestinationTable.Enabled = false;
+        }
     }
 
     private void btnAdd_Click(object sender, EventArgs e)
@@ -253,6 +267,9 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
         dgvSource.Rows.Remove(sourceRow);
         dgvDestination.Rows.Remove(destinationRow);
+
+        cmbSourceTable.Enabled = false;
+        cmbDestinationTable.Enabled = false;
     }
 
     private void btnAddEditScript_Click(object sender, EventArgs e)
@@ -294,7 +311,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
                 x["Source"].ToString() == source &&
                 x["Destination"].ToString() == destination);
 
-            row["Script"] = Constants.ImageBytes.ScriptSmall;
+            row["Script"] = Constants.ImageBytes.Script_24x24;
         }
     }
 
@@ -334,6 +351,12 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
         dgvSource.DataSource = GetFieldsDataTable(sourceFields);
         dgvDestination.DataSource = GetFieldsDataTable(destinationFields);
+
+        if (dgvMappings.Rows.Count == 0)
+        {
+            cmbSourceTable.Enabled = true;
+            cmbDestinationTable.Enabled = true;
+        }
     }
 
     #endregion Buttons
@@ -354,6 +377,11 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
                 .Select(r => r.Cells[dgvMappings_Source.Index].Value.ToString());
 
             dgvSource.DataSource = GetFieldsDataTable(SourceFields.Where(x => !x.Name.In(sourceMappedFields)));
+
+            //if (!isLoading)
+            //{
+            //    MappingsTable.Clear();
+            //}
         }
     }
 
@@ -371,6 +399,11 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
                 .Select(r => r.Cells[dgvMappings_Destination.Index].Value.ToString());
 
             dgvDestination.DataSource = GetFieldsDataTable(DestinationFields.Where(x => !x.Name.In(destinationMappedFields)));
+
+            //if (!isLoading)
+            //{
+            //    MappingsTable.Clear();
+            //}
         }
     }
 

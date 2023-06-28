@@ -28,7 +28,7 @@ partial class TableMappingControl
     /// </summary>
     private void InitializeComponent()
     {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSource = new Krypton.Toolkit.KryptonDataGridView();
             this.dgvMappings = new Krypton.Toolkit.KryptonDataGridView();
             this.dgvMappings_Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,13 +51,13 @@ partial class TableMappingControl
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel2_2 = new System.Windows.Forms.Panel();
             this.panel2_3 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.btnAddEditScript = new Krypton.Toolkit.KryptonButton();
             this.panel2_1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel3_2 = new System.Windows.Forms.Panel();
             this.panel3_3 = new System.Windows.Forms.Panel();
             this.panel3_1 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMappings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDestination)).BeginInit();
@@ -71,12 +71,12 @@ partial class TableMappingControl
             this.panel2.SuspendLayout();
             this.panel2_2.SuspendLayout();
             this.panel2_3.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.panel2_1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel3_2.SuspendLayout();
             this.panel3_3.SuspendLayout();
             this.panel3_1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvSource
@@ -96,7 +96,7 @@ partial class TableMappingControl
             this.dgvSource.Name = "dgvSource";
             this.dgvSource.RowHeadersVisible = false;
             this.dgvSource.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSource.Size = new System.Drawing.Size(261, 443);
+            this.dgvSource.Size = new System.Drawing.Size(261, 455);
             this.dgvSource.TabIndex = 1;
             this.dgvSource.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvSource_CellMouseClick);
             this.dgvSource.SelectionChanged += new System.EventHandler(this.dgvSource_SelectionChanged);
@@ -122,7 +122,7 @@ partial class TableMappingControl
             this.dgvMappings.Name = "dgvMappings";
             this.dgvMappings.RowHeadersVisible = false;
             this.dgvMappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvMappings.Size = new System.Drawing.Size(529, 555);
+            this.dgvMappings.Size = new System.Drawing.Size(529, 546);
             this.dgvMappings.TabIndex = 2;
             // 
             // dgvMappings_Source
@@ -142,9 +142,9 @@ partial class TableMappingControl
             // dgvMappings_Script
             // 
             this.dgvMappings_Script.DataPropertyName = "Script";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.NullValue = null;
-            this.dgvMappings_Script.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.NullValue = null;
+            this.dgvMappings_Script.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvMappings_Script.HeaderText = "Script";
             this.dgvMappings_Script.Name = "dgvMappings_Script";
             this.dgvMappings_Script.Width = 47;
@@ -166,7 +166,7 @@ partial class TableMappingControl
             this.dgvDestination.Name = "dgvDestination";
             this.dgvDestination.RowHeadersVisible = false;
             this.dgvDestination.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDestination.Size = new System.Drawing.Size(263, 443);
+            this.dgvDestination.Size = new System.Drawing.Size(263, 455);
             this.dgvDestination.TabIndex = 4;
             this.dgvDestination.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDestination_CellMouseClick);
             this.dgvDestination.SelectionChanged += new System.EventHandler(this.dgvDestination_SelectionChanged);
@@ -180,6 +180,7 @@ partial class TableMappingControl
             this.btnAutoMap.Name = "btnAutoMap";
             this.btnAutoMap.Size = new System.Drawing.Size(256, 41);
             this.btnAutoMap.TabIndex = 5;
+            this.btnAutoMap.Values.Image = global::DataMigrator.Resources.Wand_32x32;
             this.btnAutoMap.Values.Text = "Auto Map";
             this.btnAutoMap.Click += new System.EventHandler(this.btnAutoMap_Click);
             // 
@@ -192,6 +193,7 @@ partial class TableMappingControl
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(256, 40);
             this.btnAdd.TabIndex = 6;
+            this.btnAdd.Values.Image = global::DataMigrator.Resources.Add_32x32;
             this.btnAdd.Values.Text = "Add";
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -204,6 +206,7 @@ partial class TableMappingControl
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(257, 40);
             this.btnRemove.TabIndex = 7;
+            this.btnRemove.Values.Image = global::DataMigrator.Resources.Remove_32x32;
             this.btnRemove.Values.Text = "Remove";
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
@@ -247,8 +250,9 @@ partial class TableMappingControl
             this.btnCreateTable.Location = new System.Drawing.Point(0, 0);
             this.btnCreateTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCreateTable.Name = "btnCreateTable";
-            this.btnCreateTable.Size = new System.Drawing.Size(529, 33);
+            this.btnCreateTable.Size = new System.Drawing.Size(529, 42);
             this.btnCreateTable.TabIndex = 8;
+            this.btnCreateTable.Values.Image = global::DataMigrator.Resources.TableCreate_32x32;
             this.btnCreateTable.Values.Text = "Create Destination Table";
             this.btnCreateTable.Click += new System.EventHandler(this.btnCreateTable_Click);
             // 
@@ -308,9 +312,9 @@ partial class TableMappingControl
             // 
             this.panel1_2.Controls.Add(this.dgvSource);
             this.panel1_2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1_2.Location = new System.Drawing.Point(0, 33);
+            this.panel1_2.Location = new System.Drawing.Point(0, 21);
             this.panel1_2.Name = "panel1_2";
-            this.panel1_2.Size = new System.Drawing.Size(261, 443);
+            this.panel1_2.Size = new System.Drawing.Size(261, 455);
             this.panel1_2.TabIndex = 12;
             // 
             // panel1_1
@@ -319,7 +323,7 @@ partial class TableMappingControl
             this.panel1_1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1_1.Location = new System.Drawing.Point(0, 0);
             this.panel1_1.Name = "panel1_1";
-            this.panel1_1.Size = new System.Drawing.Size(261, 33);
+            this.panel1_1.Size = new System.Drawing.Size(261, 21);
             this.panel1_1.TabIndex = 11;
             // 
             // panel1_3
@@ -346,9 +350,9 @@ partial class TableMappingControl
             // 
             this.panel2_2.Controls.Add(this.dgvMappings);
             this.panel2_2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2_2.Location = new System.Drawing.Point(0, 33);
+            this.panel2_2.Location = new System.Drawing.Point(0, 42);
             this.panel2_2.Name = "panel2_2";
-            this.panel2_2.Size = new System.Drawing.Size(529, 555);
+            this.panel2_2.Size = new System.Drawing.Size(529, 546);
             this.panel2_2.TabIndex = 11;
             // 
             // panel2_3
@@ -359,65 +363,6 @@ partial class TableMappingControl
             this.panel2_3.Name = "panel2_3";
             this.panel2_3.Size = new System.Drawing.Size(529, 93);
             this.panel2_3.TabIndex = 10;
-            // 
-            // btnAddEditScript
-            // 
-            this.btnAddEditScript.CornerRoundingRadius = -1F;
-            this.btnAddEditScript.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAddEditScript.Location = new System.Drawing.Point(268, 49);
-            this.btnAddEditScript.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnAddEditScript.Name = "btnAddEditScript";
-            this.btnAddEditScript.Size = new System.Drawing.Size(257, 41);
-            this.btnAddEditScript.TabIndex = 8;
-            this.btnAddEditScript.Values.Text = "Add/Edit Script";
-            this.btnAddEditScript.Click += new System.EventHandler(this.btnAddEditScript_Click);
-            // 
-            // panel2_1
-            // 
-            this.panel2_1.Controls.Add(this.btnCreateTable);
-            this.panel2_1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2_1.Location = new System.Drawing.Point(0, 0);
-            this.panel2_1.Name = "panel2_1";
-            this.panel2_1.Size = new System.Drawing.Size(529, 33);
-            this.panel2_1.TabIndex = 9;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.panel3_2);
-            this.panel3.Controls.Add(this.panel3_3);
-            this.panel3.Controls.Add(this.panel3_1);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(805, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(263, 681);
-            this.panel3.TabIndex = 2;
-            // 
-            // panel3_2
-            // 
-            this.panel3_2.Controls.Add(this.dgvDestination);
-            this.panel3_2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3_2.Location = new System.Drawing.Point(0, 33);
-            this.panel3_2.Name = "panel3_2";
-            this.panel3_2.Size = new System.Drawing.Size(263, 443);
-            this.panel3_2.TabIndex = 13;
-            // 
-            // panel3_3
-            // 
-            this.panel3_3.Controls.Add(this.pGridDestination);
-            this.panel3_3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3_3.Location = new System.Drawing.Point(0, 476);
-            this.panel3_3.Name = "panel3_3";
-            this.panel3_3.Size = new System.Drawing.Size(263, 205);
-            this.panel3_3.TabIndex = 12;
-            // 
-            // panel3_1
-            // 
-            this.panel3_1.Controls.Add(this.cmbDestinationTable);
-            this.panel3_1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3_1.Location = new System.Drawing.Point(0, 0);
-            this.panel3_1.Name = "panel3_1";
-            this.panel3_1.Size = new System.Drawing.Size(263, 33);
-            this.panel3_1.TabIndex = 11;
             // 
             // tableLayoutPanel1
             // 
@@ -436,6 +381,66 @@ partial class TableMappingControl
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(529, 93);
             this.tableLayoutPanel1.TabIndex = 9;
+            // 
+            // btnAddEditScript
+            // 
+            this.btnAddEditScript.CornerRoundingRadius = -1F;
+            this.btnAddEditScript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAddEditScript.Location = new System.Drawing.Point(268, 49);
+            this.btnAddEditScript.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnAddEditScript.Name = "btnAddEditScript";
+            this.btnAddEditScript.Size = new System.Drawing.Size(257, 41);
+            this.btnAddEditScript.TabIndex = 8;
+            this.btnAddEditScript.Values.Image = global::DataMigrator.Resources.CS_Script_32x32;
+            this.btnAddEditScript.Values.Text = "Add/Edit Script";
+            this.btnAddEditScript.Click += new System.EventHandler(this.btnAddEditScript_Click);
+            // 
+            // panel2_1
+            // 
+            this.panel2_1.Controls.Add(this.btnCreateTable);
+            this.panel2_1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2_1.Location = new System.Drawing.Point(0, 0);
+            this.panel2_1.Name = "panel2_1";
+            this.panel2_1.Size = new System.Drawing.Size(529, 42);
+            this.panel2_1.TabIndex = 9;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.panel3_2);
+            this.panel3.Controls.Add(this.panel3_3);
+            this.panel3.Controls.Add(this.panel3_1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(805, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(263, 681);
+            this.panel3.TabIndex = 2;
+            // 
+            // panel3_2
+            // 
+            this.panel3_2.Controls.Add(this.dgvDestination);
+            this.panel3_2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3_2.Location = new System.Drawing.Point(0, 21);
+            this.panel3_2.Name = "panel3_2";
+            this.panel3_2.Size = new System.Drawing.Size(263, 455);
+            this.panel3_2.TabIndex = 13;
+            // 
+            // panel3_3
+            // 
+            this.panel3_3.Controls.Add(this.pGridDestination);
+            this.panel3_3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel3_3.Location = new System.Drawing.Point(0, 476);
+            this.panel3_3.Name = "panel3_3";
+            this.panel3_3.Size = new System.Drawing.Size(263, 205);
+            this.panel3_3.TabIndex = 12;
+            // 
+            // panel3_1
+            // 
+            this.panel3_1.Controls.Add(this.cmbDestinationTable);
+            this.panel3_1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3_1.Location = new System.Drawing.Point(0, 0);
+            this.panel3_1.Name = "panel3_1";
+            this.panel3_1.Size = new System.Drawing.Size(263, 21);
+            this.panel3_1.TabIndex = 11;
             // 
             // TableMappingControl
             // 
@@ -460,12 +465,12 @@ partial class TableMappingControl
             this.panel2.ResumeLayout(false);
             this.panel2_2.ResumeLayout(false);
             this.panel2_3.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2_1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3_2.ResumeLayout(false);
             this.panel3_3.ResumeLayout(false);
             this.panel3_1.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
     }
