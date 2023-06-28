@@ -176,11 +176,6 @@ public partial class MainForm : KryptonForm
 
     private void SaveCurrentControl()
     {
-        if (panelMain.Controls.Count == 0)
-        {
-            return;
-        }
-
         if (currentControl is not null && currentControl is IConfigControl)
         {
             (currentControl as IConfigControl).Save();
@@ -190,7 +185,7 @@ public partial class MainForm : KryptonForm
     private void SaveFile()
     {
         SaveCurrentControl();
-        ClearControls();
+        //ClearControls();
         AppState.ConfigFile.Save();
     }
 

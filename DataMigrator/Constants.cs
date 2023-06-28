@@ -21,12 +21,12 @@ internal static class Constants
     {
         internal static readonly byte[] Script;
 
-        internal static readonly byte[] ScriptSmall;
+        internal static readonly byte[] Script_24x24;
 
         static ImageBytes()
         {
-            Script = LoadImage(Resources.Script);
-            ScriptSmall = LoadImage(Resources.Script_Small);
+            Script = LoadImage(Resources.CS_Script);
+            Script_24x24 = LoadImage(Resources.CS_Script_24x24);
         }
 
         private static byte[] LoadImage(Image image)
