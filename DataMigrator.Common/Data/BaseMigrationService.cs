@@ -245,14 +245,14 @@ public abstract class BaseMigrationService : IMigrationService
                     command.Parameters.Add(parameter);
                 });
 
-                records.ForEach(async record =>
+                records.ForEach(record =>
                 {
                     record.Fields.ForEach(field =>
                     {
                         command.Parameters[parameterNames[field.Name]].Value = field.Value ?? DBNull.Value;
                     });
 
-                    await command.ExecuteNonQueryAsync();
+                    command.ExecuteNonQuery(); // Not using Async version as it gives an error: "A command is already in progress".
                 });
             }
             await transaction.CommitAsync();

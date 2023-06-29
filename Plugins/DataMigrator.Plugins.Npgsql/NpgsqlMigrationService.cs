@@ -1,11 +1,9 @@
 ﻿using System.Data;
 using System.Data.Common;
-using DataMigrator.Common;
 using DataMigrator.Common.Data;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using Extenso;
-using Extenso.Collections;
 using Extenso.Data.Npgsql;
 using Npgsql;
 
@@ -93,50 +91,6 @@ public class NpgsqlMigrationService : BaseMigrationService
         await command.ExecuteNonQueryAsync();
         await connection.CloseAsync();
         return true;
-    }
-
-    public override async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
-    {
-        const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
-
-        var parameterNames = CreateParameterNames(records.ElementAt(0).Fields.Select(f => f.Name));
-        string fieldNames = parameterNames.Keys.Join(",");
-
-        fieldNames = fieldNames
-            .Replace(",", string.Concat(EscapeIdentifierEnd, ",", EscapeIdentifierStart)) // "],["
-            .Prepend(EscapeIdentifierStart) // "["
-            .Append(EscapeIdentifierEnd); // "]"
-
-        //using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
-        connection.Open();
-        using (var transaction = await connection.BeginTransactionAsync())
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.Transaction = transaction;
-                command.CommandText = string.Format(INSERT_INTO_FORMAT, GetFullTableName(tableName, schemaName), fieldNames, parameterNames.Values.Join(","));
-
-                records.ElementAt(0).Fields.ForEach(field =>
-                {
-                    var parameter = command.CreateParameter();
-                    parameter.ParameterName = parameterNames[field.Name];
-                    parameter.DbType = TypeConvert.DbTypeConverter.GetDataProviderFieldType(field.Type);
-                    command.Parameters.Add(parameter);
-                });
-
-                records.ForEach(record =>
-                {
-                    record.Fields.ForEach(field =>
-                    {
-                        command.Parameters[parameterNames[field.Name]].Value = field.Value ?? DBNull.Value;
-                    });
-
-                    command.ExecuteNonQuery();
-                });
-            }
-            await transaction.CommitAsync();
-        }
-        await connection.CloseAsync();
     }
 
     #region Field Conversion

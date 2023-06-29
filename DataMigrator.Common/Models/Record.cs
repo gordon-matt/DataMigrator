@@ -35,12 +35,13 @@ public class Record : ICloneable
                 var field = this[mapping.SourceField.Name];
                 if (field != null)
                 {
+                    field.Type = mapping.DestinationField.Type;
+
                     if (field.Value == null || field.Value == DBNull.Value || (field.Value is string && string.IsNullOrEmpty(field.Value as string)))
                     { continue; }
 
                     var newType = TypeConvert.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
                     field.Value = field.Value.ConvertTo(newType);
-                    field.Type = mapping.DestinationField.Type;
                 }
             }
             catch
