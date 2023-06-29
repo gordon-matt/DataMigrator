@@ -72,6 +72,13 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
     [DefaultValue(3)]
     public int SelectionWidth { get; set; }
 
+    [Browsable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    [Category("Behavior")]
+    //[Description("")]
+    [DefaultValue(DragMode.FullRow)]
+    public DragMode DragMode { get; set; }
+
     #endregion Designer properties
 
     #region Form setup
@@ -86,19 +93,6 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
     {
         #region Designer Code
 
-        this.AllowDrop = true;
-        this.AllowUserToAddRows = false;
-        this.AllowUserToDeleteRows = false;
-        this.AllowUserToOrderColumns = true;
-        this.AllowUserToResizeRows = false;
-        this.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-        this.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-        this.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        this.EnableHeadersVisualStyles = false;
-        this.MultiSelect = false;
-        this.ReadOnly = true;
-        this.RowHeadersVisible = false;
-        this.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         this.CellMouseDown += dataGridView_CellMouseDown;
         this.DragOver += dataGridView_DragOver;
         this.DragLeave += dataGridView_DragLeave;
@@ -290,7 +284,11 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
 
     private void dataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
     {
-        if (e.Button == MouseButtons.Left && e.RowIndex >= 0)
+        bool shouldDrag = DragMode == DragMode.FirstCell
+            ? e.Button == MouseButtons.Left && e.RowIndex >= 0 && e.ColumnIndex == 0
+            : e.Button == MouseButtons.Left && e.RowIndex >= 0;
+
+        if (shouldDrag)
         {
             SelectRow(e.RowIndex);
             var dragObject = Rows[e.RowIndex];
@@ -467,4 +465,15 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
         dividerBrush?.Dispose();
         selectionPen?.Dispose();
     }
+}
+
+public enum DragMode : byte
+{
+    FullRow = 0,
+
+    /// <summary>
+    /// Useful if you have an editable grid.. make only the first cell draggable.
+    /// Recommend using an image column with an icon for that purpose.
+    /// </summary>
+    FirstCell = 1
 }

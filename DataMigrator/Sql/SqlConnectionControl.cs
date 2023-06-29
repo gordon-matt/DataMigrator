@@ -133,7 +133,7 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     #endregion IConnectionControl Members
 
-    private void cbIntegratedSecurity_CheckedChanged(object sender, EventArgs e)
+    private void rbIntegratedSecurity_CheckedChanged(object sender, EventArgs e)
     {
         txtUserName.Enabled = !IntegratedSecurity;
         txtPassword.Enabled = !IntegratedSecurity;

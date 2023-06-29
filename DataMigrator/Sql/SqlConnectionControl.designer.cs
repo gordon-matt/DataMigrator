@@ -30,14 +30,14 @@ partial class SqlConnectionControl
     {
             this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
             this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
-            this.lblServer = new System.Windows.Forms.Label();
+            this.lblServer = new Krypton.Toolkit.KryptonLabel();
             this.txtServer = new Krypton.Toolkit.KryptonTextBox();
             this.grpConnectDatabase = new System.Windows.Forms.GroupBox();
-            this.lblDatabase = new System.Windows.Forms.Label();
+            this.lblDatabase = new Krypton.Toolkit.KryptonLabel();
             this.cmbDatabase = new Krypton.Toolkit.KryptonComboBox();
             this.grpLogOnServer = new System.Windows.Forms.GroupBox();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.lblUserName = new System.Windows.Forms.Label();
+            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
             this.rbUseSqlServerAuthentication = new Krypton.Toolkit.KryptonRadioButton();
             this.rbUseWindowsAuthentication = new Krypton.Toolkit.KryptonRadioButton();
             this.grpConnectDatabase.SuspendLayout();
@@ -77,7 +77,7 @@ partial class SqlConnectionControl
             this.lblServer.Name = "lblServer";
             this.lblServer.Size = new System.Drawing.Size(47, 20);
             this.lblServer.TabIndex = 0;
-            this.lblServer.Text = "Server:";
+            this.lblServer.Values.Text = "Server:";
             // 
             // txtServer
             // 
@@ -112,7 +112,7 @@ partial class SqlConnectionControl
             this.lblDatabase.Name = "lblDatabase";
             this.lblDatabase.Size = new System.Drawing.Size(61, 20);
             this.lblDatabase.TabIndex = 9;
-            this.lblDatabase.Text = "Database";
+            this.lblDatabase.Values.Text = "Database";
             // 
             // cmbDatabase
             // 
@@ -159,7 +159,7 @@ partial class SqlConnectionControl
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
             this.lblPassword.TabIndex = 8;
-            this.lblPassword.Text = "Password";
+            this.lblPassword.Values.Text = "Password";
             // 
             // lblUserName
             // 
@@ -171,7 +171,7 @@ partial class SqlConnectionControl
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(71, 20);
             this.lblUserName.TabIndex = 6;
-            this.lblUserName.Text = "User Name";
+            this.lblUserName.Values.Text = "User Name";
             // 
             // rbUseSqlServerAuthentication
             // 
@@ -183,6 +183,7 @@ partial class SqlConnectionControl
             this.rbUseSqlServerAuthentication.Size = new System.Drawing.Size(189, 20);
             this.rbUseSqlServerAuthentication.TabIndex = 1;
             this.rbUseSqlServerAuthentication.Values.Text = "Use SQL Server Authentication";
+            this.rbUseSqlServerAuthentication.CheckedChanged += new System.EventHandler(this.rbIntegratedSecurity_CheckedChanged);
             // 
             // rbUseWindowsAuthentication
             // 
@@ -195,6 +196,7 @@ partial class SqlConnectionControl
             this.rbUseWindowsAuthentication.Size = new System.Drawing.Size(180, 20);
             this.rbUseWindowsAuthentication.TabIndex = 0;
             this.rbUseWindowsAuthentication.Values.Text = "Use Windows Authentication";
+            this.rbUseWindowsAuthentication.CheckedChanged += new System.EventHandler(this.rbIntegratedSecurity_CheckedChanged);
             // 
             // SqlConnectionControl
             // 
@@ -221,14 +223,14 @@ partial class SqlConnectionControl
     #endregion
     private KryptonTextBox txtPassword;
     private KryptonTextBox txtUserName;
-    private Label lblServer;
+    private KryptonLabel lblServer;
     private KryptonTextBox txtServer;
     private GroupBox grpConnectDatabase;
-    private Label lblDatabase;
+    private KryptonLabel lblDatabase;
     private KryptonComboBox cmbDatabase;
     private GroupBox grpLogOnServer;
-    private Label lblPassword;
-    private Label lblUserName;
+    private KryptonLabel lblPassword;
+    private KryptonLabel lblUserName;
     private KryptonRadioButton rbUseSqlServerAuthentication;
     private KryptonRadioButton rbUseWindowsAuthentication;
 }

@@ -31,14 +31,17 @@ partial class RunJobsForm
     /// </summary>
     private void InitializeComponent()
     {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new DataMigrator.Controls.KryptonDataGridViewWithDraggableRows();
+            this.DragColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.RunColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnRun = new Krypton.Toolkit.KryptonButton();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.btnCancel = new Krypton.Toolkit.KryptonButton();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblInfo = new Krypton.Toolkit.KryptonLabel();
+            this.cbSelectAll = new Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,44 +58,53 @@ partial class RunJobsForm
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DragColumn,
             this.RunColumn,
             this.NameColumn,
             this.StatusColumn});
             this.dataGridView.DividerColor = System.Drawing.Color.LightSteelBlue;
             this.dataGridView.DividerHeight = 3;
-            this.dataGridView.Location = new System.Drawing.Point(14, 36);
+            this.dataGridView.DragMode = DataMigrator.Controls.DragMode.FirstCell;
+            this.dataGridView.Location = new System.Drawing.Point(14, 38);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersVisible = false;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridView.RowTemplate.Height = 32;
             this.dataGridView.SelectionColor = System.Drawing.Color.Blue;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.SelectionWidth = 0;
-            this.dataGridView.Size = new System.Drawing.Size(750, 365);
+            this.dataGridView.Size = new System.Drawing.Size(750, 323);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragDrop);
+            // 
+            // DragColumn
+            // 
+            this.DragColumn.HeaderText = "";
+            this.DragColumn.Name = "DragColumn";
+            this.DragColumn.Width = 7;
             // 
             // RunColumn
             // 
             this.RunColumn.HeaderText = "Run";
             this.RunColumn.Name = "RunColumn";
-            this.RunColumn.ReadOnly = true;
-            this.RunColumn.Width = 37;
+            this.RunColumn.Width = 38;
             // 
             // NameColumn
             // 
             this.NameColumn.HeaderText = "Name";
             this.NameColumn.Name = "NameColumn";
             this.NameColumn.ReadOnly = true;
-            this.NameColumn.Width = 67;
+            this.NameColumn.Width = 68;
             // 
             // StatusColumn
             // 
             this.StatusColumn.HeaderText = "Status";
             this.StatusColumn.Name = "StatusColumn";
             this.StatusColumn.ReadOnly = true;
-            this.StatusColumn.Width = 67;
+            this.StatusColumn.Width = 68;
             // 
             // btnRun
             // 
@@ -129,15 +141,25 @@ partial class RunJobsForm
             this.btnCancel.Values.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // label1
+            // lblInfo
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(485, 15);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Jobs can be re-ordered by dragging and dropping them in the order you want them t" +
-    "o run.";
+            this.lblInfo.LabelStyle = Krypton.Toolkit.LabelStyle.ToolTip;
+            this.lblInfo.Location = new System.Drawing.Point(14, 365);
+            this.lblInfo.Name = "lblInfo";
+            this.lblInfo.Size = new System.Drawing.Size(714, 36);
+            this.lblInfo.TabIndex = 4;
+            this.lblInfo.Values.Image = global::DataMigrator.Resources.Info_32x32;
+            this.lblInfo.Values.Text = "Jobs can be re-ordered by dragging and dropping them in the order you want them t" +
+    "o run. Use the icon in the first column.";
+            // 
+            // cbSelectAll
+            // 
+            this.cbSelectAll.Location = new System.Drawing.Point(14, 12);
+            this.cbSelectAll.Name = "cbSelectAll";
+            this.cbSelectAll.Size = new System.Drawing.Size(73, 20);
+            this.cbSelectAll.TabIndex = 5;
+            this.cbSelectAll.Values.Text = "Select All";
+            this.cbSelectAll.CheckedChanged += new System.EventHandler(this.cbSelectAll_CheckedChanged);
             // 
             // RunJobsForm
             // 
@@ -146,7 +168,8 @@ partial class RunJobsForm
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(778, 457);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbSelectAll);
+            this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnRun);
@@ -170,8 +193,10 @@ partial class RunJobsForm
     private KryptonButton btnRun;
     private System.Windows.Forms.ProgressBar progressBar;
     private KryptonButton btnCancel;
+    private KryptonLabel lblInfo;
+    private KryptonCheckBox cbSelectAll;
+    private DataGridViewImageColumn DragColumn;
     private DataGridViewCheckBoxColumn RunColumn;
     private DataGridViewTextBoxColumn NameColumn;
     private DataGridViewTextBoxColumn StatusColumn;
-    private Label label1;
 }

@@ -19,12 +19,18 @@ internal static class Constants
 
     internal static class ImageBytes
     {
+        internal static readonly byte[] MoveGrabber_24x24;
+
+        internal static readonly byte[] MoveGrabber_32x32;
+
         internal static readonly byte[] Script;
 
         internal static readonly byte[] Script_24x24;
 
         static ImageBytes()
         {
+            MoveGrabber_24x24 = LoadImage(Resources.MoveGrabber_24x24);
+            MoveGrabber_32x32 = LoadImage(Resources.MoveGrabber_32x32);
             Script = LoadImage(Resources.CS_Script);
             Script_24x24 = LoadImage(Resources.CS_Script_24x24);
         }
