@@ -63,7 +63,7 @@ partial class DataMigratorSettingsControl
             0});
             this.nudBatchSize.Name = "nudBatchSize";
             this.nudBatchSize.Size = new System.Drawing.Size(140, 22);
-            this.nudBatchSize.TabIndex = 2;
+            this.nudBatchSize.TabIndex = 1;
             this.nudBatchSize.Value = new decimal(new int[] {
             10000,
             0,
@@ -77,7 +77,7 @@ partial class DataMigratorSettingsControl
             this.cbTrimStrings.Location = new System.Drawing.Point(104, 43);
             this.cbTrimStrings.Name = "cbTrimStrings";
             this.cbTrimStrings.Size = new System.Drawing.Size(89, 20);
-            this.cbTrimStrings.TabIndex = 3;
+            this.cbTrimStrings.TabIndex = 2;
             this.cbTrimStrings.Values.Text = "Trim Strings";
             // 
             // DataMigratorSettingsControl

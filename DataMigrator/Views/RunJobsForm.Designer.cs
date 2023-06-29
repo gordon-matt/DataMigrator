@@ -77,7 +77,7 @@ partial class RunJobsForm
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.SelectionWidth = 0;
             this.dataGridView.Size = new System.Drawing.Size(750, 323);
-            this.dataGridView.TabIndex = 0;
+            this.dataGridView.TabIndex = 1;
             this.dataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragDrop);
             // 
             // DragColumn
@@ -114,7 +114,7 @@ partial class RunJobsForm
             this.btnRun.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(167, 43);
-            this.btnRun.TabIndex = 2;
+            this.btnRun.TabIndex = 4;
             this.btnRun.Values.Image = global::DataMigrator.Resources.Play_32x32;
             this.btnRun.Values.Text = "Run";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
@@ -127,7 +127,7 @@ partial class RunJobsForm
             this.progressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(402, 43);
-            this.progressBar.TabIndex = 1;
+            this.progressBar.TabIndex = 3;
             // 
             // btnCancel
             // 
@@ -138,7 +138,7 @@ partial class RunJobsForm
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(167, 43);
-            this.btnCancel.TabIndex = 3;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.Values.Image = global::DataMigrator.Resources.Cancel_32x32;
             this.btnCancel.Values.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -148,8 +148,8 @@ partial class RunJobsForm
             this.lblInfo.LabelStyle = Krypton.Toolkit.LabelStyle.ToolTip;
             this.lblInfo.Location = new System.Drawing.Point(14, 365);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(714, 36);
-            this.lblInfo.TabIndex = 4;
+            this.lblInfo.Size = new System.Drawing.Size(649, 36);
+            this.lblInfo.TabIndex = 2;
             this.lblInfo.Values.Image = global::DataMigrator.Resources.Info_32x32;
             this.lblInfo.Values.Text = "Jobs can be re-ordered by dragging and dropping them in the order you want them t" +
     "o run. Use the icon in the first column.";
@@ -158,8 +158,8 @@ partial class RunJobsForm
             // 
             this.cbSelectAll.Location = new System.Drawing.Point(14, 12);
             this.cbSelectAll.Name = "cbSelectAll";
-            this.cbSelectAll.Size = new System.Drawing.Size(73, 20);
-            this.cbSelectAll.TabIndex = 5;
+            this.cbSelectAll.Size = new System.Drawing.Size(70, 18);
+            this.cbSelectAll.TabIndex = 0;
             this.cbSelectAll.Values.Text = "Select All";
             this.cbSelectAll.CheckedChanged += new System.EventHandler(this.cbSelectAll_CheckedChanged);
             // 

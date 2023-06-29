@@ -45,7 +45,7 @@ partial class ScriptDialog
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(167, 43);
-            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabIndex = 2;
             this.btnCancel.Values.Image = global::DataMigrator.Resources.Cancel_32x32;
             this.btnCancel.Values.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -59,7 +59,7 @@ partial class ScriptDialog
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(167, 43);
-            this.btnOK.TabIndex = 4;
+            this.btnOK.TabIndex = 1;
             this.btnOK.Values.Image = global::DataMigrator.Resources.OK_32x32;
             this.btnOK.Values.Text = "OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -89,6 +89,7 @@ partial class ScriptDialog
             this.fctScript.CharWidth = 8;
             this.fctScript.DefaultMarkerSize = 8;
             this.fctScript.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.fctScript.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fctScript.IsReplaceMode = false;
             this.fctScript.Language = FastColoredTextBoxNS.Language.CSharp;
             this.fctScript.LeftBracket = '(';
@@ -101,7 +102,7 @@ partial class ScriptDialog
             this.fctScript.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.fctScript.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("fctScript.ServiceColors")));
             this.fctScript.Size = new System.Drawing.Size(517, 486);
-            this.fctScript.TabIndex = 6;
+            this.fctScript.TabIndex = 0;
             this.fctScript.Zoom = 100;
             // 
             // ScriptDialog

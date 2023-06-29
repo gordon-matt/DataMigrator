@@ -48,7 +48,7 @@ partial class CsvConnectionControl
             this.btnBrowse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(78, 23);
-            this.btnBrowse.TabIndex = 19;
+            this.btnBrowse.TabIndex = 2;
             this.btnBrowse.Values.Text = "Browse";
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
@@ -60,7 +60,7 @@ partial class CsvConnectionControl
             this.txtFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtFile.Name = "txtFile";
             this.txtFile.Size = new System.Drawing.Size(299, 23);
-            this.txtFile.TabIndex = 18;
+            this.txtFile.TabIndex = 1;
             // 
             // lblFile
             // 
@@ -68,7 +68,7 @@ partial class CsvConnectionControl
             this.lblFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblFile.Name = "lblFile";
             this.lblFile.Size = new System.Drawing.Size(32, 20);
-            this.lblFile.TabIndex = 17;
+            this.lblFile.TabIndex = 0;
             this.lblFile.Text = "File:";
             // 
             // dlgOpenFile
@@ -83,7 +83,7 @@ partial class CsvConnectionControl
             this.cbHasHeaderRow.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cbHasHeaderRow.Name = "cbHasHeaderRow";
             this.cbHasHeaderRow.Size = new System.Drawing.Size(114, 20);
-            this.cbHasHeaderRow.TabIndex = 25;
+            this.cbHasHeaderRow.TabIndex = 3;
             this.cbHasHeaderRow.Values.Text = "Has Header Row";
             // 
             // lblDelimiter
@@ -91,7 +91,7 @@ partial class CsvConnectionControl
             this.lblDelimiter.Location = new System.Drawing.Point(10, 64);
             this.lblDelimiter.Name = "lblDelimiter";
             this.lblDelimiter.Size = new System.Drawing.Size(60, 20);
-            this.lblDelimiter.TabIndex = 26;
+            this.lblDelimiter.TabIndex = 4;
             this.lblDelimiter.Text = "Delimiter";
             // 
             // cmbDelimiter
@@ -104,7 +104,7 @@ partial class CsvConnectionControl
             this.cmbDelimiter.Name = "cmbDelimiter";
             this.cmbDelimiter.Size = new System.Drawing.Size(299, 21);
             this.cmbDelimiter.StateCommon.ComboBox.Content.TextH = Krypton.Toolkit.PaletteRelativeAlign.Near;
-            this.cmbDelimiter.TabIndex = 27;
+            this.cmbDelimiter.TabIndex = 5;
             this.cmbDelimiter.Format += new System.Windows.Forms.ListControlConvertEventHandler(this.cmbDelimiter_Format);
             // 
             // CsvConnectionControl

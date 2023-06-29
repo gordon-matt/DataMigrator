@@ -74,7 +74,7 @@ partial class ConnectionsControl
             this.btnValidateSourceConnection.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnValidateSourceConnection.Name = "btnValidateSourceConnection";
             this.btnValidateSourceConnection.Size = new System.Drawing.Size(108, 41);
-            this.btnValidateSourceConnection.TabIndex = 2;
+            this.btnValidateSourceConnection.TabIndex = 1;
             this.btnValidateSourceConnection.Values.Image = global::DataMigrator.Resources.TestTube_32x32;
             this.btnValidateSourceConnection.Values.Text = "Validate";
             this.btnValidateSourceConnection.Click += new System.EventHandler(this.btnValidateSourceConnection_Click);
@@ -88,7 +88,7 @@ partial class ConnectionsControl
             this.pnlSourceConnection.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pnlSourceConnection.Name = "pnlSourceConnection";
             this.pnlSourceConnection.Size = new System.Drawing.Size(418, 549);
-            this.pnlSourceConnection.TabIndex = 1;
+            this.pnlSourceConnection.TabIndex = 2;
             // 
             // cmbSourceConnectionType
             // 
@@ -99,7 +99,7 @@ partial class ConnectionsControl
             this.cmbSourceConnectionType.Location = new System.Drawing.Point(7, 22);
             this.cmbSourceConnectionType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbSourceConnectionType.Name = "cmbSourceConnectionType";
-            this.cmbSourceConnectionType.Size = new System.Drawing.Size(184, 18);
+            this.cmbSourceConnectionType.Size = new System.Drawing.Size(184, 21);
             this.cmbSourceConnectionType.TabIndex = 0;
             this.cmbSourceConnectionType.SelectedIndexChanged += new System.EventHandler(this.cmbSourceConnectionType_SelectedIndexChanged);
             // 
@@ -114,7 +114,7 @@ partial class ConnectionsControl
             this.grpDestinationConnection.Name = "grpDestinationConnection";
             this.grpDestinationConnection.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpDestinationConnection.Size = new System.Drawing.Size(442, 617);
-            this.grpDestinationConnection.TabIndex = 1;
+            this.grpDestinationConnection.TabIndex = 0;
             this.grpDestinationConnection.TabStop = false;
             this.grpDestinationConnection.Text = "Destination Connection Details";
             // 
@@ -126,7 +126,7 @@ partial class ConnectionsControl
             this.btnValidateDestinationConnection.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnValidateDestinationConnection.Name = "btnValidateDestinationConnection";
             this.btnValidateDestinationConnection.Size = new System.Drawing.Size(108, 41);
-            this.btnValidateDestinationConnection.TabIndex = 3;
+            this.btnValidateDestinationConnection.TabIndex = 1;
             this.btnValidateDestinationConnection.Values.Image = global::DataMigrator.Resources.TestTube_32x32;
             this.btnValidateDestinationConnection.Values.Text = "Validate";
             this.btnValidateDestinationConnection.Click += new System.EventHandler(this.btnValidateDestinationConnection_Click);
@@ -151,8 +151,8 @@ partial class ConnectionsControl
             this.cmbDestinationConnectionType.Location = new System.Drawing.Point(7, 22);
             this.cmbDestinationConnectionType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbDestinationConnectionType.Name = "cmbDestinationConnectionType";
-            this.cmbDestinationConnectionType.Size = new System.Drawing.Size(184, 18);
-            this.cmbDestinationConnectionType.TabIndex = 1;
+            this.cmbDestinationConnectionType.Size = new System.Drawing.Size(184, 21);
+            this.cmbDestinationConnectionType.TabIndex = 0;
             this.cmbDestinationConnectionType.SelectedIndexChanged += new System.EventHandler(this.cmbDestinationConnectionType_SelectedIndexChanged);
             // 
             // splitContainer
