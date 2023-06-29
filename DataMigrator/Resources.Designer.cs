@@ -183,26 +183,6 @@ namespace DataMigrator {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Mapping32x32 {
-            get {
-                object obj = ResourceManager.GetObject("Mapping32x32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Mapping64x64 {
-            get {
-                object obj = ResourceManager.GetObject("Mapping64x64", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Migrate {
             get {
                 object obj = ResourceManager.GetObject("Migrate", resourceCulture);
