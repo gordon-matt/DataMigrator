@@ -1,6 +1,6 @@
 ﻿namespace DataMigrator.Controls.Dialogs;
 
-public partial class InputDialog : Form
+public partial class InputDialog : KryptonForm
 {
     public InputDialog()
     {

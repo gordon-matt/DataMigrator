@@ -27,6 +27,7 @@ public class DbTypeConverter : IFieldTypeConverter<DbType>
         fieldTypes.Add((FieldType.Int16, DbType.Int16));
         fieldTypes.Add((FieldType.Int32, DbType.Int32));
         fieldTypes.Add((FieldType.Int64, DbType.Int64));
+        fieldTypes.Add((FieldType.Json, DbType.String));
         fieldTypes.Add((FieldType.Lookup, DbType.String));
         fieldTypes.Add((FieldType.MultiChoice, DbType.String));
         fieldTypes.Add((FieldType.MultiLookup, DbType.String));

@@ -1,5 +1,6 @@
 ﻿using DataMigrator.Common.Data;
 using DataMigrator.Common.Models;
+using Extenso;
 using MySql.Data.MySqlClient;
 
 namespace DataMigrator.MySql;
@@ -32,6 +33,7 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
         fieldTypes.Add((FieldType.Int16, MySqlDbType.Int16));
         fieldTypes.Add((FieldType.Int32, MySqlDbType.Int32));
         fieldTypes.Add((FieldType.Int64, MySqlDbType.Int64));
+        fieldTypes.Add((FieldType.Json, MySqlDbType.JSON));
         fieldTypes.Add((FieldType.Lookup, MySqlDbType.Text));
         fieldTypes.Add((FieldType.MultiChoice, MySqlDbType.Text));
         fieldTypes.Add((FieldType.MultiLookup, MySqlDbType.Text));
@@ -70,6 +72,7 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
         mySqlDbTypes.Add((MySqlDbType.Int24, FieldType.Int32));
         mySqlDbTypes.Add((MySqlDbType.Int32, FieldType.Int32));
         mySqlDbTypes.Add((MySqlDbType.Int64, FieldType.Int64));
+        mySqlDbTypes.Add((MySqlDbType.JSON, FieldType.String));
         mySqlDbTypes.Add((MySqlDbType.LongBlob, FieldType.Object));
         mySqlDbTypes.Add((MySqlDbType.LongText, FieldType.String));
         mySqlDbTypes.Add((MySqlDbType.MediumBlob, FieldType.Object));
@@ -92,7 +95,6 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
         mySqlDbTypes.Add((MySqlDbType.VarChar, FieldType.String));
         mySqlDbTypes.Add((MySqlDbType.VarString, FieldType.String));
         mySqlDbTypes.Add((MySqlDbType.Year, FieldType.Int16));
-
         #endregion mySqlDbTypes
 
         #region mySqlDbTypes2
@@ -113,6 +115,7 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
         mySqlDbTypes2.Add((MySqlDbType.Int24, "MEDIUMINT"));
         mySqlDbTypes2.Add((MySqlDbType.Int32, "INT"));
         mySqlDbTypes2.Add((MySqlDbType.Int64, "BIGINT"));
+        mySqlDbTypes2.Add((MySqlDbType.JSON, "JSON"));
         mySqlDbTypes2.Add((MySqlDbType.LongBlob, "LONGBLOB"));
         mySqlDbTypes2.Add((MySqlDbType.LongText, "LONGTEXT"));
         mySqlDbTypes2.Add((MySqlDbType.MediumBlob, "MEDIUMBLOB"));
@@ -126,11 +129,11 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
         mySqlDbTypes2.Add((MySqlDbType.Timestamp, "TIMESTAMP"));
         mySqlDbTypes2.Add((MySqlDbType.TinyBlob, "TINYBLOB"));
         mySqlDbTypes2.Add((MySqlDbType.TinyText, "TINYTEXT"));
-        mySqlDbTypes2.Add((MySqlDbType.UByte, "TINYINT"));
-        mySqlDbTypes2.Add((MySqlDbType.UInt16, "SMALLINT"));
-        mySqlDbTypes2.Add((MySqlDbType.UInt24, "MEDIUMINT"));
-        mySqlDbTypes2.Add((MySqlDbType.UInt32, "INTEGER"));
-        mySqlDbTypes2.Add((MySqlDbType.UInt64, "BIGINT"));
+        mySqlDbTypes2.Add((MySqlDbType.UByte, "TINYINT UNSIGNED"));
+        mySqlDbTypes2.Add((MySqlDbType.UInt16, "SMALLINT UNSIGNED"));
+        mySqlDbTypes2.Add((MySqlDbType.UInt24, "MEDIUMINT UNSIGNED"));
+        mySqlDbTypes2.Add((MySqlDbType.UInt32, "INTEGER UNSIGNED"));
+        mySqlDbTypes2.Add((MySqlDbType.UInt64, "BIGINT UNSIGNED"));
         mySqlDbTypes2.Add((MySqlDbType.VarBinary, "VARBINARY"));
         mySqlDbTypes2.Add((MySqlDbType.VarChar, "VARCHAR"));
         mySqlDbTypes2.Add((MySqlDbType.VarString, "VARSTRING"));
@@ -152,8 +155,14 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
     public static string GetMySqlDataTypeStringValue(MySqlDbType mySqlDbType) =>
         mySqlDbTypes2.First(x => x.EnumValue == mySqlDbType).StringValue;
 
-    public static MySqlDbType GetMySqlDataType(string mySqlDbType) =>
-        mySqlDbType.Equals("INTEGER", StringComparison.InvariantCultureIgnoreCase)
+    public static MySqlDbType GetMySqlDataType(string mySqlDbType)
+    {
+        string dataType = mySqlDbType.Contains('(')
+            ? mySqlDbType.LeftOf('(')
+            : mySqlDbType;
+
+        return mySqlDbType.Equals("INTEGER", StringComparison.InvariantCultureIgnoreCase)
             ? MySqlDbType.Int32
-            : mySqlDbTypes2.First(x => x.StringValue == mySqlDbType.ToUpperInvariant()).EnumValue;
+            : mySqlDbTypes2.First(x => x.StringValue == dataType.ToUpperInvariant()).EnumValue;
+    }
 }

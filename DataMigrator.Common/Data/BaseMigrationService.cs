@@ -109,14 +109,10 @@ public abstract class BaseMigrationService : IMigrationService
                 {
                     Name = reader.GetString(0)
                 };
-                if (!reader.IsDBNull(1))
-                { field.Ordinal = reader.GetInt32(1); }
-                if (!reader.IsDBNull(2))
-                { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
-                if (!reader.IsDBNull(3))
-                { field.IsRequired = reader.GetString(3) == "NO"; }
-                if (!reader.IsDBNull(4))
-                { field.MaxLength = reader.GetInt32(4); }
+                if (!reader.IsDBNull(1)) { field.Ordinal = reader.GetInt32(1); }
+                if (!reader.IsDBNull(2)) { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
+                if (!reader.IsDBNull(3)) { field.IsRequired = reader.GetString(3) == "NO"; }
+                if (!reader.IsDBNull(4)) { field.MaxLength = reader.GetInt32(4); }
                 fields.Add(field);
             }
         }

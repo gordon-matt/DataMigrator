@@ -46,6 +46,7 @@ partial class ScriptDialog
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(167, 43);
             this.btnCancel.TabIndex = 5;
+            this.btnCancel.Values.Image = global::DataMigrator.Resources.Cancel_32x32;
             this.btnCancel.Values.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -59,6 +60,7 @@ partial class ScriptDialog
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(167, 43);
             this.btnOK.TabIndex = 4;
+            this.btnOK.Values.Image = global::DataMigrator.Resources.OK_32x32;
             this.btnOK.Values.Text = "OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
@@ -87,7 +89,6 @@ partial class ScriptDialog
             this.fctScript.CharWidth = 8;
             this.fctScript.DefaultMarkerSize = 8;
             this.fctScript.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.fctScript.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fctScript.IsReplaceMode = false;
             this.fctScript.Language = FastColoredTextBoxNS.Language.CSharp;
             this.fctScript.LeftBracket = '(';

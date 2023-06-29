@@ -27,6 +27,7 @@ public class SqlDbTypeConverter : IFieldTypeConverter<SqlDbType>
         fieldTypes.Add((FieldType.Int16, SqlDbType.SmallInt));
         fieldTypes.Add((FieldType.Int32, SqlDbType.Int));
         fieldTypes.Add((FieldType.Int64, SqlDbType.BigInt));
+        fieldTypes.Add((FieldType.Json, SqlDbType.NVarChar));
         fieldTypes.Add((FieldType.Lookup, SqlDbType.NVarChar));
         fieldTypes.Add((FieldType.MultiChoice, SqlDbType.NVarChar));
         fieldTypes.Add((FieldType.MultiLookup, SqlDbType.NVarChar));

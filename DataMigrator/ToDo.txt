@@ -1,5 +1,7 @@
 ﻿- settings: add theme dropdown for krypton
 
+- clear button for traceviewer
+
 -licensing
 
 - Unit Tests!
