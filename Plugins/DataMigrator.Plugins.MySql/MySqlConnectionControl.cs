@@ -81,11 +81,11 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
                 return string.Empty;
             }
 
-            if (string.IsNullOrEmpty(Database))
-            {
-                TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
-                return string.Empty;
-            }
+            //if (string.IsNullOrEmpty(Database))
+            //{
+            //    TraceService.Instance.WriteMessage(TraceEvent.Error, "Database is invalid. Please try again.");
+            //    return string.Empty;
+            //}
 
             if (string.IsNullOrEmpty(UserName))
             {

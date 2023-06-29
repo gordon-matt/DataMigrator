@@ -186,6 +186,7 @@ partial class MySqlConnectionControl
             this.cmbDatabase.Size = new System.Drawing.Size(337, 21);
             this.cmbDatabase.Sorted = true;
             this.cmbDatabase.TabIndex = 0;
+            this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
             // 
             // MySqlConnectionControl
             // 

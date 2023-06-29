@@ -22,7 +22,7 @@ public class NpgsqlDbTypeConverter
         fieldTypes.Add((FieldType.Currency, NpgsqlDbType.Numeric));
         fieldTypes.Add((FieldType.Date, NpgsqlDbType.Date));
         fieldTypes.Add((FieldType.DateTime, NpgsqlDbType.Timestamp));
-        fieldTypes.Add((FieldType.DateTimeOffset, NpgsqlDbType.TimestampTZ));
+        fieldTypes.Add((FieldType.DateTimeOffset, NpgsqlDbType.TimestampTz));
         fieldTypes.Add((FieldType.Decimal, NpgsqlDbType.Numeric));
         fieldTypes.Add((FieldType.Double, NpgsqlDbType.Double));
         fieldTypes.Add((FieldType.Geometry, NpgsqlDbType.Geometry));
@@ -30,6 +30,7 @@ public class NpgsqlDbTypeConverter
         fieldTypes.Add((FieldType.Int16, NpgsqlDbType.Smallint));
         fieldTypes.Add((FieldType.Int32, NpgsqlDbType.Integer));
         fieldTypes.Add((FieldType.Int64, NpgsqlDbType.Bigint));
+        fieldTypes.Add((FieldType.Json, NpgsqlDbType.Json));
         fieldTypes.Add((FieldType.Lookup, NpgsqlDbType.Text));
         fieldTypes.Add((FieldType.MultiChoice, NpgsqlDbType.Text));
         fieldTypes.Add((FieldType.MultiLookup, NpgsqlDbType.Text));
@@ -72,8 +73,9 @@ public class NpgsqlDbTypeConverter
         npgsqlDbTypes.Add((NpgsqlDbType.Integer, FieldType.Int32));
         npgsqlDbTypes.Add((NpgsqlDbType.InternalChar, FieldType.String));
         npgsqlDbTypes.Add((NpgsqlDbType.Interval, FieldType.Time));
-        npgsqlDbTypes.Add((NpgsqlDbType.Json, FieldType.String));
+        npgsqlDbTypes.Add((NpgsqlDbType.Json, FieldType.Json));
         npgsqlDbTypes.Add((NpgsqlDbType.Jsonb, FieldType.Binary));
+        npgsqlDbTypes.Add((NpgsqlDbType.JsonPath, FieldType.String));
         npgsqlDbTypes.Add((NpgsqlDbType.Line, FieldType.Object));
         npgsqlDbTypes.Add((NpgsqlDbType.LSeg, FieldType.Object));
         npgsqlDbTypes.Add((NpgsqlDbType.MacAddr, FieldType.Object));
@@ -95,8 +97,7 @@ public class NpgsqlDbTypeConverter
         npgsqlDbTypes.Add((NpgsqlDbType.Time, FieldType.Time));
         npgsqlDbTypes.Add((NpgsqlDbType.Timestamp, FieldType.Timestamp));
         npgsqlDbTypes.Add((NpgsqlDbType.TimestampTz, FieldType.Timestamp));
-        npgsqlDbTypes.Add((NpgsqlDbType.TimestampTZ, FieldType.Timestamp));
-        npgsqlDbTypes.Add((NpgsqlDbType.TimeTZ, FieldType.Time));
+        npgsqlDbTypes.Add((NpgsqlDbType.TimeTz, FieldType.Time));
         npgsqlDbTypes.Add((NpgsqlDbType.TsVector, FieldType.Object));
         npgsqlDbTypes.Add((NpgsqlDbType.Unknown, FieldType.Unknown));
         npgsqlDbTypes.Add((NpgsqlDbType.Uuid, FieldType.Guid));
@@ -125,9 +126,9 @@ public class NpgsqlDbTypeConverter
             NpgsqlDbType.Char => "character",
             NpgsqlDbType.Varchar or NpgsqlDbType.Text => "character varying",
             NpgsqlDbType.Timestamp => "timestamp without time zone",
-            NpgsqlDbType.TimestampTZ => "timestamp with time zone",
+            NpgsqlDbType.TimestampTz => "timestamp with time zone",
             NpgsqlDbType.Time => "time without time zone",
-            NpgsqlDbType.TimeTZ => "time with time zone",
+            NpgsqlDbType.TimeTz => "time with time zone",
             _ => npgsqlDbType.ToString().ToLowerInvariant(),
         };
 
@@ -142,9 +143,9 @@ public class NpgsqlDbTypeConverter
         {
             "character" => NpgsqlDbType.Char,
             "character varying" => NpgsqlDbType.Varchar,
-            "timestamp with time zone" => NpgsqlDbType.TimestampTZ,
+            "timestamp with time zone" => NpgsqlDbType.TimestampTz,
             "timestamp without time zone" => NpgsqlDbType.Timestamp,
-            "time with time zone" => NpgsqlDbType.TimeTZ,
+            "time with time zone" => NpgsqlDbType.TimeTz,
             "time without time zone" => NpgsqlDbType.Time,
             _ => EnumExtensions.Parse<NpgsqlDbType>(npgsqlDbType),
         };

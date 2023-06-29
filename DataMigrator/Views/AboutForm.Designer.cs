@@ -60,8 +60,8 @@ partial class AboutForm
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 48.6413F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.22826F));
             this.tableLayoutPanel.Size = new System.Drawing.Size(601, 368);
             this.tableLayoutPanel.TabIndex = 0;
             // 
@@ -131,11 +131,12 @@ partial class AboutForm
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.CornerRoundingRadius = -1F;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnOK.Location = new System.Drawing.Point(498, 332);
+            this.btnOK.Location = new System.Drawing.Point(498, 326);
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(99, 33);
+            this.btnOK.Size = new System.Drawing.Size(99, 39);
             this.btnOK.TabIndex = 24;
+            this.btnOK.Values.Image = global::DataMigrator.Resources.OK_32x32;
             this.btnOK.Values.Text = "&OK";
             // 
             // rtbDescription
@@ -144,7 +145,7 @@ partial class AboutForm
             this.rtbDescription.Location = new System.Drawing.Point(201, 147);
             this.rtbDescription.Name = "rtbDescription";
             this.rtbDescription.ReadOnly = true;
-            this.rtbDescription.Size = new System.Drawing.Size(397, 178);
+            this.rtbDescription.Size = new System.Drawing.Size(397, 171);
             this.rtbDescription.TabIndex = 25;
             this.rtbDescription.Text = "Description";
             this.rtbDescription.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbDescription_LinkClicked);

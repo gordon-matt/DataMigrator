@@ -31,6 +31,7 @@ public class SPFieldTypeConverter : IFieldTypeConverter<SPFieldType>
         fieldTypes.Add((FieldType.Int16, SPFieldType.Integer));
         fieldTypes.Add((FieldType.Int32, SPFieldType.Integer));
         fieldTypes.Add((FieldType.Int64, SPFieldType.Integer));
+        fieldTypes.Add((FieldType.Json, SPFieldType.Text));
         fieldTypes.Add((FieldType.Lookup, SPFieldType.Lookup));
         fieldTypes.Add((FieldType.MultiChoice, SPFieldType.MultiChoice));
         fieldTypes.Add((FieldType.MultiLookup, SPFieldType.Lookup));

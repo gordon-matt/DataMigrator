@@ -22,18 +22,18 @@ public class Field : ICloneable
 
     public FieldType Type { get; set; } = FieldType.String;
 
-    [Newtonsoft.Json.JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
     [Browsable(false)]
     public object Value { get; set; }
 
-    [Newtonsoft.Json.JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
-    [Browsable(false)]
-    public bool IsNumeric =>
-        Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
-            FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single,
-            FieldType.UInt16, FieldType.UInt32, FieldType.UInt64);
+    //[Newtonsoft.Json.JsonIgnore]
+    //[System.Text.Json.Serialization.JsonIgnore]
+    //[Browsable(false)]
+    //public bool IsNumeric =>
+    //    Type.In(FieldType.Byte, FieldType.Currency, FieldType.Decimal, FieldType.Double,
+    //        FieldType.Int16, FieldType.Int32, FieldType.Int64, FieldType.SByte, FieldType.Single,
+    //        FieldType.UInt16, FieldType.UInt32, FieldType.UInt64);
+
+    #region Ctor
 
     public Field()
     {
@@ -44,6 +44,8 @@ public class Field : ICloneable
         Name = name;
         Value = value;
     }
+
+    #endregion Ctor
 
     public T GetValue<T>()
     {
@@ -68,14 +70,23 @@ public class Field : ICloneable
             Name = this.Name,
             Ordinal = this.Ordinal,
             Type = this.Type,
-            Value = this.Value
+            Value = this.Value,
+            ValueShouldBeSerialized = true // For logging purposes
         };
     }
 
-    object ICloneable.Clone()
-    {
-        return Clone();
-    }
+    object ICloneable.Clone() => Clone();
 
     #endregion ICloneable Members
+
+    #region JSON Serialization
+
+    [Newtonsoft.Json.JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
+    [Browsable(false)]
+    public bool ValueShouldBeSerialized { get; set; }
+
+    public bool ShouldSerializeValue() => ValueShouldBeSerialized;
+
+    #endregion
 }

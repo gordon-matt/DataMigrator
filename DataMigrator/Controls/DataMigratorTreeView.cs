@@ -24,7 +24,7 @@ public class DataMigratorTreeView : TreeView
     {
         imageList = new ImageList();
         imageList.Images.Add(Resources.Transfer);
-        imageList.Images.Add(Resources.DatabaseConfig);
+        imageList.Images.Add(Resources.Connect);
         imageList.Images.Add(Resources.List);
         imageList.Images.Add(Resources.Settings);
         imageList.Images.Add(Resources.Table);

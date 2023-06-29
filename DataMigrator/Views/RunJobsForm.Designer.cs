@@ -31,7 +31,7 @@ partial class RunJobsForm
     /// </summary>
     private void InitializeComponent()
     {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new DataMigrator.Controls.KryptonDataGridViewWithDraggableRows();
             this.DragColumn = new System.Windows.Forms.DataGridViewImageColumn();
             this.RunColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -70,8 +70,8 @@ partial class RunJobsForm
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersVisible = false;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.RowTemplate.Height = 32;
             this.dataGridView.SelectionColor = System.Drawing.Color.Blue;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -115,6 +115,7 @@ partial class RunJobsForm
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(167, 43);
             this.btnRun.TabIndex = 2;
+            this.btnRun.Values.Image = global::DataMigrator.Resources.Play_32x32;
             this.btnRun.Values.Text = "Run";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
@@ -138,6 +139,7 @@ partial class RunJobsForm
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(167, 43);
             this.btnCancel.TabIndex = 3;
+            this.btnCancel.Values.Image = global::DataMigrator.Resources.Cancel_32x32;
             this.btnCancel.Values.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 

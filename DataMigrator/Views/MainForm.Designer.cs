@@ -164,7 +164,7 @@ partial class MainForm
             // btnRun
             // 
             this.btnRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRun.Image = global::DataMigrator.Resources.RunCmd;
+            this.btnRun.Image = global::DataMigrator.Resources.Play;
             this.btnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(36, 36);

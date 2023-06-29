@@ -50,11 +50,12 @@ partial class SettingsForm
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.CornerRoundingRadius = -1F;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(390, 7);
+            this.btnOK.Location = new System.Drawing.Point(340, 6);
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(88, 32);
+            this.btnOK.Size = new System.Drawing.Size(112, 41);
             this.btnOK.TabIndex = 1;
+            this.btnOK.Values.Image = global::DataMigrator.Resources.OK_32x32;
             this.btnOK.Values.Text = "OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
@@ -97,7 +98,7 @@ partial class SettingsForm
             this.contentPanel.Location = new System.Drawing.Point(0, 0);
             this.contentPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.contentPanel.Name = "contentPanel";
-            this.contentPanel.Size = new System.Drawing.Size(575, 492);
+            this.contentPanel.Size = new System.Drawing.Size(575, 484);
             this.contentPanel.TabIndex = 3;
             // 
             // panel
@@ -105,10 +106,10 @@ partial class SettingsForm
             this.panel.Controls.Add(this.btnOK);
             this.panel.Controls.Add(this.btnCancel);
             this.panel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel.Location = new System.Drawing.Point(0, 492);
+            this.panel.Location = new System.Drawing.Point(0, 484);
             this.panel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(575, 43);
+            this.panel.Size = new System.Drawing.Size(575, 51);
             this.panel.TabIndex = 2;
             // 
             // btnCancel
@@ -116,11 +117,12 @@ partial class SettingsForm
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.CornerRoundingRadius = -1F;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(484, 7);
+            this.btnCancel.Location = new System.Drawing.Point(460, 6);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(88, 32);
+            this.btnCancel.Size = new System.Drawing.Size(112, 41);
             this.btnCancel.TabIndex = 0;
+            this.btnCancel.Values.Image = global::DataMigrator.Resources.Cancel_32x32;
             this.btnCancel.Values.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 

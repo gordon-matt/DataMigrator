@@ -1,6 +1,6 @@
 ﻿namespace DataMigrator.Common.Models;
 
-public enum FieldType
+public enum FieldType : byte
 {
     Unknown = 0,
     Binary = 1,
@@ -20,6 +20,7 @@ public enum FieldType
     Int16 = 15,
     Int32 = 16,
     Int64 = 17,
+    Json = 35,
     Lookup = 18,
     MultiChoice = 19,
     MultiLookup = 20,
