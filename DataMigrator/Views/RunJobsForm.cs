@@ -61,9 +61,9 @@ public partial class RunJobsForm : KryptonForm
         //foreach (DataGridViewRow row in dataGridView.Rows.OfType<DataGridViewRow>().OrderBy(x => x.Index)) // Shouldn't be necessary to manually order
         foreach (DataGridViewRow row in dataGridView.Rows)
         {
-            if (bool.Parse(row.Cells[COLUMN_RUN].Value.ToString()))
+            if (bool.Parse(row.Cells[RunColumn.Index].Value.ToString()))
             {
-                string jobName = row.Cells[COLUMN_NAME].Value.ToString();
+                string jobName = row.Cells[NameColumn.Index].Value.ToString();
                 var job = AppState.ConfigFile.Jobs[jobName];
 
                 if (job == null)
@@ -74,24 +74,24 @@ public partial class RunJobsForm : KryptonForm
 
                 try
                 {
-                    row.Cells[COLUMN_STATUS].Value = "Running";
+                    row.Cells[StatusColumn.Index].Value = "Running";
 
                     await Controller.RunJobAsync(job, progressHandler, cancellationTokenSource.Token);
 
                     if (cancellationTokenSource.IsCancellationRequested)
                     {
-                        row.Cells[COLUMN_STATUS].Value = "Cancelled";
+                        row.Cells[StatusColumn.Index].Value = "Cancelled";
                         TraceService.Instance.WriteConcat(TraceEvent.Information, "User cancelled job");
                         return;
                     }
                     else
                     {
-                        row.Cells[COLUMN_STATUS].Value = "Completed";
+                        row.Cells[StatusColumn.Index].Value = "Completed";
                     }
                 }
                 catch (Exception x)
                 {
-                    row.Cells[COLUMN_STATUS].Value = "Error";
+                    row.Cells[StatusColumn.Index].Value = "Error";
                     TraceService.Instance.WriteException(x, string.Concat("Job Name: ", jobName));
                 }
             }

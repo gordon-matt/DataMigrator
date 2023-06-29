@@ -55,7 +55,7 @@ public abstract class BaseMigrationService : IMigrationService
     {
         using var connection = CreateDbConnection();
         string[] restrictions = new string[4];
-        restrictions[3] = "Base Table";
+        restrictions[3] = "BASE TABLE";
 
         await connection.OpenAsync();
         var schema = await connection.GetSchemaAsync("Tables", restrictions);
@@ -249,7 +249,7 @@ public abstract class BaseMigrationService : IMigrationService
                 {
                     record.Fields.ForEach(field =>
                     {
-                        command.Parameters[parameterNames[field.Name]].Value = field.Value;
+                        command.Parameters[parameterNames[field.Name]].Value = field.Value ?? DBNull.Value;
                     });
 
                     await command.ExecuteNonQueryAsync();
