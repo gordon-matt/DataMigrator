@@ -55,7 +55,7 @@ partial class SqlConnectionControl
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(302, 23);
-            this.txtPassword.TabIndex = 7;
+            this.txtPassword.TabIndex = 5;
             // 
             // txtUserName
             // 
@@ -66,7 +66,7 @@ partial class SqlConnectionControl
             this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(302, 23);
-            this.txtUserName.TabIndex = 5;
+            this.txtUserName.TabIndex = 3;
             // 
             // lblServer
             // 
@@ -86,7 +86,7 @@ partial class SqlConnectionControl
             this.txtServer.Location = new System.Drawing.Point(19, 40);
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(434, 23);
-            this.txtServer.TabIndex = 10;
+            this.txtServer.TabIndex = 1;
             // 
             // grpConnectDatabase
             // 
@@ -99,7 +99,7 @@ partial class SqlConnectionControl
             this.grpConnectDatabase.Name = "grpConnectDatabase";
             this.grpConnectDatabase.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpConnectDatabase.Size = new System.Drawing.Size(434, 71);
-            this.grpConnectDatabase.TabIndex = 12;
+            this.grpConnectDatabase.TabIndex = 3;
             this.grpConnectDatabase.TabStop = false;
             this.grpConnectDatabase.Text = "Connect to a database";
             // 
@@ -111,7 +111,7 @@ partial class SqlConnectionControl
             this.lblDatabase.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatabase.Name = "lblDatabase";
             this.lblDatabase.Size = new System.Drawing.Size(61, 20);
-            this.lblDatabase.TabIndex = 9;
+            this.lblDatabase.TabIndex = 0;
             this.lblDatabase.Values.Text = "Database";
             // 
             // cmbDatabase
@@ -127,7 +127,7 @@ partial class SqlConnectionControl
             this.cmbDatabase.Name = "cmbDatabase";
             this.cmbDatabase.Size = new System.Drawing.Size(334, 21);
             this.cmbDatabase.Sorted = true;
-            this.cmbDatabase.TabIndex = 0;
+            this.cmbDatabase.TabIndex = 1;
             this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
             // 
             // grpLogOnServer
@@ -145,7 +145,7 @@ partial class SqlConnectionControl
             this.grpLogOnServer.Name = "grpLogOnServer";
             this.grpLogOnServer.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpLogOnServer.Size = new System.Drawing.Size(434, 153);
-            this.grpLogOnServer.TabIndex = 11;
+            this.grpLogOnServer.TabIndex = 2;
             this.grpLogOnServer.TabStop = false;
             this.grpLogOnServer.Text = "Log on to the server";
             // 
@@ -158,7 +158,7 @@ partial class SqlConnectionControl
             this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
-            this.lblPassword.TabIndex = 8;
+            this.lblPassword.TabIndex = 4;
             this.lblPassword.Values.Text = "Password";
             // 
             // lblUserName
@@ -170,7 +170,7 @@ partial class SqlConnectionControl
             this.lblUserName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(71, 20);
-            this.lblUserName.TabIndex = 6;
+            this.lblUserName.TabIndex = 2;
             this.lblUserName.Values.Text = "User Name";
             // 
             // rbUseSqlServerAuthentication

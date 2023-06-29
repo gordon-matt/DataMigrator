@@ -56,7 +56,7 @@ partial class SharePointConnectionControl
             this.lblUrl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(29, 20);
-            this.lblUrl.TabIndex = 2;
+            this.lblUrl.TabIndex = 0;
             this.lblUrl.Text = "Url:";
             // 
             // txtPassword
@@ -68,7 +68,7 @@ partial class SharePointConnectionControl
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(347, 23);
-            this.txtPassword.TabIndex = 13;
+            this.txtPassword.TabIndex = 5;
             // 
             // lblPassword
             // 
@@ -76,7 +76,7 @@ partial class SharePointConnectionControl
             this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
-            this.lblPassword.TabIndex = 12;
+            this.lblPassword.TabIndex = 4;
             this.lblPassword.Text = "Password";
             // 
             // txtUserName
@@ -87,7 +87,7 @@ partial class SharePointConnectionControl
             this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(347, 23);
-            this.txtUserName.TabIndex = 11;
+            this.txtUserName.TabIndex = 3;
             // 
             // lblUserName
             // 
@@ -95,7 +95,7 @@ partial class SharePointConnectionControl
             this.lblUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(74, 20);
-            this.lblUserName.TabIndex = 10;
+            this.lblUserName.TabIndex = 2;
             this.lblUserName.Text = "User Name:";
             // 
             // txtDomain
@@ -106,7 +106,7 @@ partial class SharePointConnectionControl
             this.txtDomain.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtDomain.Name = "txtDomain";
             this.txtDomain.Size = new System.Drawing.Size(347, 23);
-            this.txtDomain.TabIndex = 15;
+            this.txtDomain.TabIndex = 7;
             // 
             // lblDomain
             // 
@@ -114,7 +114,7 @@ partial class SharePointConnectionControl
             this.lblDomain.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblDomain.Name = "lblDomain";
             this.lblDomain.Size = new System.Drawing.Size(56, 20);
-            this.lblDomain.TabIndex = 14;
+            this.lblDomain.TabIndex = 6;
             this.lblDomain.Text = "Domain:";
             // 
             // SharePointConnectionControl

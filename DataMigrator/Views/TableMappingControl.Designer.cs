@@ -28,7 +28,7 @@ partial class TableMappingControl
     /// </summary>
     private void InitializeComponent()
     {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSource = new Krypton.Toolkit.KryptonDataGridView();
             this.dgvMappings = new Krypton.Toolkit.KryptonDataGridView();
             this.dgvMappings_Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -97,7 +97,7 @@ partial class TableMappingControl
             this.dgvSource.RowHeadersVisible = false;
             this.dgvSource.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSource.Size = new System.Drawing.Size(261, 455);
-            this.dgvSource.TabIndex = 1;
+            this.dgvSource.TabIndex = 0;
             this.dgvSource.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvSource_CellMouseClick);
             this.dgvSource.SelectionChanged += new System.EventHandler(this.dgvSource_SelectionChanged);
             // 
@@ -123,7 +123,7 @@ partial class TableMappingControl
             this.dgvMappings.RowHeadersVisible = false;
             this.dgvMappings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvMappings.Size = new System.Drawing.Size(529, 546);
-            this.dgvMappings.TabIndex = 2;
+            this.dgvMappings.TabIndex = 0;
             // 
             // dgvMappings_Source
             // 
@@ -142,9 +142,9 @@ partial class TableMappingControl
             // dgvMappings_Script
             // 
             this.dgvMappings_Script.DataPropertyName = "Script";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.NullValue = null;
-            this.dgvMappings_Script.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = null;
+            this.dgvMappings_Script.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvMappings_Script.HeaderText = "Script";
             this.dgvMappings_Script.Name = "dgvMappings_Script";
             this.dgvMappings_Script.Width = 47;
@@ -167,7 +167,7 @@ partial class TableMappingControl
             this.dgvDestination.RowHeadersVisible = false;
             this.dgvDestination.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDestination.Size = new System.Drawing.Size(263, 455);
-            this.dgvDestination.TabIndex = 4;
+            this.dgvDestination.TabIndex = 0;
             this.dgvDestination.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDestination_CellMouseClick);
             this.dgvDestination.SelectionChanged += new System.EventHandler(this.dgvDestination_SelectionChanged);
             // 
@@ -179,7 +179,7 @@ partial class TableMappingControl
             this.btnAutoMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnAutoMap.Name = "btnAutoMap";
             this.btnAutoMap.Size = new System.Drawing.Size(256, 41);
-            this.btnAutoMap.TabIndex = 5;
+            this.btnAutoMap.TabIndex = 2;
             this.btnAutoMap.Values.Image = global::DataMigrator.Resources.Wand_32x32;
             this.btnAutoMap.Values.Text = "Auto Map";
             this.btnAutoMap.Click += new System.EventHandler(this.btnAutoMap_Click);
@@ -192,7 +192,7 @@ partial class TableMappingControl
             this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(256, 40);
-            this.btnAdd.TabIndex = 6;
+            this.btnAdd.TabIndex = 0;
             this.btnAdd.Values.Image = global::DataMigrator.Resources.Add_32x32;
             this.btnAdd.Values.Text = "Add";
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
@@ -205,7 +205,7 @@ partial class TableMappingControl
             this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(257, 40);
-            this.btnRemove.TabIndex = 7;
+            this.btnRemove.TabIndex = 1;
             this.btnRemove.Values.Image = global::DataMigrator.Resources.Remove_32x32;
             this.btnRemove.Values.Text = "Remove";
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
@@ -221,7 +221,7 @@ partial class TableMappingControl
             this.cmbSourceTable.Location = new System.Drawing.Point(0, 0);
             this.cmbSourceTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbSourceTable.Name = "cmbSourceTable";
-            this.cmbSourceTable.Size = new System.Drawing.Size(261, 21);
+            this.cmbSourceTable.Size = new System.Drawing.Size(261, 18);
             this.cmbSourceTable.Sorted = true;
             this.cmbSourceTable.TabIndex = 0;
             this.cmbSourceTable.SelectedIndexChanged += new System.EventHandler(this.cmbSourceTable_SelectedIndexChanged);
@@ -237,9 +237,9 @@ partial class TableMappingControl
             this.cmbDestinationTable.Location = new System.Drawing.Point(0, 0);
             this.cmbDestinationTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbDestinationTable.Name = "cmbDestinationTable";
-            this.cmbDestinationTable.Size = new System.Drawing.Size(263, 21);
+            this.cmbDestinationTable.Size = new System.Drawing.Size(263, 18);
             this.cmbDestinationTable.Sorted = true;
-            this.cmbDestinationTable.TabIndex = 3;
+            this.cmbDestinationTable.TabIndex = 0;
             this.cmbDestinationTable.SelectedIndexChanged += new System.EventHandler(this.cmbDestinationTable_SelectedIndexChanged);
             // 
             // btnCreateTable
@@ -251,7 +251,7 @@ partial class TableMappingControl
             this.btnCreateTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCreateTable.Name = "btnCreateTable";
             this.btnCreateTable.Size = new System.Drawing.Size(529, 42);
-            this.btnCreateTable.TabIndex = 8;
+            this.btnCreateTable.TabIndex = 0;
             this.btnCreateTable.Values.Image = global::DataMigrator.Resources.TableCreate_32x32;
             this.btnCreateTable.Values.Text = "Create Destination Table";
             this.btnCreateTable.Click += new System.EventHandler(this.btnCreateTable_Click);
@@ -265,7 +265,7 @@ partial class TableMappingControl
             this.pGridSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pGridSource.Name = "pGridSource";
             this.pGridSource.Size = new System.Drawing.Size(261, 205);
-            this.pGridSource.TabIndex = 9;
+            this.pGridSource.TabIndex = 0;
             this.pGridSource.ToolbarVisible = false;
             // 
             // pGridDestination
@@ -277,7 +277,7 @@ partial class TableMappingControl
             this.pGridDestination.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pGridDestination.Name = "pGridDestination";
             this.pGridDestination.Size = new System.Drawing.Size(263, 205);
-            this.pGridDestination.TabIndex = 10;
+            this.pGridDestination.TabIndex = 0;
             this.pGridDestination.ToolbarVisible = false;
             // 
             // tableLayoutPanel
@@ -390,7 +390,7 @@ partial class TableMappingControl
             this.btnAddEditScript.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnAddEditScript.Name = "btnAddEditScript";
             this.btnAddEditScript.Size = new System.Drawing.Size(257, 41);
-            this.btnAddEditScript.TabIndex = 8;
+            this.btnAddEditScript.TabIndex = 3;
             this.btnAddEditScript.Values.Image = global::DataMigrator.Resources.CS_Script_32x32;
             this.btnAddEditScript.Values.Text = "Add/Edit Script";
             this.btnAddEditScript.Click += new System.EventHandler(this.btnAddEditScript_Click);

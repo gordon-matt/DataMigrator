@@ -53,7 +53,7 @@ partial class NpgsqlConnectionControl
             this.txtPort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(135, 23);
-            this.txtPort.TabIndex = 15;
+            this.txtPort.TabIndex = 3;
             // 
             // lblPort
             // 
@@ -61,7 +61,7 @@ partial class NpgsqlConnectionControl
             this.lblPort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(36, 20);
-            this.lblPort.TabIndex = 14;
+            this.lblPort.TabIndex = 2;
             this.lblPort.Values.Text = "Port:";
             // 
             // grpLogOnServer
@@ -77,7 +77,7 @@ partial class NpgsqlConnectionControl
             this.grpLogOnServer.Name = "grpLogOnServer";
             this.grpLogOnServer.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpLogOnServer.Size = new System.Drawing.Size(434, 95);
-            this.grpLogOnServer.TabIndex = 22;
+            this.grpLogOnServer.TabIndex = 4;
             this.grpLogOnServer.TabStop = false;
             this.grpLogOnServer.Text = "Log on to the server";
             // 
@@ -90,7 +90,7 @@ partial class NpgsqlConnectionControl
             this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
-            this.lblPassword.TabIndex = 8;
+            this.lblPassword.TabIndex = 2;
             this.lblPassword.Values.Text = "Password";
             // 
             // lblUserName
@@ -102,7 +102,7 @@ partial class NpgsqlConnectionControl
             this.lblUserName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(71, 20);
-            this.lblUserName.TabIndex = 6;
+            this.lblUserName.TabIndex = 0;
             this.lblUserName.Values.Text = "User Name";
             // 
             // txtPassword
@@ -114,7 +114,7 @@ partial class NpgsqlConnectionControl
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(338, 23);
-            this.txtPassword.TabIndex = 7;
+            this.txtPassword.TabIndex = 3;
             // 
             // txtUserName
             // 
@@ -124,7 +124,7 @@ partial class NpgsqlConnectionControl
             this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(338, 23);
-            this.txtUserName.TabIndex = 5;
+            this.txtUserName.TabIndex = 1;
             // 
             // txtServer
             // 
@@ -133,7 +133,7 @@ partial class NpgsqlConnectionControl
             this.txtServer.Location = new System.Drawing.Point(19, 40);
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(434, 23);
-            this.txtServer.TabIndex = 21;
+            this.txtServer.TabIndex = 1;
             // 
             // lblServer
             // 
@@ -143,7 +143,7 @@ partial class NpgsqlConnectionControl
             this.lblServer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblServer.Name = "lblServer";
             this.lblServer.Size = new System.Drawing.Size(47, 20);
-            this.lblServer.TabIndex = 20;
+            this.lblServer.TabIndex = 0;
             this.lblServer.Values.Text = "Server:";
             // 
             // grpConnectDatabase
@@ -157,7 +157,7 @@ partial class NpgsqlConnectionControl
             this.grpConnectDatabase.Name = "grpConnectDatabase";
             this.grpConnectDatabase.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpConnectDatabase.Size = new System.Drawing.Size(434, 71);
-            this.grpConnectDatabase.TabIndex = 23;
+            this.grpConnectDatabase.TabIndex = 5;
             this.grpConnectDatabase.TabStop = false;
             this.grpConnectDatabase.Text = "Connect to a database";
             // 
@@ -169,7 +169,7 @@ partial class NpgsqlConnectionControl
             this.lblDatabase.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatabase.Name = "lblDatabase";
             this.lblDatabase.Size = new System.Drawing.Size(61, 20);
-            this.lblDatabase.TabIndex = 9;
+            this.lblDatabase.TabIndex = 0;
             this.lblDatabase.Values.Text = "Database";
             // 
             // cmbDatabase
@@ -185,7 +185,7 @@ partial class NpgsqlConnectionControl
             this.cmbDatabase.Name = "cmbDatabase";
             this.cmbDatabase.Size = new System.Drawing.Size(338, 21);
             this.cmbDatabase.Sorted = true;
-            this.cmbDatabase.TabIndex = 0;
+            this.cmbDatabase.TabIndex = 1;
             this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
             // 
             // NpgsqlConnectionControl

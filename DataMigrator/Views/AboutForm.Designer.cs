@@ -86,7 +86,7 @@ partial class AboutForm
             this.lblProductName.MaximumSize = new System.Drawing.Size(0, 20);
             this.lblProductName.Name = "lblProductName";
             this.lblProductName.Size = new System.Drawing.Size(392, 20);
-            this.lblProductName.TabIndex = 19;
+            this.lblProductName.TabIndex = 0;
             this.lblProductName.Text = "Product Name";
             this.lblProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -98,7 +98,7 @@ partial class AboutForm
             this.lblVersion.MaximumSize = new System.Drawing.Size(0, 20);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(392, 20);
-            this.lblVersion.TabIndex = 0;
+            this.lblVersion.TabIndex = 1;
             this.lblVersion.Text = "Version";
             this.lblVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -110,7 +110,7 @@ partial class AboutForm
             this.lblCopyright.MaximumSize = new System.Drawing.Size(0, 20);
             this.lblCopyright.Name = "lblCopyright";
             this.lblCopyright.Size = new System.Drawing.Size(392, 20);
-            this.lblCopyright.TabIndex = 21;
+            this.lblCopyright.TabIndex = 2;
             this.lblCopyright.Text = "Copyright";
             this.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -122,7 +122,7 @@ partial class AboutForm
             this.lblCompanyName.MaximumSize = new System.Drawing.Size(0, 20);
             this.lblCompanyName.Name = "lblCompanyName";
             this.lblCompanyName.Size = new System.Drawing.Size(392, 20);
-            this.lblCompanyName.TabIndex = 22;
+            this.lblCompanyName.TabIndex = 3;
             this.lblCompanyName.Text = "Company Name";
             this.lblCompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -135,7 +135,7 @@ partial class AboutForm
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(99, 39);
-            this.btnOK.TabIndex = 24;
+            this.btnOK.TabIndex = 5;
             this.btnOK.Values.Image = global::DataMigrator.Resources.OK_32x32;
             this.btnOK.Values.Text = "&OK";
             // 
@@ -146,7 +146,7 @@ partial class AboutForm
             this.rtbDescription.Name = "rtbDescription";
             this.rtbDescription.ReadOnly = true;
             this.rtbDescription.Size = new System.Drawing.Size(397, 171);
-            this.rtbDescription.TabIndex = 25;
+            this.rtbDescription.TabIndex = 4;
             this.rtbDescription.Text = "Description";
             this.rtbDescription.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbDescription_LinkClicked);
             // 
