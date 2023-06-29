@@ -31,16 +31,16 @@ partial class NpgsqlConnectionControl
     private void InitializeComponent()
     {
             this.txtPort = new Krypton.Toolkit.KryptonTextBox();
-            this.lblPort = new System.Windows.Forms.Label();
+            this.lblPort = new Krypton.Toolkit.KryptonLabel();
             this.grpLogOnServer = new System.Windows.Forms.GroupBox();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.lblUserName = new System.Windows.Forms.Label();
+            this.lblPassword = new Krypton.Toolkit.KryptonLabel();
+            this.lblUserName = new Krypton.Toolkit.KryptonLabel();
             this.txtPassword = new Krypton.Toolkit.KryptonTextBox();
             this.txtUserName = new Krypton.Toolkit.KryptonTextBox();
             this.txtServer = new Krypton.Toolkit.KryptonTextBox();
-            this.lblServer = new System.Windows.Forms.Label();
+            this.lblServer = new Krypton.Toolkit.KryptonLabel();
             this.grpConnectDatabase = new System.Windows.Forms.GroupBox();
-            this.lblDatabase = new System.Windows.Forms.Label();
+            this.lblDatabase = new Krypton.Toolkit.KryptonLabel();
             this.cmbDatabase = new Krypton.Toolkit.KryptonComboBox();
             this.grpLogOnServer.SuspendLayout();
             this.grpConnectDatabase.SuspendLayout();
@@ -62,7 +62,7 @@ partial class NpgsqlConnectionControl
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(36, 20);
             this.lblPort.TabIndex = 14;
-            this.lblPort.Text = "Port:";
+            this.lblPort.Values.Text = "Port:";
             // 
             // grpLogOnServer
             // 
@@ -91,7 +91,7 @@ partial class NpgsqlConnectionControl
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
             this.lblPassword.TabIndex = 8;
-            this.lblPassword.Text = "Password";
+            this.lblPassword.Values.Text = "Password";
             // 
             // lblUserName
             // 
@@ -103,13 +103,12 @@ partial class NpgsqlConnectionControl
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(71, 20);
             this.lblUserName.TabIndex = 6;
-            this.lblUserName.Text = "User Name";
+            this.lblUserName.Values.Text = "User Name";
             // 
             // txtPassword
             // 
             this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPassword.Enabled = false;
             this.txtPassword.Location = new System.Drawing.Point(88, 51);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPassword.Name = "txtPassword";
@@ -121,7 +120,6 @@ partial class NpgsqlConnectionControl
             // 
             this.txtUserName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUserName.Enabled = false;
             this.txtUserName.Location = new System.Drawing.Point(88, 22);
             this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
@@ -146,7 +144,7 @@ partial class NpgsqlConnectionControl
             this.lblServer.Name = "lblServer";
             this.lblServer.Size = new System.Drawing.Size(47, 20);
             this.lblServer.TabIndex = 20;
-            this.lblServer.Text = "Server:";
+            this.lblServer.Values.Text = "Server:";
             // 
             // grpConnectDatabase
             // 
@@ -172,7 +170,7 @@ partial class NpgsqlConnectionControl
             this.lblDatabase.Name = "lblDatabase";
             this.lblDatabase.Size = new System.Drawing.Size(61, 20);
             this.lblDatabase.TabIndex = 9;
-            this.lblDatabase.Text = "Database";
+            this.lblDatabase.Values.Text = "Database";
             // 
             // cmbDatabase
             // 
@@ -216,15 +214,15 @@ partial class NpgsqlConnectionControl
 
     #endregion
     private KryptonTextBox txtPort;
-    private Label lblPort;
+    private KryptonLabel lblPort;
     private GroupBox grpLogOnServer;
-    private Label lblPassword;
-    private Label lblUserName;
+    private KryptonLabel lblPassword;
+    private KryptonLabel lblUserName;
     private KryptonTextBox txtPassword;
     private KryptonTextBox txtUserName;
     private KryptonTextBox txtServer;
-    private Label lblServer;
+    private KryptonLabel lblServer;
     private GroupBox grpConnectDatabase;
-    private Label lblDatabase;
+    private KryptonLabel lblDatabase;
     private KryptonComboBox cmbDatabase;
 }

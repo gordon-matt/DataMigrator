@@ -14,7 +14,7 @@ public partial class RunJobsForm : KryptonForm
 
         foreach (var job in AppState.ConfigFile.Jobs.OrderBy(x => x.Order))
         {
-            dataGridView.Rows.Add(false, job.Name, "Pending");
+            dataGridView.Rows.Add(Constants.ImageBytes.MoveGrabber_32x32, false, job.Name, "Pending");
         }
     }
 
@@ -107,6 +107,15 @@ public partial class RunJobsForm : KryptonForm
             string jobName = row.Cells[NameColumn.Index].Value.ToString();
             var job = AppState.ConfigFile.Jobs[jobName];
             job.Order = row.Index;
+        }
+    }
+
+    private void cbSelectAll_CheckedChanged(object sender, EventArgs e)
+    {
+        foreach (DataGridViewRow row in dataGridView.Rows)
+        {
+            var cell = (DataGridViewCheckBoxCell)row.Cells[RunColumn.Index];
+            cell.Value = cbSelectAll.Checked;
         }
     }
 
