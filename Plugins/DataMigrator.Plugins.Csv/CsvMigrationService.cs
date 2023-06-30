@@ -14,23 +14,23 @@ using Extenso.IO;
 
 namespace DataMigrator.Csv;
 
-public class CsvMigrationService : BaseMigrationService
+public class CsvMigrationService : IMigrationService
 {
     public CsvMigrationService(ConnectionDetails connectionDetails)
-        : base(connectionDetails)
     {
+        ConnectionDetails = connectionDetails;
     }
+
+    private ConnectionDetails ConnectionDetails { get; set; }
 
     #region IMigrationService Members
 
-    public override string DbProviderName => throw new NotSupportedException();
+    public DbConnection CreateDbConnection() => null;
 
-    public override DbConnection CreateDbConnection() => null;
-
-    public override Task<IEnumerable<string>> GetTableNamesAsync() =>
+    public Task<IEnumerable<string>> GetTableNamesAsync() =>
         Task.FromResult(new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) }.AsEnumerable());
 
-    public override Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var table = new DataTable();
         fields.ForEach(field => table.Columns.Add(field.Name));
@@ -38,12 +38,12 @@ public class CsvMigrationService : BaseMigrationService
         return Task.FromResult(true);
     }
 
-    public override async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
+    public async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
         if (IsLargeFile)
         {
             // Fast, but don't get the max column lengths..
-            var fieldNames = await GetFieldNamesAsync(tableName, schemaName);
+            var fieldNames = await GetFieldNamesAsync();
             return new FieldCollection(fieldNames.Select((x, i) => new Field
             {
                 Name = x,
@@ -64,7 +64,7 @@ public class CsvMigrationService : BaseMigrationService
         }));
     }
 
-    public override int CountRecords(string tableName, string schemaName)
+    public int CountRecords(string tableName, string schemaName)
     {
         //int rowCount = new FileInfo(ConnectionDetails.ConnectionString).ReadAllText().ToLines().Count(); //Very inefficient!
 
@@ -73,7 +73,7 @@ public class CsvMigrationService : BaseMigrationService
         return HasHeaderRow ? rowCount - 1 : rowCount;
     }
 
-    public override async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         using var fileSteam = File.OpenRead(ConnectionDetails.Database);
         using var streamReader = new StreamReader(fileSteam);
@@ -105,7 +105,7 @@ public class CsvMigrationService : BaseMigrationService
         }
     }
 
-    public override Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
+    public Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
         if (IsLargeFile)
         {
@@ -135,20 +135,7 @@ public class CsvMigrationService : BaseMigrationService
 
     #endregion IMigrationService Members
 
-    #region Field Conversion
-
-    protected override FieldType GetDataMigratorFieldType(string providerFieldType) => FieldType.String;
-
-    protected override string GetDataProviderFieldType(FieldType fieldType) => typeof(string).ToString();
-
-    #endregion Field Conversion
-
-    protected override Task<bool> CreateTableAsync(string tableName, string schemaName) => throw new NotSupportedException();
-
-    protected override Task CreateTableAsync(string tableName, string schemaName, string pkColumnName, string pkDataType, bool pkIsIdentity) =>
-        throw new NotSupportedException();
-
-    protected override async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
+    private async Task<IEnumerable<string>> GetFieldNamesAsync()
     {
         using var fileStream = new FileStream(ConnectionDetails.ConnectionString, FileMode.Open, FileAccess.Read);
         using var streamReader = new StreamReader(fileStream);
@@ -166,21 +153,6 @@ public class CsvMigrationService : BaseMigrationService
 
         return fields;
     }
-
-    protected override Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
-    {
-        if (IsLargeFile)
-        {
-            throw new MigrationException("File is too large to add a new column.");
-        }
-
-        var table = ReadCsv();
-        table.Columns.Add(field.Name);
-        table.ToCsv(ConnectionDetails.Database, true);
-        return Task.FromResult(true);
-    }
-
-    protected override string GetFullTableName(string tableName, string schemaName) => ConnectionDetails.Database;
 
     private DataTable ReadCsv()
     {

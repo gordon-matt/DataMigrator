@@ -19,7 +19,7 @@ public class MySqlDbTypeConverter : IFieldTypeConverter<MySqlDbType>
         fieldTypes.Add((FieldType.Binary, MySqlDbType.Binary));
         fieldTypes.Add((FieldType.Byte, MySqlDbType.UByte));
         fieldTypes.Add((FieldType.Boolean, MySqlDbType.Bit));
-        fieldTypes.Add((FieldType.Char, MySqlDbType.TinyText));
+        fieldTypes.Add((FieldType.Char, MySqlDbType.VarChar));
         fieldTypes.Add((FieldType.Choice, MySqlDbType.Text));
         fieldTypes.Add((FieldType.Calculated, MySqlDbType.Text));
         fieldTypes.Add((FieldType.Currency, MySqlDbType.Decimal));

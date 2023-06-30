@@ -10,16 +10,17 @@ using MySql.Data.MySqlClient;
 
 namespace DataMigrator.MySql;
 
-//TODO: Test! This class not yet tested.
-public class MySqlMigrationService : BaseMigrationService
+public class MySqlMigrationService : BaseAdoNetMigrationService
 {
     private readonly MySqlDbTypeConverter typeConverter = new();
+
+    protected override string QuotePrefix => "`";
+
+    protected override string QuoteSuffix => "`";
 
     public MySqlMigrationService(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {
-        EscapeIdentifierStart = "`";
-        EscapeIdentifierEnd = "`";
     }
 
     #region IMigrationService Members
@@ -27,57 +28,6 @@ public class MySqlMigrationService : BaseMigrationService
     public override string DbProviderName => "MySql.Data.MySqlClient";
 
     public override DbConnection CreateDbConnection() => new MySqlConnection(ConnectionDetails.ConnectionString);
-
-    //public override void InsertRecords(string tableName, IEnumerable<Record> records)
-    //{
-    //    const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
-    //    string fieldNames = records.ElementAt(0).Fields
-    //        .Select(f => f.Name)
-    //        .OrderBy(f => f)
-    //        .Join("`,`").Prepend("`").Append("`");
-
-    //    using (MySqlConnection connection = new MySqlConnection(ConnectionDetails.ConnectionString))
-    //    {
-    //        connection.Open();
-    //        using (MySqlTransaction transaction = connection.BeginTransaction())
-    //        {
-    //            using (MySqlCommand command = connection.CreateCommand())
-    //            {
-    //                command.Transaction = transaction;
-    //                //command.CommandText = "SET NAMES UTF8; SET CHARACTER SET UTF8;";
-    //                //command.ExecuteNonQuery();
-
-    //                StringBuilder sbValues = null;
-    //                records.ForEach(record =>
-    //                {
-    //                    sbValues = new StringBuilder(50);
-    //                    record.Fields.OrderBy(f => f.Name).ForEach(field =>
-    //                    {
-    //                        if (field.IsNumeric)
-    //                        {
-    //                            sbValues.Append(field.Value);
-    //                        }
-    //                        else if (field.Type == FieldType.DateTime)
-    //                        {
-    //                            sbValues.Append(field.GetValue<DateTime>().ToISO8601DateString().AddSingleQuotes());
-    //                        }
-    //                        else
-    //                        {
-    //                            sbValues.Append("'", field.Value.ToString().Replace("'", "''"), "'");
-    //                        }
-    //                        sbValues.Append(",");
-    //                    });
-    //                    sbValues.Length -= 1; // Remove last comma ","
-
-    //                    command.CommandText = string.Format(INSERT_INTO_FORMAT, tableName, fieldNames, sbValues.ToString());
-    //                    command.ExecuteNonQuery();
-    //                });
-    //            }
-    //            transaction.Commit();
-    //        }
-    //        connection.Close();
-    //    }
-    //}
 
     #endregion IMigrationService Members
 
@@ -134,14 +84,38 @@ public class MySqlMigrationService : BaseMigrationService
         string characterSet = string.Empty;
         string isRequired = string.Empty;
 
-        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char, FieldType.Binary))
         {
-            if (field.MaxLength > 0)
+            if (field.MaxLength is > 0 and <= 8000)
             {
+                if (field.Type == FieldType.Binary && field.MaxLength > 255)
+                {
+                    fieldType = "VARBINARY";
+                }
+
                 maxLength = $"({field.MaxLength})";
             }
-            //MySql does not have MAX keyword
-            characterSet = " CHARACTER SET utf8";
+            else
+            {
+                switch (field.Type)
+                {
+                    case FieldType.String:
+                    case FieldType.RichText: maxLength = "(MAX)"; break;
+                    case FieldType.Binary:
+                        {
+                            fieldType = "BLOB";
+                        }
+                        break;
+                    case FieldType.Char: maxLength = $"(128)"; break;
+                    default: break;
+                }
+            }
+
+            if (field.Type != FieldType.Binary)
+            {
+                //MySql does not have MAX keyword
+                characterSet = " CHARACTER SET utf8";
+            }
         }
 
         if (field.IsRequired)
@@ -151,10 +125,22 @@ public class MySqlMigrationService : BaseMigrationService
         command.CommandText = string.Format(
             "ALTER TABLE {0} ADD {1}",
             GetFullTableName(tableName, schemaName),
-            string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, characterSet, isRequired));
+            string.Concat(QuoteIdentifier(field.Name), " ", fieldType, maxLength, characterSet, isRequired));
+
         await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-        await connection.CloseAsync();
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+        }
+        catch (Exception x)
+        {
+            TraceService.Instance.WriteException(x, $"Error when trying to add field. Command Text: {command.CommandText}");
+        }
+        finally
+        {
+            await connection.CloseAsync();
+        }
+
         return true;
     }
 
@@ -175,4 +161,7 @@ public class MySqlMigrationService : BaseMigrationService
 
         return Task.FromResult(new FieldCollection(fields));
     }
+
+    // Schema in MySQL is just a different database altogether.. so just ignore it and return the table name directly..
+    protected override string GetFullTableName(string tableName, string schemaName) => QuoteIdentifier(tableName);
 }

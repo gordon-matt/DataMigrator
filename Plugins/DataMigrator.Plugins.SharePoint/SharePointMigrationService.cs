@@ -13,22 +13,22 @@ using SP = Microsoft.SharePoint.Client;
 namespace DataMigrator.SharePoint;
 
 //TODO: Test! This class not yet tested.
-public class SharePointMigrationService : BaseMigrationService
+public class SharePointMigrationService : IMigrationService
 {
     private readonly SPFieldTypeConverter typeConverter = new();
 
     public SharePointMigrationService(ConnectionDetails connectionDetails)
-        : base(connectionDetails)
     {
+        ConnectionDetails = connectionDetails;
     }
+
+    private ConnectionDetails ConnectionDetails { get; set; }
 
     #region IMigrationService Members
 
-    public override string DbProviderName => throw new NotSupportedException();
+    public DbConnection CreateDbConnection() => null;
 
-    public override DbConnection CreateDbConnection() => null;
-
-    public override async Task<IEnumerable<string>> GetTableNamesAsync()
+    public async Task<IEnumerable<string>> GetTableNamesAsync()
     {
         var listNames = new List<string>();
         using (var context = GetClientContext(ConnectionDetails))
@@ -45,7 +45,7 @@ public class SharePointMigrationService : BaseMigrationService
         return listNames;
     }
 
-    public override async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         try
         {
@@ -80,7 +80,7 @@ public class SharePointMigrationService : BaseMigrationService
         }
     }
 
-    public override async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
+    public async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
         var fields = new FieldCollection();
         using (var context = GetClientContext(ConnectionDetails))
@@ -115,7 +115,7 @@ public class SharePointMigrationService : BaseMigrationService
         return fields;
     }
 
-    public override int CountRecords(string tableName, string schemaName)
+    public int CountRecords(string tableName, string schemaName)
     {
         using var context = GetClientContext(ConnectionDetails);
         var site = context.Web;
@@ -131,7 +131,7 @@ public class SharePointMigrationService : BaseMigrationService
         return listItems.Count;
     }
 
-    public override async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         using var context = GetClientContext(ConnectionDetails);
         var site = context.Web;
@@ -191,7 +191,7 @@ public class SharePointMigrationService : BaseMigrationService
         }
     }
 
-    public override async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
+    public async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
         //ProcessBatchData not available in Client OM. Maybe can use custom solution similar to base class ADO.NET version
         //But first need to test - maybe this is already fast enough
@@ -232,16 +232,6 @@ public class SharePointMigrationService : BaseMigrationService
 
     #endregion IMigrationService Members
 
-    #region Field Conversion
-
-    protected override FieldType GetDataMigratorFieldType(string providerFieldType) =>
-        typeConverter.GetDataMigratorFieldType(EnumExtensions.ToEnum<SP.FieldType>(providerFieldType, true));
-
-    protected override string GetDataProviderFieldType(FieldType fieldType) =>
-        typeConverter.GetDataProviderFieldType(fieldType).ToString();
-
-    #endregion Field Conversion
-
     internal static SP.ClientContext GetClientContext(ConnectionDetails connectionDetails)
     {
         return new SP.ClientContext(connectionDetails.ConnectionString)
@@ -252,10 +242,7 @@ public class SharePointMigrationService : BaseMigrationService
         };
     }
 
-    protected override async Task<bool> CreateTableAsync(string tableName, string schemaName) =>
-        await CreateTableAsync(tableName, schemaName, null);
-
-    protected override async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
+    private async Task<bool> CreateFieldAsync(string tableName, string schemaName, Field field)
     {
         string fullTableName = GetFullTableName(tableName, schemaName);
 
@@ -285,7 +272,7 @@ public class SharePointMigrationService : BaseMigrationService
         }
     }
 
-    protected override async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
+    private async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
     {
         var spFieldNames = new List<string>();
         using (var context = GetClientContext(ConnectionDetails))
@@ -306,6 +293,6 @@ public class SharePointMigrationService : BaseMigrationService
         return spFieldNames;
     }
 
-    protected override string GetFullTableName(string tableName, string schemaName) =>
+    private string GetFullTableName(string tableName, string schemaName) =>
         !string.IsNullOrEmpty(schemaName) ? $"{schemaName}_{tableName}" : tableName;
 }

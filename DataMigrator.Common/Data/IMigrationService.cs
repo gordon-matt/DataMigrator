@@ -2,10 +2,14 @@
 
 namespace DataMigrator.Common.Data
 {
+    // TODO: Think about this a little more..
+    // On one hand, we want to pass the DbConnection in to reuse it for performance reasons..
+    // On the other hand, it's a code smell to expect non-ADO.NET implementations to implement CreateDbConnection()
+    //  and have a DbConnection in InsertRecordsAsync()..
+    // Even schemaName is not really appropriate for cases like delimited files or SharePoint..
+
     public interface IMigrationService
     {
-        string DbProviderName { get; }
-
         DbConnection CreateDbConnection();
 
         Task<IEnumerable<string>> GetTableNamesAsync();

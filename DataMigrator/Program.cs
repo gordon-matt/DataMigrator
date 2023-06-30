@@ -33,7 +33,14 @@ internal static class Program
         ApplicationConfiguration.Initialize();
 
         using var form = Container.Resolve<MainForm>();
-        Application.Run(form);
+        try
+        {
+            Application.Run(form);
+        }
+        catch (Exception x)
+        {
+            TraceService.Instance.WriteException(x);
+        }
     }
 
     private static IHostBuilder CreateHostBuilder()
