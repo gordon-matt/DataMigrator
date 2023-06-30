@@ -1,5 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
+using Extenso.Data;
+using Extenso.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 
 namespace DataMigrator.Sql;
@@ -19,6 +21,24 @@ public class SqlMigrationService : BaseMigrationService
     #region IMigrationService Members
 
     public override string DbProviderName => "Microsoft.Data.SqlClient";
+
+    public override Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
+    {
+        using var connection = CreateDbConnection() as SqlConnection;
+        var columnInfo = connection.GetColumnData(tableName, schemaName);
+
+        var fields = columnInfo.Select(x => new Field
+        {
+            Name = x.ColumnName,
+            Ordinal = x.OrdinalPosition,
+            Type = GetDataMigratorFieldType(x.DataTypeNative),
+            IsRequired = !x.IsNullable,
+            MaxLength = (int)x.MaximumLength,
+            IsPrimaryKey = x.KeyType == KeyType.PrimaryKey
+        });
+
+        return Task.FromResult(new FieldCollection(fields));
+    }
 
     public override async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {

@@ -4,7 +4,9 @@ using DataMigrator.Common.Data;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using Extenso;
+using Extenso.Data;
 using Extenso.Data.Npgsql;
+using Microsoft.Data.SqlClient;
 using Npgsql;
 
 namespace DataMigrator.Plugins.Npgsql;
@@ -91,6 +93,24 @@ public class NpgsqlMigrationService : BaseMigrationService
         await command.ExecuteNonQueryAsync();
         await connection.CloseAsync();
         return true;
+    }
+
+    public override Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
+    {
+        using var connection = CreateDbConnection() as NpgsqlConnection;
+        var columnInfo = connection.GetColumnData(tableName, schemaName);
+
+        var fields = columnInfo.Select(x => new Field
+        {
+            Name = x.ColumnName,
+            Ordinal = x.OrdinalPosition,
+            Type = GetDataMigratorFieldType(x.DataTypeNative),
+            IsRequired = !x.IsNullable,
+            MaxLength = (int)x.MaximumLength,
+            IsPrimaryKey = x.KeyType == KeyType.PrimaryKey
+        });
+
+        return Task.FromResult(new FieldCollection(fields));
     }
 
     #region Field Conversion
