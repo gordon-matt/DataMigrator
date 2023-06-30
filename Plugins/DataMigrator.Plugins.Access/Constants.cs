@@ -1,7 +1,6 @@
-﻿namespace DataMigrator.Access
+﻿namespace DataMigrator.Access;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        internal const string PROVIDER_NAME = "Microsoft Access";
-    }
+    internal const string PROVIDER_NAME = "Microsoft Access";
 }
