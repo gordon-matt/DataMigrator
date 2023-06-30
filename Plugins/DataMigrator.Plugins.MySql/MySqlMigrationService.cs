@@ -4,8 +4,9 @@ using DataMigrator.Common.Data;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using Extenso;
+using Extenso.Data;
+using Extenso.Data.MySql;
 using MySql.Data.MySqlClient;
-using CommonConstants = DataMigrator.Common.Constants;
 
 namespace DataMigrator.MySql;
 
@@ -157,70 +158,21 @@ public class MySqlMigrationService : BaseMigrationService
         return true;
     }
 
-    public override async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
+    public override Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
-        using var connection = CreateDbConnection();
-        using var command = connection.CreateCommand();
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format(
-@"SELECT COLUMN_NAME, ORDINAL_POSITION, COLUMN_TYPE, IS_NULLABLE, CHARACTER_MAXIMUM_LENGTH
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = '{0}'", tableName);
+        using var connection = CreateDbConnection() as MySqlConnection;
+        var columnInfo = connection.GetColumnData(tableName);
 
-        if (!string.IsNullOrEmpty(schemaName))
+        var fields = columnInfo.Select(x => new Field
         {
-            command.CommandText = $"{command.CommandText} AND TABLE_SCHEMA = '{schemaName}'";
-        }
+            Name = x.ColumnName,
+            Ordinal = x.OrdinalPosition,
+            Type = GetDataMigratorFieldType(x.DataTypeNative),
+            IsRequired = !x.IsNullable,
+            MaxLength = (int)x.MaximumLength,
+            IsPrimaryKey = x.KeyType == KeyType.PrimaryKey
+        });
 
-        var fields = new FieldCollection();
-
-        await connection.OpenAsync();
-        using (var reader = await command.ExecuteReaderAsync())
-        {
-            while (await reader.ReadAsync())
-            {
-                var field = new Field
-                {
-                    Name = reader.GetString(0)
-                };
-                if (!reader.IsDBNull(1)) { field.Ordinal = reader.GetInt32(1); }
-                if (!reader.IsDBNull(2)) { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
-                if (!reader.IsDBNull(3)) { field.IsRequired = reader.GetString(3) == "NO"; }
-                if (!reader.IsDBNull(4)) { field.MaxLength = reader.GetInt32(4); }
-                fields.Add(field);
-            }
-        }
-        await connection.CloseAsync();
-
-        try
-        {
-            command.CommandText = string.Format(CommonConstants.Data.CMD_IS_PRIMARY_KEY_FORMAT, tableName);
-
-            await connection.OpenAsync();
-            using (var reader = await command.ExecuteReaderAsync())
-            {
-                while (await reader.ReadAsync())
-                {
-                    string pkColumn = reader.GetString(0);
-                    var match = fields.SingleOrDefault(f => f.Name == pkColumn);
-                    if (match != null)
-                    {
-                        match.IsPrimaryKey = true;
-                    }
-                }
-            }
-
-            await connection.CloseAsync();
-        }
-        catch (Exception x)
-        {
-            TraceService.Instance.WriteConcat(TraceEvent.Error, "Error: Could not get primary key info - ", x.Message);
-            if (connection.State != ConnectionState.Closed)
-            {
-                await connection.CloseAsync();
-            }
-        }
-
-        return fields;
+        return Task.FromResult(new FieldCollection(fields));
     }
 }

@@ -2,6 +2,8 @@
 
 - clear button for traceviewer
 
+- use extenso helpers for getting column info (GetFieldsAsync())
+
 -licensing
 
 - Unit Tests!

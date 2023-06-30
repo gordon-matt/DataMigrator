@@ -89,6 +89,7 @@ public abstract class BaseMigrationService : IMigrationService
     public virtual async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
     {
         using var connection = CreateDbConnection();
+
         using var command = connection.CreateCommand();
         command.CommandType = CommandType.Text;
         command.CommandText = string.Format(Constants.Data.CMD_SELECT_INFO_SCHEMA_COLUMNS, tableName);
