@@ -44,15 +44,17 @@ namespace DataMigrator.Access
             // 
             this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPassword.Location = new System.Drawing.Point(78, 66);
+            this.txtPassword.Location = new System.Drawing.Point(91, 76);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(189, 23);
+            this.txtPassword.Size = new System.Drawing.Size(422, 23);
             this.txtPassword.TabIndex = 13;
             // 
             // lblPassword
             // 
-            this.lblPassword.Location = new System.Drawing.Point(9, 69);
+            this.lblPassword.Location = new System.Drawing.Point(10, 80);
+            this.lblPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(62, 20);
             this.lblPassword.TabIndex = 12;
@@ -60,14 +62,18 @@ namespace DataMigrator.Access
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(78, 37);
+            this.txtUserName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUserName.Location = new System.Drawing.Point(91, 43);
+            this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(189, 23);
+            this.txtUserName.Size = new System.Drawing.Size(422, 23);
             this.txtUserName.TabIndex = 11;
             // 
             // lblUserName
             // 
-            this.lblUserName.Location = new System.Drawing.Point(9, 40);
+            this.lblUserName.Location = new System.Drawing.Point(10, 46);
+            this.lblUserName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(74, 20);
             this.lblUserName.TabIndex = 10;
@@ -77,14 +83,16 @@ namespace DataMigrator.Access
             // 
             this.txtDatabase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDatabase.Location = new System.Drawing.Point(78, 8);
+            this.txtDatabase.Location = new System.Drawing.Point(91, 9);
+            this.txtDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtDatabase.Name = "txtDatabase";
-            this.txtDatabase.Size = new System.Drawing.Size(362, 23);
+            this.txtDatabase.Size = new System.Drawing.Size(422, 23);
             this.txtDatabase.TabIndex = 15;
             // 
             // lblDatabase
             // 
-            this.lblDatabase.Location = new System.Drawing.Point(9, 11);
+            this.lblDatabase.Location = new System.Drawing.Point(10, 13);
+            this.lblDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lblDatabase.Name = "lblDatabase";
             this.lblDatabase.Size = new System.Drawing.Size(64, 20);
             this.lblDatabase.TabIndex = 14;
@@ -93,9 +101,11 @@ namespace DataMigrator.Access
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(446, 6);
+            this.btnBrowse.CornerRoundingRadius = -1F;
+            this.btnBrowse.Location = new System.Drawing.Point(520, 9);
+            this.btnBrowse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 28);
+            this.btnBrowse.Size = new System.Drawing.Size(88, 24);
             this.btnBrowse.TabIndex = 16;
             this.btnBrowse.Values.Text = "Browse";
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
@@ -106,7 +116,7 @@ namespace DataMigrator.Access
             // 
             // AccessConnectionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.btnBrowse);
@@ -116,8 +126,9 @@ namespace DataMigrator.Access
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.txtUserName);
             this.Controls.Add(this.lblUserName);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "AccessConnectionControl";
-            this.Size = new System.Drawing.Size(529, 110);
+            this.Size = new System.Drawing.Size(617, 119);
             this.ResumeLayout(false);
             this.PerformLayout();
 
