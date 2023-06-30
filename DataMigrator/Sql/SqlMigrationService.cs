@@ -6,8 +6,12 @@ using Microsoft.Data.SqlClient;
 
 namespace DataMigrator.Sql;
 
-public class SqlMigrationService : BaseMigrationService
+public class SqlMigrationService : BaseAdoNetMigrationService
 {
+    protected override string QuotePrefix => "[";
+
+    protected override string QuoteSuffix => "]";
+
     public SqlMigrationService(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {

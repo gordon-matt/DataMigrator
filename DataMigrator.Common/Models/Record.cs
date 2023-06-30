@@ -1,4 +1,6 @@
-﻿namespace DataMigrator.Common.Models;
+﻿using DataMigrator.Common.Diagnostics;
+
+namespace DataMigrator.Common.Models;
 
 public class Record : ICloneable
 {
@@ -14,7 +16,7 @@ public class Record : ICloneable
 
     #endregion ICloneable Members
 
-    public void RunScripts(List<(string SourceFieldName, ITransform Script)> scripts)
+    public void RunScripts(IEnumerable<(string SourceFieldName, ITransform Script)> scripts)
     {
         foreach (var entry in scripts)
         {
@@ -41,11 +43,30 @@ public class Record : ICloneable
                     { continue; }
 
                     var newType = TypeConvert.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
+                    if (newType is object)
+                    {
+                        // Not much we can do here.. just return as-is
+                        continue;
+                    }
+
+                    if (mapping.SourceField.Type == FieldType.Guid)
+                    {
+                        // Guid does not implement IConvertible.. so let's convert it to a string first..
+                        //  and then let the rest of the process carry itself out
+                        field.Value = field.Value.ToString();
+                    }
+
                     field.Value = field.Value.ConvertTo(newType);
                 }
             }
             catch
             {
+                TraceService.Instance.WriteMessage(
+$@"Error during type conversion:
+    Source field: '{mapping.SourceField.Name}' of type, '{mapping.SourceField.Type}'
+    Destination field: '{mapping.DestinationField.Name}' of type, '{mapping.DestinationField.Type}'
+    Value: {this[mapping.SourceField.Name]?.Value}");
+
                 throw;
             }
         }

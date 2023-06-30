@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="CS-Script" Version="4.6.5" />
     <PackageReference Include="Extenso.Core" Version="7.1.1" />
-    <PackageReference Include="Extenso.Data" Version="7.1.1" />
+    <PackageReference Include="Extenso.Data" Version="7.1.2" />
     <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
   </ItemGroup>
 

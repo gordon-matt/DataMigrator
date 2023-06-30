@@ -2,7 +2,8 @@
 
 - clear button for traceviewer
 
-- use extenso helpers for getting column info (GetFieldsAsync())
+= creating tables when specifying schema name... schema in destination may not exist!
+- create table should select that table when done
 
 -licensing
 

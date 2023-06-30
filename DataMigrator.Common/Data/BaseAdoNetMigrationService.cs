@@ -5,18 +5,26 @@ using Extenso.Data.Common;
 
 namespace DataMigrator.Common.Data;
 
-public abstract class BaseMigrationService : IMigrationService
+public abstract class BaseAdoNetMigrationService : IMigrationService
 {
-    public BaseMigrationService(ConnectionDetails connectionDetails)
+    public BaseAdoNetMigrationService(ConnectionDetails connectionDetails)
     {
         ConnectionDetails = connectionDetails;
+
+        if (string.IsNullOrEmpty(QuotePrefix) || string.IsNullOrEmpty(QuoteSuffix))
+        {
+            using var connection = CreateDbConnection();
+            using var commandBuilder = connection.GetDbProviderFactory().CreateCommandBuilder();
+            QuotePrefix = commandBuilder.QuotePrefix;
+            QuoteSuffix = commandBuilder.QuoteSuffix;
+        }
     }
 
     protected ConnectionDetails ConnectionDetails { get; set; }
 
-    protected virtual string EscapeIdentifierEnd { get; set; } = "]";
+    protected virtual string QuotePrefix { get; private set; }
 
-    protected virtual string EscapeIdentifierStart { get; set; } = "[";
+    protected virtual string QuoteSuffix { get; private set; }
 
     #region IMigrationService Members
 
@@ -110,10 +118,10 @@ public abstract class BaseMigrationService : IMigrationService
                 {
                     Name = reader.GetString(0)
                 };
-                if (!reader.IsDBNull(1)) { field.Ordinal = reader.GetInt32(1); }
-                if (!reader.IsDBNull(2)) { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
-                if (!reader.IsDBNull(3)) { field.IsRequired = reader.GetString(3) == "NO"; }
-                if (!reader.IsDBNull(4)) { field.MaxLength = reader.GetInt32(4); }
+                if (!await reader.IsDBNullAsync(1)) { field.Ordinal = reader.GetInt32(1); }
+                if (!await reader.IsDBNullAsync(2)) { field.Type = GetDataMigratorFieldType(reader.GetString(2)); }
+                if (!await reader.IsDBNullAsync(3)) { field.IsRequired = reader.GetString(3) == "NO"; }
+                if (!await reader.IsDBNullAsync(4)) { field.MaxLength = reader.GetInt32(4); }
                 fields.Add(field);
             }
         }
@@ -159,16 +167,9 @@ public abstract class BaseMigrationService : IMigrationService
 
     public virtual async IAsyncEnumerable<Record> GetRecordsAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
-        //Query query = new Query();
-        //fields.ForEach(f => { query.Select(f.Name); });
-        //query.From(tableName);
-
         var sb = new StringBuilder();
         sb.Append("SELECT ");
-        sb.Append(fields.Select(f => f.Name).Join(
-            string.Concat(EscapeIdentifierEnd, ",", EscapeIdentifierStart))
-            .Prepend(EscapeIdentifierStart)
-            .Append(EscapeIdentifierEnd));
+        sb.Append(fields.Select(f => QuoteIdentifier(f.Name)).Join(","));
         sb.Append(" FROM ");
         sb.Append(GetFullTableName(tableName, schemaName));
 
@@ -184,14 +185,14 @@ public abstract class BaseMigrationService : IMigrationService
             {
                 var record = new Record();
                 record.Fields.AddRange(fields);
-                fields.ForEach(f =>
+                fields.ForEach(async f =>
                 {
                     if (f.Type == FieldType.String)
                     {
-                        string value = reader.GetString(f.Name);
+                        string value = (await reader.IsDBNullAsync(f.Name)) ? null : reader.GetString(f.Name);
                         if (AppState.ConfigFile.TrimStrings)
                         {
-                            value = value.Trim();
+                            value = value?.Trim();
                         }
 
                         if (string.IsNullOrEmpty(value))
@@ -212,20 +213,14 @@ public abstract class BaseMigrationService : IMigrationService
         await connection.CloseAsync();
     }
 
-    // TODO: See if can improve performance.
+    // TODO: See if can improve performance even more.. (bulk insert operations for MySQL / PostgreSQL)?
     public virtual async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
         const string INSERT_INTO_FORMAT = "INSERT INTO {0}({1}) VALUES({2})";
 
         var parameterNames = CreateParameterNames(records.ElementAt(0).Fields.Select(f => f.Name));
-        string fieldNames = parameterNames.Keys.Join(",");
+        string fieldNames = parameterNames.Keys.Select(QuoteIdentifier).Join(",");
 
-        fieldNames = fieldNames
-            .Replace(",", string.Concat(EscapeIdentifierEnd, ",", EscapeIdentifierStart)) // "],["
-            .Prepend(EscapeIdentifierStart) // "["
-            .Append(EscapeIdentifierEnd); // "]"
-
-        //using var connection = CreateDbConnection(DbProviderName, ConnectionDetails.ConnectionString);
         await connection.OpenAsync();
         using (var transaction = await connection.BeginTransactionAsync())
         {
@@ -306,8 +301,8 @@ public abstract class BaseMigrationService : IMigrationService
         string commandText =
 $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
 (
-    {EncloseIdentifier(pkColumnName)} {pkDataType} {(pkIsIdentity ? "IDENTITY(1,1)" : string.Empty)} NOT NULL
-        CONSTRAINT {EncloseIdentifier("PK_" + tableName)} PRIMARY KEY
+    {QuoteIdentifier(pkColumnName)} {pkDataType} {(pkIsIdentity ? "IDENTITY(1,1)" : string.Empty)} NOT NULL
+        CONSTRAINT {QuoteIdentifier("PK_" + tableName)} PRIMARY KEY
 )";
 
         using var command = connection.CreateCommand();
@@ -332,7 +327,7 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
         using var command = connection.CreateCommand();
         string fieldType = GetDataProviderFieldType(field.Type);
         string maxLength = string.Empty;
-        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char))
+        if (field.Type.In(FieldType.String, FieldType.RichText, FieldType.Char, FieldType.Binary))
         {
             if (field.MaxLength is > 0 and <= 8000)
             {
@@ -340,9 +335,13 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
             }
             else
             {
-                if (field.Type.In(FieldType.String, FieldType.RichText)) //Not supported for CHAR
+                switch (field.Type)
                 {
-                    maxLength = "(MAX)";
+                    case FieldType.String:
+                    case FieldType.RichText:
+                    case FieldType.Binary: maxLength = "(MAX)"; break;
+                    case FieldType.Char: maxLength = $"(128)"; break;
+                    default: break;
                 }
             }
         }
@@ -351,26 +350,36 @@ $@"CREATE TABLE {GetFullTableName(tableName, schemaName)}
         { isRequired = " NOT NULL"; }
 
         command.CommandType = CommandType.Text;
+
         command.CommandText = string.Format(
             Constants.Data.CMD_ADD_COLUMN,
             GetFullTableName(tableName, schemaName),
-            string.Concat(
-                EncloseIdentifier(field.Name), " ",
-                fieldType,
-                maxLength,
-                isRequired));
+            string.Concat(QuoteIdentifier(field.Name), " ", fieldType, maxLength, isRequired));
+
         await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-        await connection.CloseAsync();
+
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+        }
+        catch (Exception x)
+        {
+            TraceService.Instance.WriteException(x, $"Error when trying to add field. Command Text: {command.CommandText}");
+        }
+        finally
+        {
+            await connection.CloseAsync();
+        }
+
         return true;
     }
 
-    protected string EncloseIdentifier(string value) => $"{EscapeIdentifierStart}{value}{EscapeIdentifierEnd}";
+    protected string QuoteIdentifier(string value) => $"{QuotePrefix}{value}{QuoteSuffix}";
 
     protected virtual string GetFullTableName(string tableName, string schemaName) =>
         !string.IsNullOrEmpty(schemaName)
-            ? $"{EncloseIdentifier(schemaName)}.{EncloseIdentifier(tableName)}"
-            : EncloseIdentifier(tableName);
+            ? $"{QuoteIdentifier(schemaName)}.{QuoteIdentifier(tableName)}"
+            : QuoteIdentifier(tableName);
 
     protected virtual async Task<IEnumerable<string>> GetFieldNamesAsync(string tableName, string schemaName)
     {

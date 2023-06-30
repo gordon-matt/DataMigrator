@@ -6,20 +6,21 @@ using DataMigrator.Common.Models;
 using Extenso;
 using Extenso.Data;
 using Extenso.Data.Npgsql;
-using Microsoft.Data.SqlClient;
 using Npgsql;
 
 namespace DataMigrator.Plugins.Npgsql;
 
-public class NpgsqlMigrationService : BaseMigrationService
+public class NpgsqlMigrationService : BaseAdoNetMigrationService
 {
     private readonly NpgsqlDbTypeConverter typeConverter = new();
+
+    protected override string QuotePrefix => "\"";
+
+    protected override string QuoteSuffix => "\"";
 
     public NpgsqlMigrationService(ConnectionDetails connectionDetails)
         : base(connectionDetails)
     {
-        EscapeIdentifierStart = "\"";
-        EscapeIdentifierEnd = "\"";
     }
 
     #region IMigrationService Members
@@ -87,7 +88,7 @@ public class NpgsqlMigrationService : BaseMigrationService
         command.CommandText = string.Format(
             @"ALTER TABLE {0} ADD {1}",
             GetFullTableName(tableName, schemaName),
-            string.Concat(EncloseIdentifier(field.Name), " ", fieldType, maxLength, isRequired));
+            string.Concat(QuoteIdentifier(field.Name), " ", fieldType, maxLength, isRequired));
 
         await connection.OpenAsync();
         await command.ExecuteNonQueryAsync();
