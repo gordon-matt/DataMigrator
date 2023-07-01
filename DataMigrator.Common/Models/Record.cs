@@ -37,13 +37,14 @@ public class Record : ICloneable
                 var field = this[mapping.SourceField.Name];
                 if (field != null)
                 {
+                    // This should always happen, even if no value to convert..
                     field.Type = mapping.DestinationField.Type;
 
                     if (field.Value == null || field.Value == DBNull.Value || (field.Value is string && string.IsNullOrEmpty(field.Value as string)))
                     { continue; }
 
                     var newType = TypeConvert.SystemTypeConverter.GetDataProviderFieldType(mapping.DestinationField.Type);
-                    if (newType is object)
+                    if (newType == typeof(object))
                     {
                         // Not much we can do here.. just return as-is
                         continue;

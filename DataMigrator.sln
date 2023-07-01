@@ -17,11 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{C66A2563
 		_Misc\Screenshot_02_Job.PNG = _Misc\Screenshot_02_Job.PNG
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigrator.Plugins.Access", "Plugins\DataMigrator.Plugins.Access\DataMigrator.Plugins.Access.csproj", "{454375C1-9FF3-444D-AD11-3E14D4F0CD6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Plugins.Access", "Plugins\DataMigrator.Plugins.Access\DataMigrator.Plugins.Access.csproj", "{454375C1-9FF3-444D-AD11-3E14D4F0CD6E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Plugins.Csv", "Plugins\DataMigrator.Plugins.Csv\DataMigrator.Plugins.Csv.csproj", "{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Plugins.Excel", "Plugins\DataMigrator.Plugins.Excel\DataMigrator.Plugins.Excel.csproj", "{8181ECE8-40C6-45F9-A386-7C3998B8D7F6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigrator.Plugins.MySql", "Plugins\DataMigrator.Plugins.MySql\DataMigrator.Plugins.MySql.csproj", "{747107A0-B019-42EB-9D89-15E4AAD5A4FC}"
 EndProject
@@ -51,10 +49,6 @@ Global
 		{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8181ECE8-40C6-45F9-A386-7C3998B8D7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8181ECE8-40C6-45F9-A386-7C3998B8D7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8181ECE8-40C6-45F9-A386-7C3998B8D7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8181ECE8-40C6-45F9-A386-7C3998B8D7F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{747107A0-B019-42EB-9D89-15E4AAD5A4FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{747107A0-B019-42EB-9D89-15E4AAD5A4FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{747107A0-B019-42EB-9D89-15E4AAD5A4FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,7 +68,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{454375C1-9FF3-444D-AD11-3E14D4F0CD6E} = {169C2457-B1D8-44E1-A126-798FC2889479}
 		{35D9B2C8-017E-4B93-9FE9-9DA3E0FD3512} = {169C2457-B1D8-44E1-A126-798FC2889479}
-		{8181ECE8-40C6-45F9-A386-7C3998B8D7F6} = {169C2457-B1D8-44E1-A126-798FC2889479}
 		{747107A0-B019-42EB-9D89-15E4AAD5A4FC} = {169C2457-B1D8-44E1-A126-798FC2889479}
 		{451A7EA1-4919-47D5-895F-27A15497EFF0} = {169C2457-B1D8-44E1-A126-798FC2889479}
 		{A283EB15-19EA-4DE7-93FA-431F2F663683} = {169C2457-B1D8-44E1-A126-798FC2889479}

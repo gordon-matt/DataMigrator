@@ -31,7 +31,7 @@ public class NpgsqlMigrationService : BaseAdoNetMigrationService
 
     public override int CountRecords(string tableName, string schemaName)
     {
-        using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection() as NpgsqlConnection;
         return connection.GetRowCount(schemaName, tableName);
     }
 
@@ -39,7 +39,7 @@ public class NpgsqlMigrationService : BaseAdoNetMigrationService
 
     protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
-        using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection() as NpgsqlConnection;
         using var command = connection.CreateCommand();
 
         command.CommandType = CommandType.Text;
@@ -65,7 +65,7 @@ public class NpgsqlMigrationService : BaseAdoNetMigrationService
             return false;
         }
 
-        using var connection = new NpgsqlConnection(ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection() as NpgsqlConnection;
         using var command = connection.CreateCommand();
         string fieldType = GetDataProviderFieldType(field.Type);
         string maxLength = string.Empty;

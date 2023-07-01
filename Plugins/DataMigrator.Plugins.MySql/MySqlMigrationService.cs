@@ -35,6 +35,12 @@ public class MySqlMigrationService : BaseAdoNetMigrationService
         return $"{ConnectionDetails.Database}.{result}".ToLowerInvariant(); // For MySQL, the database name takes the place of schema name
     }
 
+    public override int CountRecords(string tableName, string schemaName)
+    {
+        using var connection = CreateDbConnection() as MySqlConnection;
+        return connection.GetRowCount(tableName);
+    }
+
     #endregion IMigrationService Members
 
     #region Field Conversion
@@ -55,7 +61,7 @@ public class MySqlMigrationService : BaseAdoNetMigrationService
 
     protected override async Task<bool> CreateTableAsync(string tableName, string schemaName)
     {
-        using (var connection = new MySqlConnection(ConnectionDetails.ConnectionString))
+        using var connection = CreateDbConnection() as MySqlConnection;
         using (var command = connection.CreateCommand())
         {
             command.CommandType = CommandType.Text;
@@ -83,7 +89,7 @@ public class MySqlMigrationService : BaseAdoNetMigrationService
             return false;
         }
 
-        using var connection = new MySqlConnection(ConnectionDetails.ConnectionString);
+        using var connection = CreateDbConnection() as MySqlConnection;
         using var command = connection.CreateCommand();
         string fieldType = GetDataProviderFieldType(field.Type);
         string maxLength = string.Empty;

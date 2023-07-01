@@ -1,10 +1,11 @@
-﻿using DataMigrator.Common.Models;
+﻿using DataMigrator.Common.Data;
+using DataMigrator.Common.Models;
 using Extenso;
 using NpgsqlTypes;
 
 namespace DataMigrator.Plugins.Npgsql;
 
-public class NpgsqlDbTypeConverter
+public class NpgsqlDbTypeConverter : IFieldTypeConverter<NpgsqlDbType>
 {
     private static readonly List<(FieldType FieldType, NpgsqlDbType NpgsqlDbType)> fieldTypes = new();
     private static readonly List<(NpgsqlDbType NpgsqlDbType, FieldType FieldType)> npgsqlDbTypes = new();
