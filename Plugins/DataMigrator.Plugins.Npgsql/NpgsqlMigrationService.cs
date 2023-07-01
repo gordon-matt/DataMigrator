@@ -7,6 +7,7 @@ using Extenso;
 using Extenso.Data;
 using Extenso.Data.Npgsql;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace DataMigrator.Plugins.Npgsql;
 
@@ -42,11 +43,16 @@ public class NpgsqlMigrationService : BaseAdoNetMigrationService
         using var connection = CreateDbConnection() as NpgsqlConnection;
         using var command = connection.CreateCommand();
 
-        command.CommandType = CommandType.Text;
-        command.CommandText = string.Format($@"CREATE TABLE {GetFullTableName(tableName, schemaName)}()");
-
         await connection.OpenAsync();
+
+        command.CommandType = CommandType.Text;
+
+        command.CommandText = $"CREATE SCHEMA IF NOT EXISTS {QuoteIdentifier(schemaName)}";
         await command.ExecuteNonQueryAsync();
+
+        command.CommandText = string.Format($@"CREATE TABLE {GetFullTableName(tableName, schemaName)}()");
+        await command.ExecuteNonQueryAsync();
+
         await connection.CloseAsync();
 
         return true;
@@ -126,6 +132,17 @@ public class NpgsqlMigrationService : BaseAdoNetMigrationService
     {
         var npgsqlType = typeConverter.GetDataProviderFieldType(fieldType);
         return NpgsqlDbTypeConverter.GetNpgsqlDataTypeStringValue(npgsqlType);
+    }
+
+    protected override DbParameter EnsureCorrectParameterType(FieldType fieldType, DbParameter parameter)
+    {
+        var npgsqlParameter = parameter as NpgsqlParameter;
+        if (npgsqlParameter.NpgsqlDbType == NpgsqlDbType.TimestampTz)
+        {
+            // Prevent errors regarding DateTimeKind.Unspecified not being supported.
+            npgsqlParameter.NpgsqlDbType= NpgsqlDbType.Timestamp;
+        }
+        return npgsqlParameter;
     }
 
     #endregion Field Conversion

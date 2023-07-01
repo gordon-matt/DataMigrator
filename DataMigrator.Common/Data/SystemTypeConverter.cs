@@ -41,7 +41,7 @@ public class SystemTypeConverter : IFieldTypeConverter<Type>
         fieldTypes.Add((FieldType.Single, typeof(float)));
         fieldTypes.Add((FieldType.String, typeof(string)));
         fieldTypes.Add((FieldType.Time, typeof(TimeOnly)));
-        fieldTypes.Add((FieldType.Timestamp, typeof(byte[])));
+        fieldTypes.Add((FieldType.Timestamp, typeof(DateTime)));
         fieldTypes.Add((FieldType.UInt16, typeof(ushort)));
         fieldTypes.Add((FieldType.UInt32, typeof(uint)));
         fieldTypes.Add((FieldType.UInt64, typeof(ulong)));
