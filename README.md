@@ -6,16 +6,16 @@
 
 ## Intro
 
-This was an interesting project I started some years ago. The idea is that you should be able to migrate from any database system to any database system... and it's extensible via plugins (developed with MEF). There are currently plugins for the following systems:
+This was an interesting project I started some years ago. The idea is that you should be able to migrate from any database system to any database system... and it's extensible via plugins (developed with MEF). Development on this was cancelled due to no longer being needed at the time. I have now "dusted it off" so to speak and fixed many bugs that I found, improved the UI, added features, updated the target framework to .NET 7, and updated NuGet packages, etc. I have also tested the SQL Server, MySQL, PostgreSQL and delimited file migrations and it seems to be working quite well.
 
-- SQL Server (Tested and working)
-- PostgreSQL (Tested and working)
-- MySQL/MariaDB (Tested and working)
-- Access (Tested. Not working. Needs further development to support .NET 7)
-- CSV (Tested and working)
-- SharePoint (Untested. Developed this years ago. The APIs seem to have remained the same. Needs testing when I find time).
+There are currently plugins for the following systems:
 
-*Note:* Development on this project was cancelled due to no longer being needed at the time. I have now "dusted it off" so to speak and fixed many bugs that I found, improved the UI, added features, updated the target framework to .NET 7, and updated NuGet packages, etc. I have also tested the SQL Server, MySQL and Postgres migrations and it seems to be working quite well.
+- [x] **SQL Server** (Working)
+- [x] **PostgreSQL** (Working)
+- [x] **MySQL/MariaDB** (Working)
+- [x] **CSV** (Working)
+- [ ] **Access** (Needs further development to support .NET 7)
+- [ ] **SharePoint** (Untested. Developed this years ago. The APIs seem to have remained the same. Needs testing when I find time).
 
 ## Screenshots
 
