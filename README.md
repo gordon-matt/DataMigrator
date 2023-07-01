@@ -6,26 +6,38 @@
 
 ## Intro
 
-This was an interesting project I started some years ago. The idea is that you should be able to migrate from any database system to any database system... and it's extensible via plugins (developed with MEF). There are currently plugins for the following database systems:
+This was an interesting project I started some years ago. The idea is that you should be able to migrate from any database system to any database system... and it's extensible via plugins (developed with MEF). There are currently plugins for the following systems:
 
-- SQL Server
-- PostgreSQL
-- MySQL (also works on MariaDB)
-- Access
-- Excel
-- CSV
-- SharePoint
-- SQL Compact Edition
+- SQL Server (Tested and working)
+- PostgreSQL (Tested and working)
+- MySQL/MariaDB (Tested and working)
+- Access (Tested. Not working. Needs further development to support .NET 7)
+- CSV (Tested and working)
+- SharePoint (Untested. Developed this years ago. The APIs seem to have remained the same. Needs testing when I find time).
 
-*Note:* Development on this project was cancelled due to no longer being needed at the time. However, most of the work was already done. I have now "dusted it off" so to speak and fixed a few bugs that I found, updated the target .NET Framework to 4.8, and updated NuGet packages, etc. I have also tested the SQL Server, MySQL and Postgres migrations and it seems to be working quite well. The project could definitely do with some thorough testing and polishing off though, as the UI is a little "buggy" in some places. For example: loading one saved file after having already opened another doesn't seem to reset things properly with the connections view.
-
-I welcome any pull requests to fix bugs or add new features.
+*Note:* Development on this project was cancelled due to no longer being needed at the time. I have now "dusted it off" so to speak and fixed many bugs that I found, improved the UI, added features, updated the target framework to .NET 7, and updated NuGet packages, etc. I have also tested the SQL Server, MySQL and Postgres migrations and it seems to be working quite well.
 
 ## Screenshots
 
-<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshot_01_Connections.PNG" alt="Connections" />
+Startup:
 
-<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshot_02_Job.PNG" alt="Job" />
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Startup.PNG" alt="Startup" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Connections.PNG" alt="Connections" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/NewJob.PNG" alt="NewJob" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/AddJob.PNG" alt="AddJob" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/TableMappings_1.PNG" alt="TableMappings_1" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/TableMappings_2.PNG" alt="TableMappings_2" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Script.PNG" alt="Script" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Settings.PNG" alt="Settings" />
+
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Running.PNG" alt="Running" />
 
 ## License
 
