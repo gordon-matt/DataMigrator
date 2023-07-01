@@ -19,23 +19,48 @@ This was an interesting project I started some years ago. The idea is that you s
 
 ## Screenshots
 
-Startup:
+**Startup**:
 
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Startup.PNG" alt="Startup" />
 
+**Connections**:
+
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Connections.PNG" alt="Connections" />
+
+**Adding a new "job"** (essentially, a job = a table to be transferred):
 
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/NewJob.PNG" alt="NewJob" />
 
+**"Add Job" dialog:**
+
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/AddJob.PNG" alt="AddJob" />
+
+**The Table Mappings screen**
+This screen lets you match source to destination via the buttons on the bottom of the screen. It is divided into 3 sections:
+  - **Fields of source table** shown on left
+  - **Fields of destination table** shown on right.
+  - **Mapped fields** in the center
+
+**Buttons** as follows:
+  - **Create Destination Table**: As the name suggests, it will create a table in the destination based on the schema of the source table. 
+  - **Add**: Maps the selected source and destination rows. Removes them from their respective grids and adds the row in the center grid.
+  - **Remove**: Removes the selected mapping and restores the rows in the source and destination grids.
+  - **Auto Map**: Will automatically map all fields it is able to (based on name and data type)
+  - **Add/Edit Script**: Shows a popup window for writing a C# script to transform the data for a given mapping. For example: You may wish to transform "Yes" and "No" values to "1" and "0" for a boolean (BIT) destination column. See screenshot a little further down for an example of this...
 
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/TableMappings_1.PNG" alt="TableMappings_1" />
 
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/TableMappings_2.PNG" alt="TableMappings_2" />
 
+**Script dialog:**
+
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Script.PNG" alt="Script" />
 
+**Settings** (You can specify batch size and whether or not to trim strings from source before insert to destination):
+
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Settings.PNG" alt="Settings" />
+
+**Runing job:**
 
 <img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/Running.PNG" alt="Running" />
 
