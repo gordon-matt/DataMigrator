@@ -196,11 +196,12 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
                     continue;
                 }
 
-                if (destinationRow.Cells[0].Value.ToString() == sourceRowValue)
+                string destinationRowValue = destinationRow.Cells[0].Value.ToString();
+                if (destinationRowValue.Equals(sourceRowValue, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var mappedRow = MappingsTable.NewRow();
                     mappedRow["Source"] = sourceRowValue;
-                    mappedRow["Destination"] = sourceRowValue;
+                    mappedRow["Destination"] = destinationRowValue;
                     mappedRow["Script"] = null;
                     MappingsTable.Rows.Add(mappedRow);
 
