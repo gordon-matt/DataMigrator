@@ -30,12 +30,12 @@ public class CsvMigrationService : IMigrationService
     public Task<IEnumerable<string>> GetTableNamesAsync() =>
         Task.FromResult(new string[] { Path.GetFileNameWithoutExtension(ConnectionDetails.Database) }.AsEnumerable());
 
-    public Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public Task<string> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         var table = new DataTable();
         fields.ForEach(field => table.Columns.Add(field.Name));
         table.ToCsv(ConnectionDetails.Database, true);
-        return Task.FromResult(true);
+        return Task.FromResult(tableName);
     }
 
     public async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)
