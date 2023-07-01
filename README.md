@@ -29,7 +29,7 @@ There are currently plugins for the following systems:
 
 **Adding a new "job"** (essentially, a job = a table to be transferred):
 
-<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/NewJob.PNG" alt="NewJob" />
+<img src="https://github.com/gordon-matt/DataMigrator/blob/master/_Misc/Screenshots/NewJob.png" alt="NewJob" />
 
 **"Add Job" dialog:**
 
