@@ -2,6 +2,7 @@
 using System.Text;
 using DataMigrator.Common.Diagnostics;
 using Extenso.Data.Common;
+using Newtonsoft.Json.Linq;
 
 namespace DataMigrator.Common.Data;
 
@@ -192,24 +193,36 @@ public abstract class BaseAdoNetMigrationService : IMigrationService
                 record.Fields.AddRange(fields);
                 fields.ForEach(async f =>
                 {
-                    if (f.Type == FieldType.String)
+                    if (await reader.IsDBNullAsync(f.Name))
                     {
-                        string value = (await reader.IsDBNullAsync(f.Name)) ? null : reader.GetString(f.Name);
-                        if (AppState.ConfigFile.TrimStrings)
-                        {
-                            value = value?.Trim();
-                        }
-
-                        if (string.IsNullOrEmpty(value))
-                        {
-                            value = null;
-                        }
-
-                        record[f.Name].Value = value;
+                        record[f.Name].Value = null;
                     }
                     else
                     {
-                        record[f.Name].Value = reader[f.Name];
+                        switch (f.Type)
+                        {
+                            case FieldType.Boolean: record[f.Name].Value = reader.GetBoolean(f.Name); break; // Necessary to convert 0/1 values to false/true
+                            case FieldType.String:
+                            case FieldType.Json:
+                            case FieldType.RichText:
+                            case FieldType.Xml:
+                                {
+                                    string value = reader.GetString(f.Name);
+                                    if (AppState.ConfigFile.TrimStrings)
+                                    {
+                                        value = value?.Trim();
+                                    }
+
+                                    if (string.IsNullOrEmpty(value))
+                                    {
+                                        value = null;
+                                    }
+
+                                    record[f.Name].Value = value;
+                                }
+                                break;
+                            default: record[f.Name].Value = reader[f.Name]; break;
+                        }
                     }
                 });
                 yield return record;
