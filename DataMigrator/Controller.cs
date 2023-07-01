@@ -88,7 +88,7 @@ public static class Controller
         }
     }
 
-    public static async Task<bool> CreateDestinationTableAsync(string tableName)
+    public static async Task<string> CreateDestinationTableAsync(string tableName)
     {
         var sourceProvider = GetProvider(AppState.ConfigFile.SourceConnection);
         var destinationProvider = GetProvider(AppState.ConfigFile.DestinationConnection);

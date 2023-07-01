@@ -315,11 +315,11 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     private async void btnCreateTable_Click(object sender, EventArgs e)
     {
-        await Controller.CreateDestinationTableAsync(SourceTable);
+        string destinationTable = await Controller.CreateDestinationTableAsync(SourceTable);
         cmbDestinationTable.Items.Clear();
         (await DestinationController.GetTableNamesAsync()).ForEach(x => cmbDestinationTable.Items.Add(x));
-        cmbDestinationTable.SelectedItem = SourceTable;
-        AppState.CurrentJob.DestinationTable = SourceTable;
+        cmbDestinationTable.SelectedItem = destinationTable;
+        AppState.CurrentJob.DestinationTable = destinationTable;
     }
 
     private void btnRemove_Click(object sender, EventArgs e)

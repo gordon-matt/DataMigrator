@@ -45,7 +45,7 @@ public class SharePointMigrationService : IMigrationService
         return listNames;
     }
 
-    public async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public async Task<string> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         try
         {
@@ -71,12 +71,12 @@ public class SharePointMigrationService : IMigrationService
                 });
             }
 
-            return true;
+            return GetFullTableName(tableName, schemaName);
         }
         catch (Exception x)
         {
             TraceService.Instance.WriteException(x);
-            return false;
+            return null;
         }
     }
 

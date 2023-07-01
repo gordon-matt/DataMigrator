@@ -80,18 +80,23 @@ public abstract class BaseAdoNetMigrationService : IMigrationService
         return tableNames;
     }
 
-    public virtual async Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    public virtual async Task<string> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
     {
         bool ok = await CreateTableAsync(tableName, schemaName);
 
         if (!ok)
-        { return false; }
+        {
+            return null;
+        }
 
         foreach (var field in fields)
         {
             await CreateFieldAsync(tableName, schemaName, field);
         }
-        return true;
+
+        return GetFullTableName(tableName, schemaName)
+            .Replace(QuotePrefix, string.Empty)
+            .Replace(QuoteSuffix, string.Empty);
     }
 
     public virtual async Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName)

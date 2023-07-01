@@ -29,6 +29,12 @@ public class MySqlMigrationService : BaseAdoNetMigrationService
 
     public override DbConnection CreateDbConnection() => new MySqlConnection(ConnectionDetails.ConnectionString);
 
+    public override async Task<string> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields)
+    {
+        string result = await base.CreateTableAsync(tableName, schemaName, fields);
+        return $"{ConnectionDetails.Database}.{result}".ToLowerInvariant(); // For MySQL, the database name takes the place of schema name
+    }
+
     #endregion IMigrationService Members
 
     #region Field Conversion

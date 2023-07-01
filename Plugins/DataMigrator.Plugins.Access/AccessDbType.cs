@@ -2,10 +2,12 @@
 
 public enum AccessDbType
 {
-    Text,
-    Memo,
+    ShortText,
+    LongText,
     Number,
+    LargeNumber,
     DateTime,
+    DateTimeExtended,
     Currency,
     AutoNumber,
     YesNo,
@@ -13,4 +15,5 @@ public enum AccessDbType
     Hyperlink,
     Attachment,
     Calculated
+    //LookupWizard??
 }

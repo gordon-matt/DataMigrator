@@ -14,7 +14,7 @@ namespace DataMigrator.Common.Data
 
         Task<IEnumerable<string>> GetTableNamesAsync();
 
-        Task<bool> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields);
+        Task<string> CreateTableAsync(string tableName, string schemaName, IEnumerable<Field> fields);
 
         Task<FieldCollection> GetFieldsAsync(string tableName, string schemaName);
 
