@@ -96,8 +96,8 @@ public class NpgsqlDbTypeConverter : IFieldTypeConverter<NpgsqlDbType>
         npgsqlDbTypes.Add((NpgsqlDbType.Text, FieldType.String));
         npgsqlDbTypes.Add((NpgsqlDbType.Tid, FieldType.Object));
         npgsqlDbTypes.Add((NpgsqlDbType.Time, FieldType.Time));
-        npgsqlDbTypes.Add((NpgsqlDbType.Timestamp, FieldType.Timestamp));
-        npgsqlDbTypes.Add((NpgsqlDbType.TimestampTz, FieldType.Timestamp));
+        npgsqlDbTypes.Add((NpgsqlDbType.Timestamp, FieldType.DateTime));
+        npgsqlDbTypes.Add((NpgsqlDbType.TimestampTz, FieldType.DateTimeOffset));
         npgsqlDbTypes.Add((NpgsqlDbType.TimeTz, FieldType.Time));
         npgsqlDbTypes.Add((NpgsqlDbType.TsVector, FieldType.Object));
         npgsqlDbTypes.Add((NpgsqlDbType.Unknown, FieldType.Unknown));

@@ -252,6 +252,7 @@ public abstract class BaseAdoNetMigrationService : IMigrationService
                     var parameter = command.CreateParameter();
                     parameter.ParameterName = parameterNames[field.Name];
                     parameter.DbType = TypeConvert.DbTypeConverter.GetDataProviderFieldType(field.Type);
+                    parameter = EnsureCorrectParameterType(field.Type, parameter);
                     command.Parameters.Add(parameter);
                 });
 
@@ -277,6 +278,8 @@ public abstract class BaseAdoNetMigrationService : IMigrationService
     protected abstract FieldType GetDataMigratorFieldType(string providerFieldType);
 
     protected abstract string GetDataProviderFieldType(FieldType fieldType);
+
+    protected virtual DbParameter EnsureCorrectParameterType(FieldType fieldType, DbParameter parameter) => parameter;
 
     #endregion Field Conversion
 
