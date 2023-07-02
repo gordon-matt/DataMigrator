@@ -2,10 +2,15 @@
 
 - clear button for traceviewer
 
-= creating tables when specifying schema name... schema in destination may not exist!
+= schema handling for mysql: currently ignoring schems altogether and just creating the tables in the specified db..
+	maybe best approach is to give tables names a prefix for mysql.
+		Example: dbo.People -> dbo_People
+		Production.Product -> Production_Product
+		etc..
+	A setting for this would probably be best - MySQL Schema Name Handling (enum options: Ignore = default, UsePrefix, CreateNewDatabase)
 - 
 
--licensing
+-licensing?
 
 - Unit Tests!
 - Support setting primary keys (and remove default primary key from table creation)
@@ -13,5 +18,5 @@
 
 - Support foreign keys? would be complicated .. need to make sure jobs run in correct order or will get errors (missing table/missing data for foreign key)..
 
-- Enable user change field type on UI (mapping)?
+- Enable user change field type on mapping UI?
 - ExtendedProperties IEnumerable<string> on Field?

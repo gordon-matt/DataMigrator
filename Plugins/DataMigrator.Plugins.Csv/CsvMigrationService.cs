@@ -8,6 +8,7 @@ using DataMigrator.Common.Data;
 using DataMigrator.Common.Extensions;
 using DataMigrator.Common.Models;
 using DataMigrator.Plugins.Csv;
+using Extenso;
 using Extenso.Collections;
 using Extenso.Data;
 using Extenso.IO;
@@ -105,32 +106,15 @@ public class CsvMigrationService : IMigrationService
         }
     }
 
-    public Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
+    public async Task InsertRecordsAsync(DbConnection connection, string tableName, string schemaName, IEnumerable<Record> records)
     {
-        if (IsLargeFile)
+        using var fileStream = new FileStream(ConnectionDetails.Database, FileMode.Append, FileAccess.Write);
+        using var streamWriter = new StreamWriter(fileStream);
+        foreach (var record in records)
         {
-            using var fileStream = new FileStream(ConnectionDetails.Database, FileMode.Append, FileAccess.Write);
-            using var streamWriter = new StreamWriter(fileStream);
-            foreach (var record in records)
-            {
-                string line = string.Join($"\"{Delimiter}\"", record.Fields.OrderBy(x => x.Ordinal).Select(x => x.Value));
-                streamWriter.WriteLine($"\"{line}\"");
-            }
+            string line = string.Join($"\"{Delimiter}\"", record.Fields.OrderBy(x => x.Ordinal).Select(x => x.Value));
+            await streamWriter.WriteLineAsync($"\"{line}\"");
         }
-
-        var table = ReadCsv();
-        records.ForEach(record =>
-        {
-            var row = table.NewRow();
-            record.Fields.ForEach(field =>
-            {
-                row[field.Name] = field.Value.ToString();
-            });
-            table.Rows.Add(row);
-        });
-
-        table.ToCsv(ConnectionDetails.Database, true);
-        return Task.CompletedTask;
     }
 
     #endregion IMigrationService Members
