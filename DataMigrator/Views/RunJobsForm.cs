@@ -2,10 +2,6 @@
 
 public partial class RunJobsForm : KryptonForm
 {
-    private const string COLUMN_RUN = "Run";
-    private const string COLUMN_NAME = "Name";
-    private const string COLUMN_STATUS = "Status";
-
     private CancellationTokenSource cancellationTokenSource;
 
     public RunJobsForm()
@@ -16,22 +12,6 @@ public partial class RunJobsForm : KryptonForm
         {
             dataGridView.Rows.Add(Constants.ImageBytes.MoveGrabber_32x32, false, job.Name, "Pending");
         }
-    }
-
-    private async void btnRun_Click(object sender, EventArgs e)
-    {
-        btnRun.Enabled = false;
-        btnCancel.Enabled = true;
-
-        progressBar.Value = 0;
-        await DoWorkAsync();
-
-        TraceService.Instance.WriteMessage(TraceEvent.Information, "Completed");
-        progressBar.Value = 0;
-        btnRun.Enabled = true;
-        btnCancel.Enabled = false;
-
-        cancellationTokenSource?.Dispose();
     }
 
     private async Task DoWorkAsync()
@@ -98,8 +78,27 @@ public partial class RunJobsForm : KryptonForm
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
+    private async void btnRun_Click(object sender, EventArgs e)
+    {
+        btnRun.Enabled = false;
+        btnCancel.Enabled = true;
+
+        progressBar.Value = 0;
+        await DoWorkAsync();
+
+        TraceService.Instance.WriteMessage(TraceEvent.Information, "Completed");
+        progressBar.Value = 0;
+        btnRun.Enabled = true;
+        btnCancel.Enabled = false;
+
+        cancellationTokenSource?.Dispose();
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnCancel_Click(object sender, EventArgs e) => cancellationTokenSource.Cancel();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_DragDrop(object sender, DragEventArgs e)
     {
         foreach (DataGridViewRow row in dataGridView.Rows)
@@ -110,6 +109,7 @@ public partial class RunJobsForm : KryptonForm
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void cbSelectAll_CheckedChanged(object sender, EventArgs e)
     {
         foreach (DataGridViewRow row in dataGridView.Rows)

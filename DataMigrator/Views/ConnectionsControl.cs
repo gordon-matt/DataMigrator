@@ -73,18 +73,21 @@ public partial class ConnectionsControl : UserControl, IConfigControl
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void cmbSourceConnectionType_SelectedIndexChanged(object sender, EventArgs e)
     {
         sourceConnectionControl = Controller.GetPlugin(SourceConnectionType).ConnectionControl;
         LoadSourceConnectionControl();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void cmbDestinationConnectionType_SelectedIndexChanged(object sender, EventArgs e)
     {
         destinationConnectionControl = Controller.GetPlugin(DestinationConnectionType).ConnectionControl;
         LoadDestinationConnectionControl();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnValidateSourceConnection_Click(object sender, EventArgs e)
     {
         if (sourceConnectionControl != null)
@@ -108,6 +111,7 @@ public partial class ConnectionsControl : UserControl, IConfigControl
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnValidateDestinationConnection_Click(object sender, EventArgs e)
     {
         if (destinationConnectionControl != null)

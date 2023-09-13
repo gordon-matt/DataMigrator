@@ -13,21 +13,21 @@ partial class MainForm
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing && (components != null))
+        if (disposing)
         {
-            components.Dispose();
-        }
-        base.Dispose(disposing);
-        //fonts?.Dispose();
-
-        if (userControls is not null)
-        {
-            foreach (var control in userControls)
+            if (userControls is not null)
             {
-                control.Value?.Dispose();
+                foreach (var control in userControls)
+                {
+                    control.Value?.Dispose();
+                }
+                userControls = null;
             }
-            userControls = null;
+
+            components?.Dispose();
         }
+
+        base.Dispose(disposing);
     }
 
     #region Windows Form Designer generated code

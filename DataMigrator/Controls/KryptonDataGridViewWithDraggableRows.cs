@@ -169,6 +169,7 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
 
     #region Selection highlighting
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_Paint_Selection(object sender, PaintEventArgs e)
     {
         if (!HighlightSelectedRow)
@@ -198,12 +199,14 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
             displayRect.Height + SelectionWidth - 1);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_DefaultcellStyleChanged(object sender, EventArgs e)
     {
         DefaultCellStyle.SelectionBackColor = DefaultCellStyle.BackColor;
         DefaultCellStyle.SelectionForeColor = DefaultCellStyle.ForeColor;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_Scroll(object sender, ScrollEventArgs e)
     {
         Invalidate();
@@ -249,12 +252,14 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
         base.OnDragDrop(args);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_DragLeave(object sender, EventArgs e1)
     {
         RemoveHighlighting();
         autoScrollTimer.Enabled = false;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_DragEnter(object sender, DragEventArgs e)
     {
         e.Effect = e.Data.GetDataPresent(typeof(DataGridViewRow))
@@ -262,6 +267,7 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
             : DragDropEffects.None;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_DragOver(object sender, DragEventArgs e)
     {
         if (e.Effect == DragDropEffects.None)
@@ -282,6 +288,7 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
     {
         bool shouldDrag = DragMode == DragMode.FirstCell
@@ -359,6 +366,7 @@ internal class KryptonDataGridViewWithDraggableRows : KryptonDataGridView
     #region Drop-and-drop highlighting
 
     //Draw the actual row-divider
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dataGridView_Paint_RowDivider(object sender, PaintEventArgs e)
     {
         if (predictedInsertIndex != null)

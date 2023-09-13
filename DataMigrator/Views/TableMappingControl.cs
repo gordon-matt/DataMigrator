@@ -1,6 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using DataMigrator.Controls.Dialogs;
 using Extenso.Data;
+using Microsoft.VisualStudio.Threading;
 
 namespace DataMigrator.Views;
 
@@ -47,7 +49,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         }
     }
 
-    private Dictionary<string, string> scripts = new();
+    private readonly Dictionary<string, string> scripts = new();
 
     #endregion Public Properties
 
@@ -154,7 +156,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     #endregion Constructor
 
-    private DataTable GetFieldsDataTable(IEnumerable<Field> fields)
+    private static DataTable GetFieldsDataTable(IEnumerable<Field> fields)
     {
         var table = new DataTable();
         table.Columns.AddRange("Field Name", "Type");
@@ -170,6 +172,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     #region Buttons
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnAutoMap_Click(object sender, EventArgs e)
     {
         var sourceRowsToRemove = new List<DataGridViewRow>();
@@ -222,6 +225,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnAdd_Click(object sender, EventArgs e)
     {
         if (dgvSource.SelectedRows.Count == 0)
@@ -271,6 +275,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         cmbDestinationTable.Enabled = false;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnAddEditScript_Click(object sender, EventArgs e)
     {
         if (dgvMappings.SelectedRows.Count == 0)
@@ -314,6 +319,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private async void btnCreateTable_Click(object sender, EventArgs e)
     {
         string destinationTable = await Controller.CreateDestinationTableAsync(SourceTable);
@@ -323,6 +329,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         AppState.CurrentJob.DestinationTable = destinationTable;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnRemove_Click(object sender, EventArgs e)
     {
         if (dgvMappings.SelectedRows.Count == 0)
@@ -362,6 +369,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     #region Combo Boxes
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private async void cmbSourceTable_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbSourceTable.SelectedIndex != -1)
@@ -384,6 +392,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private async void cmbDestinationTable_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cmbDestinationTable.SelectedIndex != -1)
@@ -408,14 +417,17 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 
     #endregion Combo Boxes
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dgvSource_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
     {
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dgvDestination_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
     {
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dgvSource_SelectionChanged(object sender, EventArgs e)
     {
         if (dgvSource.SelectedRows.Count == 0)
@@ -433,6 +445,7 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
         pGridSource.SelectedObject = field;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void dgvDestination_SelectionChanged(object sender, EventArgs e)
     {
         if (dgvDestination.SelectedRows.Count == 0)

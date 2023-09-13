@@ -133,12 +133,14 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     #endregion IConnectionControl Members
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void rbIntegratedSecurity_CheckedChanged(object sender, EventArgs e)
     {
         txtUserName.Enabled = !IntegratedSecurity;
         txtPassword.Enabled = !IntegratedSecurity;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void cmbDatabase_DropDown(object sender, EventArgs e)
     {
         if (!string.IsNullOrEmpty(Server) && string.IsNullOrEmpty(cmbDatabase.Text))

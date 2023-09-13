@@ -19,7 +19,7 @@ internal partial class AboutForm : KryptonForm
 
     #region Assembly Attribute Accessors
 
-    public string AssemblyTitle
+    public static string AssemblyTitle
     {
         get
         {
@@ -36,9 +36,9 @@ internal partial class AboutForm : KryptonForm
         }
     }
 
-    public string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+    public static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-    public string AssemblyDescription
+    public static string AssemblyDescription
     {
         get
         {
@@ -47,7 +47,7 @@ internal partial class AboutForm : KryptonForm
         }
     }
 
-    public string AssemblyProduct
+    public static string AssemblyProduct
     {
         get
         {
@@ -56,7 +56,7 @@ internal partial class AboutForm : KryptonForm
         }
     }
 
-    public string AssemblyCopyright
+    public static string AssemblyCopyright
     {
         get
         {
@@ -65,7 +65,7 @@ internal partial class AboutForm : KryptonForm
         }
     }
 
-    public string AssemblyCompany
+    public static string AssemblyCompany
     {
         get
         {
@@ -76,6 +76,7 @@ internal partial class AboutForm : KryptonForm
 
     #endregion Assembly Attribute Accessors
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void rtbDescription_LinkClicked(object sender, LinkClickedEventArgs e)
     {
         LaunchBrowser(e.LinkText);
