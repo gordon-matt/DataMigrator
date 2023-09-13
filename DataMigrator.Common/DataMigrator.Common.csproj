@@ -11,6 +11,7 @@
     <PackageReference Include="Extenso.Core" Version="7.1.1" />
     <PackageReference Include="Extenso.Data" Version="7.1.2" />
     <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.6.40" />
   </ItemGroup>
 
 </Project>

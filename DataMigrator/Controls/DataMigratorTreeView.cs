@@ -102,6 +102,7 @@ public class DataMigratorTreeView : TreeView
         LoadDefaultNodes();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuContextJobsJobRename_Click(object sender, EventArgs e)
     {
         using var dlgInput = new InputDialog
@@ -124,6 +125,7 @@ public class DataMigratorTreeView : TreeView
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuContextJobsJobDelete_Click(object sender, EventArgs e)
     {
         string jobName = this.SelectedNode.Text;
@@ -138,6 +140,7 @@ public class DataMigratorTreeView : TreeView
         TreeViewChanged?.Invoke();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuContextJobsNewJob_Click(object sender, EventArgs e)
     {
         using var dlgInput = new InputDialog

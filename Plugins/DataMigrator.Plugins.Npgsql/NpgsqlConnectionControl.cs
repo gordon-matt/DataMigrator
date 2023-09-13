@@ -133,6 +133,7 @@ public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
 
     #endregion IConnectionControl Members
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void cmbDatabase_DropDown(object sender, EventArgs e)
     {
         if (!string.IsNullOrEmpty(Server) && string.IsNullOrEmpty(cmbDatabase.Text))

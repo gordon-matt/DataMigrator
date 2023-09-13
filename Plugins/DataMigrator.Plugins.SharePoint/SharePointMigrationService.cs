@@ -215,7 +215,7 @@ public class SharePointMigrationService : IMigrationService
                     string value = field.Value.ToString();
                     if (value.Length > 255)
                     {
-                        value = value.Substring(0, 255);
+                        value = value[..255];
                     }
                     listItem[field.Name] = field.Value.ToString();
                 }
@@ -293,6 +293,6 @@ public class SharePointMigrationService : IMigrationService
         return spFieldNames;
     }
 
-    private string GetFullTableName(string tableName, string schemaName) =>
+    private static string GetFullTableName(string tableName, string schemaName) =>
         !string.IsNullOrEmpty(schemaName) ? $"{schemaName}_{tableName}" : tableName;
 }

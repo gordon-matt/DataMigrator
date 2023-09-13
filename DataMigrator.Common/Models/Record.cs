@@ -18,12 +18,12 @@ public class Record : ICloneable
 
     public void RunScripts(IEnumerable<(string SourceFieldName, ITransform Script)> scripts)
     {
-        foreach (var entry in scripts)
+        foreach (var (sourceFieldName, script) in scripts)
         {
-            var field = this[entry.SourceFieldName];
+            var field = this[sourceFieldName];
             if (field is not null && field.Value is not null)
             {
-                field.Value = entry.Script.Transform(field.Value);
+                field.Value = script.Transform(field.Value);
             }
         }
     }

@@ -72,9 +72,9 @@ public class AccessDbTypeConverter : IFieldTypeConverter<AccessDbType>
 
     #region IFieldTypeConverter<AccessDbType> Members
 
-    public FieldType GetDataMigratorFieldType(AccessDbType providerFieldType) => accessDbTypes.First(x => x.Item1 == providerFieldType).Item2;
+    public FieldType GetDataMigratorFieldType(AccessDbType providerFieldType) => accessDbTypes.First(x => x.AccessDbType == providerFieldType).FieldType;
 
-    public AccessDbType GetDataProviderFieldType(FieldType fieldType) => fieldTypes.First(x => x.Item1 == fieldType).Item2;
+    public AccessDbType GetDataProviderFieldType(FieldType fieldType) => fieldTypes.First(x => x.FieldType == fieldType).AccessDbType;
 
     #endregion IFieldTypeConverter<AccessDbType> Members
 }

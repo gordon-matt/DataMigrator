@@ -23,8 +23,14 @@ public partial class MainForm : KryptonForm
 
         if (!this.IsInWinDesignMode())
         {
+            string pluginsPath = Path.Combine(Application.StartupPath, "Plugins");
+            if (!Directory.Exists(pluginsPath))
+            {
+                Directory.CreateDirectory(pluginsPath);
+            }
+
             using var mainAssemblyCatalog = new AssemblyCatalog(typeof(Program).Assembly);
-            using var pluginsDirectoryCatalog = new DirectoryCatalog(Path.Combine(Application.StartupPath, "Plugins"));
+            using var pluginsDirectoryCatalog = new DirectoryCatalog(pluginsPath);
             using var aggregateCatalog = new AggregateCatalog(mainAssemblyCatalog, pluginsDirectoryCatalog);
             using var container = new CompositionContainer(aggregateCatalog);
             container.ComposeParts(this);
@@ -138,7 +144,7 @@ public partial class MainForm : KryptonForm
         mnuMainToolsShowTraceViewer.Checked = currentControl is TraceViewerControl;
     }
 
-    private T GetControl<T>() where T : UserControl
+    private static T GetControl<T>() where T : UserControl
     {
         //T control;
         //if (Program.Container.TryResolve(out control))
@@ -193,10 +199,13 @@ public partial class MainForm : KryptonForm
 
     #region Control Event Handlers
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnNew_Click(object sender, EventArgs e) => NewFile();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnOpen_Click(object sender, EventArgs e) => OpenFile();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnRun_Click(object sender, EventArgs e)
     {
         ShowTraceViewer();
@@ -205,8 +214,10 @@ public partial class MainForm : KryptonForm
         form.ShowDialog();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnSave_Click(object sender, EventArgs e) => SaveFile();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
     {
         SaveCurrentControl();
@@ -237,14 +248,19 @@ public partial class MainForm : KryptonForm
 
     #region Main Menu
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainFileExit_Click(object sender, EventArgs e) => Close();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainFileNew_Click(object sender, EventArgs e) => NewFile();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainFileOpen_Click(object sender, EventArgs e) => OpenFile();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainFileSave_Click(object sender, EventArgs e) => SaveFile();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainFileSaveAs_Click(object sender, EventArgs e)
     {
         if (dlgSaveFile.ShowDialog() == DialogResult.OK)
@@ -255,24 +271,28 @@ public partial class MainForm : KryptonForm
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainHelpAbout_Click(object sender, EventArgs e)
     {
         using var form = Program.Container.Resolve<AboutForm>();
         form.ShowDialog();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainToolsOptions_Click(object sender, EventArgs e)
     {
         using var form = Program.Container.Resolve<SettingsForm>();
         form.ShowDialog();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainToolsPluginTools_Click(object sender, EventArgs e)
     {
         using var form = Program.Container.Resolve<ToolsForm>();
         form.ShowDialog();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuMainToolsShowTraceViewer_Click(object sender, EventArgs e)
     {
         if (mnuMainToolsShowTraceViewer.Checked)

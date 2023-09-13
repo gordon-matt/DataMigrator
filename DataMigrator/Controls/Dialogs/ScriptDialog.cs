@@ -26,7 +26,9 @@ public partial class ScriptDialog : KryptonForm
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnCancel_Click(object sender, EventArgs e) => Close();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void btnOK_Click(object sender, EventArgs e) => Close();
 }

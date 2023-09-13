@@ -1,6 +1,5 @@
-﻿namespace DataMigrator.Views
+﻿namespace DataMigrator.Views;
+
+internal interface ITransientControl
 {
-    internal interface ITransientControl
-    {
-    }
 }
