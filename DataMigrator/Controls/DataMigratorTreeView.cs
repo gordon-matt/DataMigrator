@@ -1,4 +1,5 @@
 ﻿using DataMigrator.Controls.Dialogs;
+using DataMigrator.Views;
 
 namespace DataMigrator.Controls;
 
@@ -6,6 +7,7 @@ public class DataMigratorTreeView : TreeView
 {
     private readonly ImageList imageList = null;
     private readonly ContextMenuStrip mnuContextJobs = null;
+    private readonly ToolStripMenuItem mnuContextJobsWizard;
     private readonly ToolStripMenuItem mnuContextJobsNewJob;
     private readonly ContextMenuStrip mnuContextJobsJob = null;
     private readonly ToolStripMenuItem mnuContextJobsJobRename;
@@ -31,16 +33,24 @@ public class DataMigratorTreeView : TreeView
         imageList.ImageSize = new Size(32, 32);
         this.ImageList = imageList;
 
-        mnuContextJobs = new ContextMenuStrip
-        {
-            Name = "mnuContextJobs"
-        };
+        #region mnuContextJobs
+
+        mnuContextJobs = new ContextMenuStrip { Name = "mnuContextJobs" };
+
+        mnuContextJobsWizard = new ToolStripMenuItem("Jobs Wizard") { Name = "mnuContextJobsWizard" };
+        mnuContextJobsWizard.Click += new EventHandler(mnuContextJobsWizard_Click);
+        mnuContextJobs.Items.Add(mnuContextJobsWizard);
 
         mnuContextJobsNewJob = new ToolStripMenuItem("New Job") { Name = "mnuContextJobsNewJob" };
         mnuContextJobsNewJob.Click += new EventHandler(mnuContextJobsNewJob_Click);
         mnuContextJobs.Items.Add(mnuContextJobsNewJob);
 
+        #endregion mnuContextJobs
+
+        #region mnuContextJobsJob
+
         mnuContextJobsJob = new ContextMenuStrip { Name = "mnuContextJobsJob" };
+
         mnuContextJobsJobRename = new ToolStripMenuItem("Rename") { Name = "mnuContextJobsJobRename" };
         mnuContextJobsJobRename.Click += new EventHandler(mnuContextJobsJobRename_Click);
         mnuContextJobsJob.Items.Add(mnuContextJobsJobRename);
@@ -48,6 +58,8 @@ public class DataMigratorTreeView : TreeView
         mnuContextJobsJobDelete = new ToolStripMenuItem("Delete") { Name = "mnuContextJobsJobDelete" };
         mnuContextJobsJobDelete.Click += new EventHandler(mnuContextJobsJobDelete_Click);
         mnuContextJobsJob.Items.Add(mnuContextJobsJobDelete);
+
+        #endregion mnuContextJobsJob
     }
 
     public void LoadDefaultNodes()
@@ -128,6 +140,11 @@ public class DataMigratorTreeView : TreeView
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
     private void mnuContextJobsJobDelete_Click(object sender, EventArgs e)
     {
+        if (MessageBox.Show("Are you sure you want to delete this job?", "Delete Job", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
+        {
+            return;
+        }
+
         string jobName = this.SelectedNode.Text;
         var selectedJob = AppState.ConfigFile.Jobs[jobName];
         AppState.ConfigFile.Jobs.Remove(selectedJob);
@@ -167,6 +184,71 @@ public class DataMigratorTreeView : TreeView
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "All exceptions being caught.")]
+    private async void mnuContextJobsWizard_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            using var form = new JobsWizardForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                var sourceController = Controller.GetProvider(AppState.ConfigFile.SourceConnection);
+                var destinationController = Controller.GetProvider(AppState.ConfigFile.DestinationConnection);
+
+                int jobNumber = 0;
+                foreach (var mapping in form.MappedSelections.OrderBy(x => x.Key))
+                {
+                    // TODO: Add it and do automap for fields
+                    string sourceTableName = mapping.Key;
+                    string sourceSchemaName = sourceTableName.Contains('.') ? sourceTableName.LeftOf('.') : string.Empty;
+                    string sourceTableNameWithoutSchema = sourceTableName.Contains('.') ? sourceTableName.RightOf('.') : sourceTableName;
+                    var sourceFields = await sourceController.GetFieldsAsync(sourceTableNameWithoutSchema, sourceSchemaName);
+
+                    string destinationTableName = mapping.Value;
+                    string destinationSchemaName = destinationTableName.Contains('.') ? destinationTableName.LeftOf('.') : string.Empty;
+                    string destinationTableNameWithoutSchema = destinationTableName.Contains('.') ? destinationTableName.RightOf('.') : destinationTableName;
+                    var destinationFields = await destinationController.GetFieldsAsync(destinationTableNameWithoutSchema, destinationSchemaName);
+
+                    var fieldMappings = new List<FieldMapping>();
+                    foreach (var sourceField in sourceFields)
+                    {
+                        var destinationField = destinationFields.FirstOrDefault(x => x.Name.Equals(sourceField.Name, StringComparison.InvariantCultureIgnoreCase));
+                        if (destinationField is null)
+                        {
+                            continue;
+                        }
+
+                        fieldMappings.Add(new FieldMapping
+                        {
+                            SourceField = sourceField,
+                            DestinationField = destinationField
+                        });
+                    }
+
+                    jobNumber++;
+                    AppState.ConfigFile.Jobs.Add(new Job
+                    {
+                        Name = mapping.Value,
+                        SourceTable = mapping.Key,
+                        DestinationTable = mapping.Value,
+                        FieldMappings = fieldMappings,
+                        Order = jobNumber
+                    });
+                }
+
+                foreach (var job in AppState.ConfigFile.Jobs.OrderBy(j => j.Name))
+                {
+                    AddJob(job);
+                }
+            }
+        }
+        catch (Exception x)
+        {
+            TraceService.Instance.WriteException(x);
+        }
+    }
+
     protected override void OnMouseUp(MouseEventArgs e)
     {
         if (e.Button == MouseButtons.Right)
@@ -197,8 +279,10 @@ public class DataMigratorTreeView : TreeView
     {
         base.Dispose(disposing);
         imageList?.Dispose();
+        mnuContextJobsWizard?.Dispose();
         mnuContextJobsNewJob?.Dispose();
         mnuContextJobsJobRename?.Dispose();
+        mnuContextJobsJobDelete?.Dispose();
         mnuContextJobsJob?.Dispose();
         mnuContextJobs?.Dispose();
     }
