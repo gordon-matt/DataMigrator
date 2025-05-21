@@ -13,8 +13,8 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 {
     // Setting Sql Server Mode=True no longer necessary, as have implemented "SpaceEscape" in BaseProvider.
     // Just need to set SpaceEscapeStart and SpaceEscapeEnd in constructor
-    private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};CharSet=utf8";
-    private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};CharSet=utf8";
+    private const string MYSQL_CONNECTION_STRING_FORMAT_STANDARD = "Server={0};Database={1};Uid={2};Pwd={3};CharSet=utf8mb4";
+    private const string MYSQL_CONNECTION_STRING_FORMAT_WITH_PORT = "Server={0};Port={1};Database={2};Uid={3};Pwd={4};CharSet=utf8mb4";
 
     public MySqlConnectionControl()
     {
