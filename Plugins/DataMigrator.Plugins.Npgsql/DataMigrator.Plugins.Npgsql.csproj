@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Extenso.Data.Npgsql" Version="7.1.1" />
     <PackageReference Include="Krypton.Toolkit" Version="70.22.11.312" />
-    <PackageReference Include="Npgsql" Version="7.0.4" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
 
