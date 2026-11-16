@@ -323,7 +323,7 @@ partial class MainForm
             // 
             // kryptonManager
             // 
-            this.kryptonManager.GlobalPaletteMode = Krypton.Toolkit.PaletteModeManager.ProfessionalSystem;
+            this.kryptonManager.GlobalPaletteMode = PaletteMode.ProfessionalSystem;
             // 
             // MainForm
             // 

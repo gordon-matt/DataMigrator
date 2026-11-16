@@ -1,4 +1,5 @@
-﻿using System.Data.Odbc;
+﻿using System.ComponentModel;
+using System.Data.Odbc;
 using DataMigrator.Common;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
@@ -11,18 +12,21 @@ public partial class AccessConnectionControl : UserControl, IConnectionControl
     private const string ACCESS_CONNECTION_STRING_FORMAT_STANDARD = @"Driver={{Microsoft Access Driver (*.mdb, *.accdb)}};Dbq={0};Uid={1};Pwd={2};";
     private const string ACCESS_CONNECTION_STRING_FORMAT_NO_USER = @"Driver={{Microsoft Access Driver (*.mdb, *.accdb)}};Dbq={0};";
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Database
     {
         get { return txtDatabase.Text.Trim(); }
         set { txtDatabase.Text = value; }
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string UserName
     {
         get { return txtUserName.Text.Trim(); }
         set { txtUserName.Text = value; }
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Password
     {
         get { return txtPassword.Text.Trim(); }
@@ -63,6 +67,7 @@ public partial class AccessConnectionControl : UserControl, IConnectionControl
 
     public UserControl ControlContent => this;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ConnectionDetails ConnectionDetails
     {
         get

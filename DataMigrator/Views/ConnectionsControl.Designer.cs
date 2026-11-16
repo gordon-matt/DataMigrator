@@ -69,7 +69,6 @@ partial class ConnectionsControl
             // btnValidateSourceConnection
             // 
             this.btnValidateSourceConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnValidateSourceConnection.CornerRoundingRadius = -1F;
             this.btnValidateSourceConnection.Location = new System.Drawing.Point(318, 14);
             this.btnValidateSourceConnection.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnValidateSourceConnection.Name = "btnValidateSourceConnection";
@@ -92,7 +91,6 @@ partial class ConnectionsControl
             // 
             // cmbSourceConnectionType
             // 
-            this.cmbSourceConnectionType.CornerRoundingRadius = -1F;
             this.cmbSourceConnectionType.DropDownWidth = 158;
             this.cmbSourceConnectionType.FormattingEnabled = true;
             this.cmbSourceConnectionType.IntegralHeight = false;
@@ -121,7 +119,6 @@ partial class ConnectionsControl
             // btnValidateDestinationConnection
             // 
             this.btnValidateDestinationConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnValidateDestinationConnection.CornerRoundingRadius = -1F;
             this.btnValidateDestinationConnection.Location = new System.Drawing.Point(319, 14);
             this.btnValidateDestinationConnection.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnValidateDestinationConnection.Name = "btnValidateDestinationConnection";
@@ -144,7 +141,6 @@ partial class ConnectionsControl
             // 
             // cmbDestinationConnectionType
             // 
-            this.cmbDestinationConnectionType.CornerRoundingRadius = -1F;
             this.cmbDestinationConnectionType.DropDownWidth = 158;
             this.cmbDestinationConnectionType.FormattingEnabled = true;
             this.cmbDestinationConnectionType.IntegralHeight = false;

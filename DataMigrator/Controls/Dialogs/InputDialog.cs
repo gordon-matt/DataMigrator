@@ -1,4 +1,6 @@
-﻿namespace DataMigrator.Controls.Dialogs;
+﻿using System.ComponentModel;
+
+namespace DataMigrator.Controls.Dialogs;
 
 public partial class InputDialog : KryptonForm
 {
@@ -7,12 +9,14 @@ public partial class InputDialog : KryptonForm
         InitializeComponent();
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string LabelText
     {
         get => lblInput.Text;
         set => lblInput.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string UserInput
     {
         get => txtInput.Text;

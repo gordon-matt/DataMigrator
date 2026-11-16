@@ -1,4 +1,5 @@
-﻿using Extenso.Data.Common;
+﻿using System.ComponentModel;
+using Extenso.Data.Common;
 using Extenso.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 
@@ -16,12 +17,14 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     #region Public Properties
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Server
     {
         get => !string.IsNullOrWhiteSpace(txtServer.Text) ? txtServer.Text : string.Empty;
         set => txtServer.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Database
     {
         get
@@ -39,18 +42,21 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
         set => cmbDatabase.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string UserName
     {
         get => txtUserName.Text.Trim();
         set => txtUserName.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Password
     {
         get => txtPassword.Text.Trim();
         set => txtPassword.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public bool IntegratedSecurity
     {
         get => rbUseWindowsAuthentication.Checked;
@@ -103,6 +109,7 @@ public partial class SqlConnectionControl : UserControl, IConnectionControl
 
     public UserControl ControlContent => this;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ConnectionDetails ConnectionDetails
     {
         get => new()

@@ -1,4 +1,5 @@
-﻿using DataMigrator.Common;
+﻿using System.ComponentModel;
+using DataMigrator.Common;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 
@@ -6,24 +7,28 @@ namespace DataMigrator.SharePoint;
 
 public partial class SharePointConnectionControl : UserControl, IConnectionControl
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Url
     {
         get => txtUrl.Text;
         set => txtUrl.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string UserName
     {
         get => txtUserName.Text.Trim();
         set => txtUserName.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Password
     {
         get => txtPassword.Text.Trim();
         set => txtPassword.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Domain
     {
         get => txtDomain.Text.Trim();
@@ -37,6 +42,7 @@ public partial class SharePointConnectionControl : UserControl, IConnectionContr
 
     #region IConnectionControl Members
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ConnectionDetails ConnectionDetails
     {
         get => new()

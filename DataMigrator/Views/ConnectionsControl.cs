@@ -1,4 +1,6 @@
-﻿namespace DataMigrator.Views;
+﻿using System.ComponentModel;
+
+namespace DataMigrator.Views;
 
 public partial class ConnectionsControl : UserControl, IConfigControl
 {
@@ -9,12 +11,14 @@ public partial class ConnectionsControl : UserControl, IConfigControl
 
     public ConnectionDetails DestinationConnection => destinationConnectionControl?.ConnectionDetails;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string SourceConnectionType
     {
         get => cmbSourceConnectionType.SelectedIndex != -1 ? cmbSourceConnectionType.SelectedItem.ToString() : string.Empty;
         set => cmbSourceConnectionType.SelectedItem = value.ToString();
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string DestinationConnectionType
     {
         get => cmbDestinationConnectionType.SelectedIndex != -1 ? cmbDestinationConnectionType.SelectedItem.ToString() : string.Empty;

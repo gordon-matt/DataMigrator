@@ -1,4 +1,6 @@
-﻿namespace DataMigrator.Views;
+﻿using System.ComponentModel;
+
+namespace DataMigrator.Views;
 
 public partial class JobsWizardForm : KryptonForm
 {
@@ -21,6 +23,7 @@ public partial class JobsWizardForm : KryptonForm
         }
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public IDictionary<string, string> MappedSelections { get; set; } = new Dictionary<string, string>();
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Acceptable for WinForms event handlers")]

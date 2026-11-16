@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CS-Script" Version="4.6.5" />
-    <PackageReference Include="Extenso.Core" Version="7.1.1" />
-    <PackageReference Include="Extenso.Data" Version="7.1.2" />
-    <PackageReference Include="Extenso.Windows.Forms" Version="7.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.6.40" />
+    <PackageReference Include="CS-Script" Version="4.11.0" />
+    <PackageReference Include="Extenso.Core" Version="9.4.0" />
+    <PackageReference Include="Extenso.Data" Version="9.4.0" />
+    <PackageReference Include="Extenso.Windows.Forms" Version="9.4.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.14.15" />
   </ItemGroup>
 
 </Project>

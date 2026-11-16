@@ -51,7 +51,6 @@
             // btnCancel
             // 
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.CornerRoundingRadius = -1F;
             btnCancel.DialogResult = DialogResult.Cancel;
             btnCancel.Location = new Point(597, 404);
             btnCancel.Margin = new Padding(4, 3, 4, 3);
@@ -65,7 +64,6 @@
             // btnOK
             // 
             btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOK.CornerRoundingRadius = -1F;
             btnOK.DialogResult = DialogResult.OK;
             btnOK.Location = new Point(424, 404);
             btnOK.Margin = new Padding(4, 3, 4, 3);

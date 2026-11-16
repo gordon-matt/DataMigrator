@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using DataMigrator.Controls.Dialogs;
 using Extenso.Data;
@@ -10,12 +11,14 @@ public partial class TableMappingControl : UserControl, IConfigControl, ITransie
 {
     #region Public Properties
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string SourceTable
     {
         get => cmbSourceTable.SelectedIndex != -1 ? cmbSourceTable.SelectedItem.ToString() : string.Empty;
         set => cmbSourceTable.SelectedItem = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string DestinationTable
     {
         get => cmbDestinationTable.SelectedIndex != -1 ? cmbDestinationTable.SelectedItem.ToString() : string.Empty;

@@ -1,4 +1,5 @@
-﻿using DataMigrator.Common;
+﻿using System.ComponentModel;
+using DataMigrator.Common;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using Extenso.Collections;
@@ -55,6 +56,7 @@ public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
         }
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Database
     {
         get
@@ -72,24 +74,28 @@ public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
         set => cmbDatabase.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Password
     {
         get => txtPassword.Text.Trim();
         set => txtPassword.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public int Port
     {
         get => !string.IsNullOrEmpty(txtPort.Text) ? int.Parse(txtPort.Text.Trim()) : -1;
         set => txtPort.Text = value.ToString();
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Server
     {
         get => txtServer.Text.Trim();
         set => txtServer.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string UserName
     {
         get => txtUserName.Text.Trim();
@@ -100,6 +106,7 @@ public partial class NpgsqlConnectionControl : UserControl, IConnectionControl
 
     #region IConnectionControl Members
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ConnectionDetails ConnectionDetails
     {
         get => new()

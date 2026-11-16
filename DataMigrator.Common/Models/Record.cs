@@ -1,4 +1,5 @@
 ﻿using DataMigrator.Common.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DataMigrator.Common.Models;
 
@@ -56,6 +57,15 @@ public class Record : ICloneable
                         //  and then let the rest of the process carry itself out
                         field.Value = field.Value.ToString();
                     }
+
+                    //if (newType == typeof(DateTimeOffset))
+                    //{
+                    //    if (field.Value is DateTime dateTimeValue)
+                    //    {
+                    //        field.Value = new DateTimeOffset(dateTimeValue);
+                    //        continue;
+                    //    }
+                    //}
 
                     field.Value = field.Value.ConvertTo(newType);
                 }

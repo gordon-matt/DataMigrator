@@ -1,4 +1,5 @@
-﻿using DataMigrator.Common;
+﻿using System.ComponentModel;
+using DataMigrator.Common;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using Extenso.Collections;
@@ -23,18 +24,21 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     #region Public Properties
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Server
     {
         get => txtServer.Text.Trim();
         set => txtServer.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public int Port
     {
         get => !string.IsNullOrEmpty(txtPort.Text) ? int.Parse(txtPort.Text.Trim()) : -1;
         set => txtPort.Text = value.ToString();
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Database
     {
         get
@@ -52,12 +56,14 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
         set => cmbDatabase.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string UserName
     {
         get => txtUserName.Text.Trim();
         set => txtUserName.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Password
     {
         get => txtPassword.Text.Trim();
@@ -107,6 +113,7 @@ public partial class MySqlConnectionControl : UserControl, IConnectionControl
 
     public UserControl ControlContent => this;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ConnectionDetails ConnectionDetails
     {
         get => new()

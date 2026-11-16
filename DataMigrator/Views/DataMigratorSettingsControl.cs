@@ -1,13 +1,17 @@
-﻿namespace DataMigrator.Views;
+﻿using System.ComponentModel;
+
+namespace DataMigrator.Views;
 
 public partial class DataMigratorSettingsControl : UserControl, ISettingsControl
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public int BatchSize
     {
         get => (int)nudBatchSize.Value;
         set => nudBatchSize.Value = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public bool TrimStrings
     {
         get => cbTrimStrings.Checked;

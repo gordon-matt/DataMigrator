@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Krypton.Toolkit" Version="70.22.11.312" />
-    <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.23710.12000" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
+    <PackageReference Include="Krypton.Toolkit" Version="95.25.8.235" />
+    <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.26413.12010" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.9" />
   </ItemGroup>
 
   <ItemGroup>

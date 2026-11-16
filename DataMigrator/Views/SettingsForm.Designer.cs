@@ -48,7 +48,6 @@ partial class SettingsForm
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.CornerRoundingRadius = -1F;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Location = new System.Drawing.Point(340, 6);
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -115,7 +114,6 @@ partial class SettingsForm
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.CornerRoundingRadius = -1F;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(460, 6);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

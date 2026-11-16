@@ -118,7 +118,6 @@ partial class SqlConnectionControl
             // 
             this.cmbDatabase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbDatabase.CornerRoundingRadius = -1F;
             this.cmbDatabase.DropDownWidth = 334;
             this.cmbDatabase.FormattingEnabled = true;
             this.cmbDatabase.IntegralHeight = false;

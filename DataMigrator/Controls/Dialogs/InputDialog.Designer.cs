@@ -53,7 +53,6 @@ partial class InputDialog
             // 
             // btnCancel
             // 
-            this.btnCancel.CornerRoundingRadius = -1F;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(324, 60);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -66,7 +65,6 @@ partial class InputDialog
             // 
             // btnOK
             // 
-            this.btnOK.CornerRoundingRadius = -1F;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Location = new System.Drawing.Point(228, 60);
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

@@ -1,7 +1,10 @@
-﻿namespace DataMigrator.Controls.Dialogs;
+﻿using System.ComponentModel;
+
+namespace DataMigrator.Controls.Dialogs;
 
 public partial class ScriptDialog : KryptonForm
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string Script
     {
         get => fctScript.Text;

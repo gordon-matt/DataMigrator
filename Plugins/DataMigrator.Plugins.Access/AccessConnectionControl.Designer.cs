@@ -101,7 +101,6 @@ namespace DataMigrator.Access
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.CornerRoundingRadius = -1F;
             this.btnBrowse.Location = new System.Drawing.Point(520, 9);
             this.btnBrowse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnBrowse.Name = "btnBrowse";

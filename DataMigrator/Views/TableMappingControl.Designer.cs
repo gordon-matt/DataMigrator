@@ -173,7 +173,6 @@ partial class TableMappingControl
             // 
             // btnAutoMap
             // 
-            this.btnAutoMap.CornerRoundingRadius = -1F;
             this.btnAutoMap.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAutoMap.Location = new System.Drawing.Point(4, 49);
             this.btnAutoMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -186,7 +185,6 @@ partial class TableMappingControl
             // 
             // btnAdd
             // 
-            this.btnAdd.CornerRoundingRadius = -1F;
             this.btnAdd.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAdd.Location = new System.Drawing.Point(4, 3);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -199,7 +197,6 @@ partial class TableMappingControl
             // 
             // btnRemove
             // 
-            this.btnRemove.CornerRoundingRadius = -1F;
             this.btnRemove.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRemove.Location = new System.Drawing.Point(268, 3);
             this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -214,7 +211,6 @@ partial class TableMappingControl
             // 
             this.cmbSourceTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbSourceTable.CornerRoundingRadius = -1F;
             this.cmbSourceTable.DropDownWidth = 240;
             this.cmbSourceTable.FormattingEnabled = true;
             this.cmbSourceTable.IntegralHeight = false;
@@ -230,7 +226,6 @@ partial class TableMappingControl
             // 
             this.cmbDestinationTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbDestinationTable.CornerRoundingRadius = -1F;
             this.cmbDestinationTable.DropDownWidth = 240;
             this.cmbDestinationTable.FormattingEnabled = true;
             this.cmbDestinationTable.IntegralHeight = false;
@@ -246,7 +241,6 @@ partial class TableMappingControl
             // 
             this.btnCreateTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCreateTable.CornerRoundingRadius = -1F;
             this.btnCreateTable.Location = new System.Drawing.Point(0, 0);
             this.btnCreateTable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnCreateTable.Name = "btnCreateTable";
@@ -384,7 +378,6 @@ partial class TableMappingControl
             // 
             // btnAddEditScript
             // 
-            this.btnAddEditScript.CornerRoundingRadius = -1F;
             this.btnAddEditScript.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAddEditScript.Location = new System.Drawing.Point(268, 49);
             this.btnAddEditScript.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

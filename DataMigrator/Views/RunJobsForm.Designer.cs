@@ -109,7 +109,6 @@ partial class RunJobsForm
             // btnRun
             // 
             this.btnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRun.CornerRoundingRadius = -1F;
             this.btnRun.Location = new System.Drawing.Point(424, 407);
             this.btnRun.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnRun.Name = "btnRun";
@@ -132,7 +131,6 @@ partial class RunJobsForm
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.CornerRoundingRadius = -1F;
             this.btnCancel.Enabled = false;
             this.btnCancel.Location = new System.Drawing.Point(597, 407);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

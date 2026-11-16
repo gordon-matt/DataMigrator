@@ -1,4 +1,5 @@
-﻿using DataMigrator.Common;
+﻿using System.ComponentModel;
+using DataMigrator.Common;
 using DataMigrator.Common.Diagnostics;
 using DataMigrator.Common.Models;
 using DataMigrator.Plugins.Csv;
@@ -8,18 +9,21 @@ namespace DataMigrator.Csv;
 
 public partial class CsvConnectionControl : UserControl, IConnectionControl
 {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string FilePath
     {
         get => txtFile.Text.Trim();
         set => txtFile.Text = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public bool HasHeaderRow
     {
         get => cbHasHeaderRow.Checked;
         set => cbHasHeaderRow.Checked = value;
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public FileDelimiter Delimiter
     {
         get
@@ -61,6 +65,7 @@ public partial class CsvConnectionControl : UserControl, IConnectionControl
 
     public UserControl ControlContent => this;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ConnectionDetails ConnectionDetails
     {
         get
